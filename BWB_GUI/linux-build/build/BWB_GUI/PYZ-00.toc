@@ -1,6 +1,6 @@
 ('/mnt/c/Users/tageb/OneDrive/Desktop/Homework Assignments/Fall '
  '2024/Capstone/GitHub '
- 'Repository/Capstone_BWB/BWB_GUI/build/build/BWB_GUI/PYZ-00.pyz',
+ 'Repository/Capstone_BWB/BWB_GUI/linux-build/build/BWB_GUI/PYZ-00.pyz',
  [('PySide6',
    '/home/linuxbrew/.linuxbrew/opt/python@3.12/lib/python3.12/site-packages/PySide6/__init__.py',
    'PYMODULE'),

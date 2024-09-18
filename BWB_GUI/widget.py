@@ -13,7 +13,8 @@ from ui_form import Ui_Widget
 if hasattr(sys, '_MEIPASS'):
     # Set the path to the bundled platform plugins
     os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = sys._MEIPASS
-    os.environ['QT_QPA_PLATFORM'] = 'xcb'
+    if os.name == 'posix':
+        os.environ['QT_QPA_PLATFORM'] = 'xcb'
 
 class Widget(QWidget):
     def __init__(self, parent=None):
