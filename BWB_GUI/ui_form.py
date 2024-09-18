@@ -37,9 +37,9 @@ class Ui_Widget(object):
         self.lineEdit_2 = QLineEdit(self.tab)
         self.lineEdit_2.setObjectName(u"lineEdit_2")
         self.lineEdit_2.setGeometry(QRect(170, 20, 113, 26))
-        self.textBrowser_3 = QTextBrowser(self.tab)
-        self.textBrowser_3.setObjectName(u"textBrowser_3")
-        self.textBrowser_3.setGeometry(QRect(320, 20, 111, 31))
+        self.textBrowser = QTextBrowser(self.tab)
+        self.textBrowser.setObjectName(u"textBrowser")
+        self.textBrowser.setGeometry(QRect(320, 20, 111, 31))
         self.label = QLabel(self.tab)
         self.label.setObjectName(u"label")
         self.label.setGeometry(QRect(150, 20, 21, 20))
@@ -62,7 +62,7 @@ class Ui_Widget(object):
     def retranslateUi(self, Widget):
         Widget.setWindowTitle(QCoreApplication.translate("Widget", u"Widget", None))
         self.pushButton.setText(QCoreApplication.translate("Widget", u"Add", None))
-        self.textBrowser_3.setHtml(QCoreApplication.translate("Widget", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.textBrowser.setHtml(QCoreApplication.translate("Widget", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "hr { height: 1px; border-width: 0; }\n"

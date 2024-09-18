@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 import sys
 import os
+from functions import Functions
 
 from PySide6.QtWidgets import QApplication, QWidget
 
@@ -21,7 +22,7 @@ class Widget(QWidget):
         super().__init__(parent)
         self.ui = Ui_Widget()
         self.ui.setupUi(self)
-
+        self.functions = Functions(self.ui)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
