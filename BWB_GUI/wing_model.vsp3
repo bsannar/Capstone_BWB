@@ -449,10 +449,14 @@
           <Last_Scale Value="1.000000000000000000e+00" ID="IDAPFSHVMOL"/>
           <Origin Value="0.000000000000000000e+00" ID="SPIKQAVCFNV"/>
 <<<<<<< HEAD
+<<<<<<< HEAD
           <Scale Value="4.000000000000000000e+00" ID="LJNGAKAYTAD"/>
 =======
           <Scale Value="2.000000000000000000e+00" ID="LJNGAKAYTAD"/>
 >>>>>>> 3dc99fb (Scatter plot and vsp3 changes are working)
+=======
+          <Scale Value="4.000000000000000000e+00" ID="LJNGAKAYTAD"/>
+>>>>>>> be9c124 (no changes have been made)
           <X_Location Value="0.000000000000000000e+00" ID="GQTQCBDMHHH"/>
           <X_Rel_Location Value="0.000000000000000000e+00" ID="ASAQXMPLOBA"/>
           <X_Rel_Rotation Value="0.000000000000000000e+00" ID="KFTQKOAKTAW"/>
@@ -1137,6 +1141,9 @@
     <FeaPropertyInfo>
       <ParmContainer>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> be9c124 (no changes have been made)
         <ID>CXFURGRIBX</ID>
         <Name>DefaultShell</Name>
         <FeaProperty>
@@ -1168,6 +1175,7 @@
           <LengthUnit Value="3.000000000000000000e+00" ID="JCEXGLAUAFM"/>
           <Thickness Value="1.000000000000000056e-01" ID="WABKSVYBSOR"/>
           <Thickness_FEM Value="1.000000000000000056e-01" ID="GJQPPWOOPJE"/>
+<<<<<<< HEAD
 =======
         <ID>MEAOEFZYLD</ID>
         <Name>DefaultShell</Name>
@@ -1201,6 +1209,8 @@
           <Thickness Value="1.000000000000000056e-01" ID="KQBVIKYNMIV"/>
           <Thickness_FEM Value="1.000000000000000056e-01" ID="UBWSODBSAFS"/>
 >>>>>>> 3dc99fb (Scatter plot and vsp3 changes are working)
+=======
+>>>>>>> be9c124 (no changes have been made)
         </FeaProperty>
       </ParmContainer>
       <FeaMaterialID>_Al6061T6</FeaMaterialID>
@@ -1208,6 +1218,9 @@
     <FeaPropertyInfo>
       <ParmContainer>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> be9c124 (no changes have been made)
         <ID>AKKBJXNMJV</ID>
         <Name>DefaultBeam</Name>
         <FeaProperty>
@@ -1239,6 +1252,7 @@
           <LengthUnit Value="3.000000000000000000e+00" ID="ZWGOYIMNFFT"/>
           <Thickness Value="1.000000000000000056e-01" ID="MSKRMDAYWIM"/>
           <Thickness_FEM Value="1.000000000000000056e-01" ID="NGPQSPFBGQM"/>
+<<<<<<< HEAD
 =======
         <ID>LKIUJIQRGD</ID>
         <Name>DefaultBeam</Name>
@@ -1938,6 +1952,8 @@
           <Thickness Value="1.000000000000000056e-01" ID="FCSXUBIKEQJ"/>
           <Thickness_FEM Value="1.000000000000000056e-01" ID="MRHDDTPNDVI"/>
 >>>>>>> 3dc99fb (Scatter plot and vsp3 changes are working)
+=======
+>>>>>>> be9c124 (no changes have been made)
         </FeaProperty>
       </ParmContainer>
       <FeaMaterialID>_Al6061T6</FeaMaterialID>
