@@ -15,8 +15,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QLabel, QLineEdit, QPushButton,
-    QSizePolicy, QTabWidget, QTextBrowser, QWidget)
+from PySide6.QtWidgets import (QApplication, QLabel, QLineEdit, QListWidget,
+    QListWidgetItem, QPushButton, QSizePolicy, QTabWidget,
+    QTextBrowser, QWidget)
 
 class Ui_Widget(object):
     def setupUi(self, Widget):
@@ -28,9 +29,9 @@ class Ui_Widget(object):
         self.tabWidget.setGeometry(QRect(0, 0, 801, 601))
         self.tab = QWidget()
         self.tab.setObjectName(u"tab")
-        self.pushButton = QPushButton(self.tab)
-        self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setGeometry(QRect(440, 20, 93, 29))
+        self.addButton = QPushButton(self.tab)
+        self.addButton.setObjectName(u"addButton")
+        self.addButton.setGeometry(QRect(440, 20, 93, 29))
         self.lineEdit = QLineEdit(self.tab)
         self.lineEdit.setObjectName(u"lineEdit")
         self.lineEdit.setGeometry(QRect(20, 20, 113, 26))
@@ -49,6 +50,25 @@ class Ui_Widget(object):
         self.tabWidget.addTab(self.tab, "")
         self.tab_2 = QWidget()
         self.tab_2.setObjectName(u"tab_2")
+        self.insertButton = QPushButton(self.tab_2)
+        self.insertButton.setObjectName(u"insertButton")
+        self.insertButton.setGeometry(QRect(40, 80, 161, 29))
+        self.vspButton = QPushButton(self.tab_2)
+        self.vspButton.setObjectName(u"vspButton")
+        self.vspButton.setGeometry(QRect(40, 190, 161, 29))
+        self.txt_wingspan = QLineEdit(self.tab_2)
+        self.txt_wingspan.setObjectName(u"txt_wingspan")
+        self.txt_wingspan.setGeometry(QRect(40, 150, 161, 28))
+        self.lst_excel = QListWidget(self.tab_2)
+        QListWidgetItem(self.lst_excel)
+        QListWidgetItem(self.lst_excel)
+        QListWidgetItem(self.lst_excel)
+        QListWidgetItem(self.lst_excel)
+        self.lst_excel.setObjectName(u"lst_excel")
+        self.lst_excel.setGeometry(QRect(140, 30, 61, 41))
+        self.txt_excel = QLineEdit(self.tab_2)
+        self.txt_excel.setObjectName(u"txt_excel")
+        self.txt_excel.setGeometry(QRect(40, 30, 91, 28))
         self.tabWidget.addTab(self.tab_2, "")
 
         self.retranslateUi(Widget)
@@ -61,7 +81,7 @@ class Ui_Widget(object):
 
     def retranslateUi(self, Widget):
         Widget.setWindowTitle(QCoreApplication.translate("Widget", u"Widget", None))
-        self.pushButton.setText(QCoreApplication.translate("Widget", u"Add", None))
+        self.addButton.setText(QCoreApplication.translate("Widget", u"Add", None))
         self.textBrowser.setHtml(QCoreApplication.translate("Widget", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -73,6 +93,21 @@ class Ui_Widget(object):
         self.label.setText(QCoreApplication.translate("Widget", u"+", None))
         self.label_2.setText(QCoreApplication.translate("Widget", u"=", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("Widget", u"Tab 1", None))
+        self.insertButton.setText(QCoreApplication.translate("Widget", u"Put text in box", None))
+        self.vspButton.setText(QCoreApplication.translate("Widget", u"Set Scale", None))
+
+        __sortingEnabled = self.lst_excel.isSortingEnabled()
+        self.lst_excel.setSortingEnabled(False)
+        ___qlistwidgetitem = self.lst_excel.item(0)
+        ___qlistwidgetitem.setText(QCoreApplication.translate("Widget", u"A1", None));
+        ___qlistwidgetitem1 = self.lst_excel.item(1)
+        ___qlistwidgetitem1.setText(QCoreApplication.translate("Widget", u"A2", None));
+        ___qlistwidgetitem2 = self.lst_excel.item(2)
+        ___qlistwidgetitem2.setText(QCoreApplication.translate("Widget", u"A3", None));
+        ___qlistwidgetitem3 = self.lst_excel.item(3)
+        ___qlistwidgetitem3.setText(QCoreApplication.translate("Widget", u"A4", None));
+        self.lst_excel.setSortingEnabled(__sortingEnabled)
+
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("Widget", u"Tab 2", None))
     # retranslateUi
 
