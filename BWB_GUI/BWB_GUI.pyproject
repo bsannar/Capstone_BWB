@@ -2,6 +2,7 @@
     "files": [
         "widget.py",
         "form.ui",
-        "functions.py"
+        "functions.py",
+        "calculations/f_35s_refueled.py"
     ]
 }
