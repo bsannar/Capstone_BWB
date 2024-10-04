@@ -69,14 +69,6 @@ class Functions():
         plt.close()
         self.ui.imgPlot.setPixmap(QPixmap("Scatter_test.png"))
 
-    def set_wingspan(self):
-        self.wingspan = True
-        print("Wingspan")
-
-    def set_tailspan(self):
-        self.tailspan = True
-        print("Vertical Tail Span")
-
     def update_geometry(self):
         print("Updating...")
         xl = xw.App(visible=False)
