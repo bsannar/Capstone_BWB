@@ -12,9 +12,6 @@ class Functions():
         self.connect_all()
 
     def connect_all(self):
-        self.ui.addButton.clicked.connect(self.add)
-        self.ui.insertButton.clicked.connect(self.insert)
-        self.ui.btnVSP.clicked.connect(self.open_vsp)
         self.ui.btnPlot.clicked.connect(self.add_plot)
         self.ui.txtWingspan.editingFinished.connect(self.set_wingspan)
         self.ui.txtTailspan.editingFinished.connect(self.set_tailspan)
