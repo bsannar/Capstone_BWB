@@ -1,3 +1,16 @@
+import sys
+import os
+
+# Add the path to the folder containing the other script
+script_dir = os.path.abspath("BWB_GUI\calculations")
+sys.path.insert(0, script_dir)
+
+import f_35s_refueled as Henry
+
+
+Henry_data = Henry.fuel_required_for_range(400, .5, 500, 20, 300000)
+print(f"Test: {Henry_data}")
+
 data_storage = {}
 
 def save_data(name, values):

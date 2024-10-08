@@ -1,5 +1,8 @@
 import xlwings as xw
 import openvsp as vsp
+import numpy as np
+#import calculations/f_35s_refueled as calcs
+
 
 class Functions():
     def __init__(self, ui):
@@ -43,4 +46,9 @@ class Functions():
         if scale_val.isdigit:
             vsp.SetParmVal(wing_id, "Scale", "XForm", float(scale_val))
         vsp.WriteVSPFile("wing_model.vsp3")
+
+
+
+
+
 
