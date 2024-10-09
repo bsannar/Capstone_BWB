@@ -4,13 +4,30 @@ import matplotlib.pyplot as plt
 import random as rnd
 from PySide6.QtGui import QPixmap
 from bwb_class import BWB
+from f_35s_refueled import get_number_f_35s
 
 class Functions():
     def __init__(self, ui):
         self.ui = ui
-        self.wingspan = False
-        self.tailspan = False
+        self.setupGUI()
         self.connect_all()
+
+    def setupGUI(self):
+        xl = xw.App(visible=False)
+        wb = xl.books.open("Assets/BWB_tanker.xlsm")
+        mainSheet = wb.sheets["Main"]
+
+        self.ui.txtWingSqFt.setText(str(mainSheet["B18"].value))
+        self.ui.txtWingAspectRatio.setText(str(mainSheet["B19"].value))
+        self.ui.txtWingTaperRatio.setText(str(mainSheet["B20"].value))
+        self.ui.txtWingSweep.setText(str(mainSheet["B21"].value))
+        self.ui.txtVertTailSqFt.setText(str(mainSheet["H18"].value))
+        self.ui.txtVertTailAspectRatio.setText(str(mainSheet["H19"].value))
+        self.ui.txtVertTailTaperRatio.setText(str(mainSheet["H20"].value))
+        self.ui.txtVertTailSweep.setText(str(mainSheet["H21"].value))
+
+        wb.close()
+        xl.quit()
 
     def connect_all(self):
         self.ui.btnPlot.clicked.connect(self.add_plot)
@@ -91,16 +108,16 @@ class Functions():
         mainSheet["H20"].value = vertTailTaperRatio
         mainSheet["H21"].value = vertTailSweep
 
-        takeOffWeight = mainSheet["O15"]
+        takeOffWeight = mainSheet["O15"].value
         dryWeight = weightSheet["B12"].value
         fuelCapacity = takeOffWeight - dryWeight
-        specificFuelConsumption = mainSheet["C30"]
+        specificFuelConsumption = mainSheet["C30"].value
         maxLiftToDragRatio = 0
         for i in range(26, 47):
-            liftToDragRatio = performanceSheet['Z'+i.toString()]
+            liftToDragRatio = performanceSheet['Z'+str(i)].value
             if liftToDragRatio > maxLiftToDragRatio:
                 maxLiftToDragRatio = liftToDragRatio
-                cruiseSpeed = performanceSheet['C'+i.toString()]
+                machNumber = performanceSheet['C'+str(i)].value
 
         wb.save("new_BWB_tanker.xlsm")
         wb.close()
@@ -108,6 +125,6 @@ class Functions():
         print("Finished")
 
         bwb = BWB(wingSqFt, vertTailSqFt, wingAspectRatio, vertTailAspectRatio, wingTaperRatio, vertTailTaperRatio, wingSweep, vertTailSweep,
-                dryWeight, fuelCapacity, specificFuelConsumption, maxLiftToDragRatio, cruiseSpeed)
-        numF35s = f_35s_refueled.get_number_f_35s(bwb)
-        print(numF35s)
+                dryWeight, fuelCapacity, specificFuelConsumption, maxLiftToDragRatio, machNumber)
+        get_number_f_35s(bwb)
+        print(bwb.numFighter)

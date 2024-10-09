@@ -1,7 +1,7 @@
 import numpy as np
-from bwb_class import BWB
+#from bwb_class import BWB
 
-bwb = BWB(300000, 200000, .5, 20, .1, 530)
+#bwb = BWB(300000, 200000, .5, 20, .1, 530)
 
 # # Hypothetical BWB Parameters
 # empty_weight_BWB = 300000                                   # BWB empty weight
@@ -66,8 +66,8 @@ def tanker_fuel_for_round_trip(range_nm, SFC, V, L_over_D, initial_weight, fuel_
     return total_fuel_round_trip
 
 
-def get_number_f_35s(BWB):
-    initial_weight_BWB = BWB.dryWeight + BWB.fuelCap                  # Fully fueled BWB weight
+def get_number_f_35s(bwb):
+    initial_weight_BWB = bwb.dryWeight + bwb.fuelCap                  # Fully fueled BWB weight
 
     range_nm = 4000                                                   # Mission radius in nautical miles (one way)
     f35_max_fuel = 18000                                              # Maximum fuel capacity of F-35 in pounds
@@ -79,16 +79,17 @@ def get_number_f_35s(BWB):
     # Simulate refueling to count number of f-35s
     num_f35s_refueled = 0
     max_f35s = 80000  # Max number of F-35s to attempt refueling
+    cruiseSpeed = bwb.machNumber * 666.739
     for i in range(1, max_f35s + 1):
-        weight_after_leg_1 = initial_weight_BWB - fuel_required_for_range(range_nm, BWB.sFuelConsum, BWB.cruiseSpeed, BWB.liftDrag, initial_weight_BWB)
+        weight_after_leg_1 = initial_weight_BWB - fuel_required_for_range(range_nm, bwb.sFuelConsum, cruiseSpeed, bwb.liftDrag, initial_weight_BWB)
 
-        fuel_for_refueling_f_35s = fuel_used_during_refueling_calc(i, f35_refuel_rate, fuel_required_per_f35, BWB.cruiseSpeed, BWB.sFuelConsum, BWB.liftDrag, weight_after_leg_1)
+        fuel_for_refueling_f_35s = fuel_used_during_refueling_calc(i, f35_refuel_rate, fuel_required_per_f35, cruiseSpeed, bwb.sFuelConsum, bwb.liftDrag, weight_after_leg_1)
 
         # Calculate total fuel for the round trip (including refueling)
-        fuel_for_whole_trip = tanker_fuel_for_round_trip(range_nm, BWB.sFuelConsum, BWB.cruiseSpeed, BWB.liftDrag, initial_weight_BWB, fuel_for_refueling_f_35s)
+        fuel_for_whole_trip = tanker_fuel_for_round_trip(range_nm, bwb.sFuelConsum, cruiseSpeed, bwb.liftDrag, initial_weight_BWB, fuel_for_refueling_f_35s)
 
         # Reserve some fuel as a factor of safety, and calculate fuel left over
-        fuel_left_over = BWB.fuelCap - fuel_for_whole_trip - (BWB.resFraction * BWB.fuelCap)
+        fuel_left_over = bwb.fuelCap - fuel_for_whole_trip - (bwb.resFraction * bwb.fuelCap)
 
         # Count number of iterations to know how many f-35s can be refueled
         if fuel_left_over >= 0:
@@ -96,8 +97,7 @@ def get_number_f_35s(BWB):
         else:
             number_refueled = i-1
             leftover_fuel = fuel_left_over
-            print(f"F-35s refueled: {i-1}")
             break
-    return number_refueled, leftover_fuel
+    bwb.numFighter = num_f35s_refueled
 
-get_number_f_35s(bwb)
+#get_number_f_35s(bwb)
