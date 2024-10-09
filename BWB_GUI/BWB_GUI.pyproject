@@ -3,7 +3,7 @@
         "widget.py",
         "form.ui",
         "functions.py",
-        "calculations/f_35s_refueled.py",
+        "f_35s_refueled.py",
         "bwb_class.py"
     ]
 }

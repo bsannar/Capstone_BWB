@@ -1,21 +1,22 @@
 import numpy as np
+from bwb_class import BWB
 
-import bwb_class as BWB
+bwb = BWB(300000, 200000, .5, 20, .1, 530)
 
-# Hypothetical BWB Parameters
-empty_weight_BWB = 300000                                   # BWB empty weight
-fuel_capacity_BWB = 200000
-initial_weight_BWB = empty_weight_BWB + fuel_capacity_BWB   # Fully fueled BWB weight
-SFC_BWB = 0.5                                               # Specific fuel consumption in 1/hour??
-L_over_D_BWB = 20                                           # Lift-to-drag ratio
-cruise_speed_BWB = 530                                      # BWB cruise speed in knots (NM/hour)??
-reserve_fraction = 0.1                                      # Fraction of total fuel reserved for safety (10%)
+# # Hypothetical BWB Parameters
+# empty_weight_BWB = 300000                                   # BWB empty weight
+# fuel_capacity_BWB = 200000
+# initial_weight_BWB = empty_weight_BWB + fuel_capacity_BWB   # Fully fueled BWB weight
+# SFC_BWB = 0.5                                               # Specific fuel consumption in 1/hour??
+# L_over_D_BWB = 20                                           # Lift-to-drag ratio
+# cruise_speed_BWB = 530                                      # BWB cruise speed in knots (NM/hour)??
+# reserve_fraction = 0.1                                      # Fraction of total fuel reserved for safety (10%)
 
-# Mission parameters
-range_nm = 4000             # Mission radius in nautical miles (one way)
-f35_max_fuel = 18000        # Maximum fuel capacity of F-35 in pounds
-f35_refuel_threshold = .2   # percentage of fuel left in F-35 tank when refueling begins
-f35_refuel_rate = 360000    # this is a totally arbitrary number (just googled) in lbs of fuel per hour
+# # Mission parameters
+# range_nm = 4000             # Mission radius in nautical miles (one way)
+# f35_max_fuel = 18000        # Maximum fuel capacity of F-35 in pounds
+# f35_refuel_threshold = .2   # percentage of fuel left in F-35 tank when refueling begins
+# f35_refuel_rate = 360000    # this is a totally arbitrary number (just googled) in lbs of fuel per hour
 
 
 # Function to calculate the fuel consumed for a given range using the range equation
@@ -95,8 +96,8 @@ def get_number_f_35s(BWB):
         else:
             number_refueled = i-1
             leftover_fuel = fuel_left_over
-            print(f"F-35s refueled: {i-1} \n\nFuel left over {fuel_left_over}")
+            print(f"F-35s refueled: {i-1}")
             break
     return number_refueled, leftover_fuel
 
-get_number_f_35s(BWB)
+get_number_f_35s(bwb)
