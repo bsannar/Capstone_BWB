@@ -3,6 +3,7 @@ import openvsp as vsp
 import matplotlib.pyplot as plt
 import random as rnd
 from PySide6.QtGui import QPixmap
+from bwb_class import BWB
 
 class Functions():
     def __init__(self, ui):
@@ -13,8 +14,6 @@ class Functions():
 
     def connect_all(self):
         self.ui.btnPlot.clicked.connect(self.add_plot)
-        self.ui.txtWingspan.editingFinished.connect(self.set_wingspan)
-        self.ui.txtTailspan.editingFinished.connect(self.set_tailspan)
         self.ui.btnUpdate.clicked.connect(self.update_geometry)
 
     def add(self):
@@ -31,8 +30,8 @@ class Functions():
         if len(self.ui.lst_excel.selectedItems()) == 1:
             xl = xw.App(visible=False)
             wb = xl.books.open("test.xlsx")
-            sheet = wb.sheets[0]
-            sheet[self.ui.lst_excel.selectedItems()[0].text()].value = self.ui.txt_excel.text()
+            mainSheet = wb.mainSheets[0]
+            mainSheet[self.ui.lst_excel.selectedItems()[0].text()].value = self.ui.txt_excel.text()
             wb.save("test.xlsx")
             wb.close()
             xl.quit()
@@ -70,12 +69,45 @@ class Functions():
         print("Updating...")
         xl = xw.App(visible=False)
         wb = xl.books.open("Assets/BWB_tanker.xlsm")
-        sheet = wb.sheets["Main"]
-        if self.wingspan:
-            sheet["B18"].value = self.ui.txtWingspan.text()
-        if self.tailspan:
-            sheet["H18"].value = self.ui.txtTailspan.text()
+        mainSheet = wb.sheets["Main"]
+        weightSheet = wb.sheets["Wt"]
+        performanceSheet = wb.sheets["Perf"]
+
+        wingSqFt = self.ui.txtWingSqFt.text()
+        wingAspectRatio = self.ui.txtWingAspectRatio.text()
+        wingTaperRatio = self.ui.txtWingTaperRatio.text()
+        wingSweep = self.ui.txtWingSweep.text()
+        vertTailSqFt = self.ui.txtVertTailSqFt.text()
+        vertTailAspectRatio = self.ui.txtVertTailAspectRatio.text()
+        vertTailTaperRatio = self.ui.txtVertTailTaperRatio.text()
+        vertTailSweep = self.ui.txtVertTailSweep.text()
+
+        mainSheet["B18"].value = wingSqFt
+        mainSheet["B19"].value = wingAspectRatio
+        mainSheet["B20"].value = wingTaperRatio
+        mainSheet["B21"].value = wingSweep
+        mainSheet["H18"].value = vertTailSqFt
+        mainSheet["H19"].value = vertTailAspectRatio
+        mainSheet["H20"].value = vertTailTaperRatio
+        mainSheet["H21"].value = vertTailSweep
+
+        takeOffWeight = mainSheet["O15"]
+        dryWeight = weightSheet["B12"].value
+        fuelCapacity = takeOffWeight - dryWeight
+        specificFuelConsumption = mainSheet["C30"]
+        maxLiftToDragRatio = 0
+        for i in range(26, 47):
+            liftToDragRatio = performanceSheet['Z'+i.toString()]
+            if liftToDragRatio > maxLiftToDragRatio:
+                maxLiftToDragRatio = liftToDragRatio
+                cruiseSpeed = performanceSheet['C'+i.toString()]
+
         wb.save("new_BWB_tanker.xlsm")
         wb.close()
         xl.quit()
         print("Finished")
+
+        bwb = BWB(wingSqFt, vertTailSqFt, wingAspectRatio, vertTailAspectRatio, wingTaperRatio, vertTailTaperRatio, wingSweep, vertTailSweep,
+                dryWeight, fuelCapacity, specificFuelConsumption, maxLiftToDragRatio, cruiseSpeed)
+        numF35s = f_35s_refueled.get_number_f_35s(bwb)
+        print(numF35s)
