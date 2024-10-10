@@ -5,12 +5,14 @@ import random as rnd
 from PySide6.QtGui import QPixmap
 from bwb_class import BWB
 from f_35s_refueled import get_number_f_35s
+import numpy as np
 
 class Functions():
     def __init__(self, ui):
         self.ui = ui
         self.setupGUI()
         self.connect_all()
+        self.bwb_configurations_list = []
 
     def setupGUI(self):
         xl = xw.App(visible=False)
@@ -69,18 +71,42 @@ class Functions():
         vsp.WriteVSPFile("wing_model.vsp3")
 
     def add_plot(self):
-        x = []
-        y = []
-        for i in range(20):
-            x.append(i)
-            y.append(rnd.uniform(-5, 5))
+        x = np.arange(2)
+        width = 0.25  # the width of the bars
+        multiplier = 0
+
         size = self.ui.imgPlot.size()
         px = 1/plt.rcParams['figure.dpi']
         plt.figure(figsize=(size.width()*px, size.height()*px))
-        plt.scatter(x, y)
-        plt.savefig("Scatter_test.png")
+        fig, ax = plt.subplots(layout='constrained', figsize=(size.width()*px, size.height()*px))
+
+        rangeNormalizer = max([bwb.maxRange for bwb in self.bwb_configurations_list])
+
+        values = []
+        bar_labels = []
+        for i, bwb in enumerate(self.bwb_configurations_list):
+            offset = width * multiplier
+            rects = ax.bar(x + offset, [bwb.maxRange / rangeNormalizer, bwb.numFighter], width, label="Config "+str(i+1))
+            values.append(bwb.maxRange)
+            values.append(bwb.numFighter)
+            labels = ax.bar_label(rects, padding=3)
+            bar_labels.extend(labels)
+            multiplier += 1
+
+        for label, value in zip(bar_labels, values):
+            label.set_text(int(np.round(value)))
+
+        # Add some text for labels, title and custom x-axis tick labels, etc.
+        numBWBs = len(self.bwb_configurations_list)
+        ax.set_ylabel('Normalized Performance')
+        ax.set_title('BWB Performance')
+        ax.set_xticks(x + (width * (numBWBs - 1))/2, ["Range (nautical mi)", "F35s Refueled"])
+        ax.legend(loc='upper left', ncols=3)
+        ax.set_ylim(0, 1.2)
+
+        plt.savefig("BWB_performance.png")
         plt.close()
-        self.ui.imgPlot.setPixmap(QPixmap("Scatter_test.png"))
+        self.ui.imgPlot.setPixmap(QPixmap("BWB_performance.png"))
 
     def update_geometry(self):
         print("Updating...")
@@ -127,4 +153,10 @@ class Functions():
         bwb = BWB(wingSqFt, vertTailSqFt, wingAspectRatio, vertTailAspectRatio, wingTaperRatio, vertTailTaperRatio, wingSweep, vertTailSweep,
                 dryWeight, fuelCapacity, specificFuelConsumption, maxLiftToDragRatio, machNumber)
         get_number_f_35s(bwb)
-        print(bwb.numFighter)
+        calculate_max_range(bwb)
+        print(bwb.maxRange)
+        self.bwb_configurations_list.append(bwb)
+
+def calculate_max_range(bwb):
+    speed = bwb.machNumber * 666.739
+    bwb.maxRange = (speed / bwb.sFuelConsum) * bwb.liftDrag * np.log((bwb.dryWeight + bwb.fuelCap) / bwb.dryWeight)

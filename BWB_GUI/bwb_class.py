@@ -29,3 +29,4 @@ class BWB:
         self.resFraction = resFraction
         self.machNumber = machNumber
         self.numFighter = None
+        self.maxRange = None

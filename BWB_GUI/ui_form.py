@@ -30,7 +30,7 @@ class Ui_Widget(object):
         self.tbMain.setObjectName(u"tbMain")
         self.imgPlot = QLabel(self.tbMain)
         self.imgPlot.setObjectName(u"imgPlot")
-        self.imgPlot.setGeometry(QRect(20, 20, 741, 471))
+        self.imgPlot.setGeometry(QRect(20, 20, 751, 471))
         self.imgPlot.setPixmap(QPixmap(u"plot_placeholder.png"))
         self.btnPlot = QPushButton(self.tbMain)
         self.btnPlot.setObjectName(u"btnPlot")
