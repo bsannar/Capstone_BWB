@@ -27,6 +27,7 @@ class Functions():
         self.ui.txtVertTailAspectRatio.setText(str(mainSheet["H19"].value))
         self.ui.txtVertTailTaperRatio.setText(str(mainSheet["H20"].value))
         self.ui.txtVertTailSweep.setText(str(mainSheet["H21"].value))
+        self.ui.txtCruiseAltitude.setText(str(mainSheet["N38"].value + mainSheet["M38"].value + mainSheet["P38"].value + mainSheet["L38"].value))
 
         wb.close()
         xl.quit()
@@ -71,8 +72,8 @@ class Functions():
         vsp.WriteVSPFile("wing_model.vsp3")
 
     def add_plot(self):
-        x = np.arange(2)
-        width = 0.25  # the width of the bars
+        x = np.arange(3)
+        width = 0.2  # the width of the bars
         multiplier = 0
 
         size = self.ui.imgPlot.size()
@@ -81,14 +82,17 @@ class Functions():
         fig, ax = plt.subplots(layout='constrained', figsize=(size.width()*px, size.height()*px))
 
         rangeNormalizer = max([bwb.maxRange for bwb in self.bwb_configurations_list])
+        bwbsRefueledNormalizer = 1 if max([bwb.numFighter for bwb in self.bwb_configurations_list]) == 0 else max([bwb.numFighter for bwb in self.bwb_configurations_list])
+        dryWeightNormalizer = max([bwb.dryWeight for bwb in self.bwb_configurations_list])
 
         values = []
         bar_labels = []
         for i, bwb in enumerate(self.bwb_configurations_list):
             offset = width * multiplier
-            rects = ax.bar(x + offset, [bwb.maxRange / rangeNormalizer, bwb.numFighter], width, label="Config "+str(i+1))
+            rects = ax.bar(x + offset, [bwb.maxRange / rangeNormalizer, bwb.numFighter / bwbsRefueledNormalizer, bwb.dryWeight / dryWeightNormalizer], width, label="Config "+str(i+1))
             values.append(bwb.maxRange)
             values.append(bwb.numFighter)
+            values.append(bwb.dryWeight)
             labels = ax.bar_label(rects, padding=3)
             bar_labels.extend(labels)
             multiplier += 1
@@ -100,8 +104,8 @@ class Functions():
         numBWBs = len(self.bwb_configurations_list)
         ax.set_ylabel('Normalized Performance')
         ax.set_title('BWB Performance')
-        ax.set_xticks(x + (width * (numBWBs - 1))/2, ["Range (nautical mi)", "F35s Refueled"])
-        ax.legend(loc='upper left', ncols=3)
+        ax.set_xticks(x + (width * (numBWBs - 1))/2, ["Range (nautical mi)", "F35s Refueled", "Dry Weight (lbs)"])
+        ax.legend(loc='upper left', ncols=numBWBs)
         ax.set_ylim(0, 1.2)
 
         plt.savefig("BWB_performance.png")
@@ -124,6 +128,7 @@ class Functions():
         vertTailAspectRatio = self.ui.txtVertTailAspectRatio.text()
         vertTailTaperRatio = self.ui.txtVertTailTaperRatio.text()
         vertTailSweep = self.ui.txtVertTailSweep.text()
+        payloadDropDistance = self.ui.txtDropDistance.text()
 
         mainSheet["B18"].value = wingSqFt
         mainSheet["B19"].value = wingAspectRatio
@@ -133,17 +138,12 @@ class Functions():
         mainSheet["H19"].value = vertTailAspectRatio
         mainSheet["H20"].value = vertTailTaperRatio
         mainSheet["H21"].value = vertTailSweep
+        mainSheet["N38"].value = payloadDropDistance - mainSheet["M38"].value - mainSheet["P38"].value - mainSheet["L38"].value
 
         takeOffWeight = mainSheet["O15"].value
-        dryWeight = weightSheet["B12"].value
-        fuelCapacity = takeOffWeight - dryWeight
+        dryWeight = mainSheet["O23"].value
+        fuelCapacity = mainSheet["O18"].value
         specificFuelConsumption = mainSheet["C30"].value
-        maxLiftToDragRatio = 0
-        for i in range(26, 47):
-            liftToDragRatio = performanceSheet['Z'+str(i)].value
-            if liftToDragRatio > maxLiftToDragRatio:
-                maxLiftToDragRatio = liftToDragRatio
-                machNumber = performanceSheet['C'+str(i)].value
 
         wb.save("new_BWB_tanker.xlsm")
         wb.close()
@@ -151,12 +151,15 @@ class Functions():
         print("Finished")
 
         bwb = BWB(wingSqFt, vertTailSqFt, wingAspectRatio, vertTailAspectRatio, wingTaperRatio, vertTailTaperRatio, wingSweep, vertTailSweep,
-                dryWeight, fuelCapacity, specificFuelConsumption, maxLiftToDragRatio, machNumber)
-        get_number_f_35s(bwb)
-        calculate_max_range(bwb)
+                dryWeight, fuelCapacity, specificFuelConsumption, maxLiftToDragRatio, maxMachNumber, cruiseAltitude)
+        get_number_f_35s(bwb, mainSheet)
+        calculate_max_range(bwb, mainSheet)
         print(bwb.maxRange)
         self.bwb_configurations_list.append(bwb)
 
 def calculate_max_range(bwb):
-    speed = bwb.machNumber * 666.739
-    bwb.maxRange = (speed / bwb.sFuelConsum) * bwb.liftDrag * np.log((bwb.dryWeight + bwb.fuelCap) / bwb.dryWeight)
+    for nautical_miles in range(1, 999999):
+        mainSheet["017"].value = nautical_miles
+        if mainSheet["X40"] > mainSheet["O18"]:
+            bwb.maxRange = nautical_miles
+            break

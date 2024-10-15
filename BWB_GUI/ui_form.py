@@ -117,6 +117,22 @@ class Ui_Widget(object):
 
         self.gridLayout.addWidget(self.lbWingspan_3, 0, 2, 1, 1)
 
+        self.gridLayoutWidget_2 = QWidget(self.tbBWB)
+        self.gridLayoutWidget_2.setObjectName(u"gridLayoutWidget_2")
+        self.gridLayoutWidget_2.setGeometry(QRect(30, 210, 341, 80))
+        self.gridLayout_2 = QGridLayout(self.gridLayoutWidget_2)
+        self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.gridLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.lbDropDistance = QLabel(self.gridLayoutWidget_2)
+        self.lbDropDistance.setObjectName(u"lbDropDistance")
+
+        self.gridLayout_2.addWidget(self.lbDropDistance, 0, 0, 1, 1)
+
+        self.txtCruiseAltitude = QLineEdit(self.gridLayoutWidget_2)
+        self.txtCruiseAltitude.setObjectName(u"txtCruiseAltitude")
+
+        self.gridLayout_2.addWidget(self.txtCruiseAltitude, 0, 1, 1, 1)
+
         self.tabWidget.addTab(self.tbBWB, "")
         self.tbTW = QWidget()
         self.tbTW.setObjectName(u"tbTW")
@@ -125,7 +141,7 @@ class Ui_Widget(object):
 
         self.retranslateUi(Widget)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(Widget)
@@ -143,6 +159,7 @@ class Ui_Widget(object):
         self.lbWingspan.setText(QCoreApplication.translate("Widget", u"Square Footage:", None))
         self.lbWingspan_2.setText(QCoreApplication.translate("Widget", u"Wing", None))
         self.lbWingspan_3.setText(QCoreApplication.translate("Widget", u"Vertical Tail", None))
+        self.lbDropDistance.setText(QCoreApplication.translate("Widget", u"Payload drop off distance:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbBWB), QCoreApplication.translate("Widget", u"BWB", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbTW), QCoreApplication.translate("Widget", u"Tube And Wing", None))
     # retranslateUi
