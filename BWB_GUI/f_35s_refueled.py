@@ -102,7 +102,7 @@
 
 #get_number_f_35s(bwb)
 
-def get_number_f_35s(bwb, mainSheet)       # compare_x40_to_018()
+def get_number_f_35s(bwb, mainSheet):       # compare_x40_to_018()
     f35_max_fuel = 18000                       # Maximum fuel capacity of F-35 in pounds
     f35_refuel_threshold = .2
 
