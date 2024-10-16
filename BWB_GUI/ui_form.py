@@ -128,10 +128,10 @@ class Ui_Widget(object):
 
         self.gridLayout_2.addWidget(self.lbDropDistance, 0, 0, 1, 1)
 
-        self.txtCruiseAltitude = QLineEdit(self.gridLayoutWidget_2)
-        self.txtCruiseAltitude.setObjectName(u"txtCruiseAltitude")
+        self.txtDropDistance = QLineEdit(self.gridLayoutWidget_2)
+        self.txtDropDistance.setObjectName(u"txtDropDistance")
 
-        self.gridLayout_2.addWidget(self.txtCruiseAltitude, 0, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.txtDropDistance, 0, 1, 1, 1)
 
         self.tabWidget.addTab(self.tbBWB, "")
         self.tbTW = QWidget()

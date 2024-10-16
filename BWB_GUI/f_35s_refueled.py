@@ -109,10 +109,10 @@ def get_number_f_35s(bwb, mainSheet):       # compare_x40_to_018()
     max_number_f35s = 80000  # Max number of F-35s to attempt refueling
     for i in range(1, max_number_f35s + 1):
 
-        mainSheet["017"].value = f35_max_fuel*(1-f35_refuel_threshold)*i
+        mainSheet["O17"].value = f35_max_fuel*(1-f35_refuel_threshold)*i
 
         # Count number of iterations to know how many f-35s can be refueled
-        if mainSheet["X40"] > mainSheet["O18"]:
+        if mainSheet["X40"].value > mainSheet["O18"].value:
             bwb.numFighter = i-1
             break
 

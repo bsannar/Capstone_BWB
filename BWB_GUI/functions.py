@@ -27,7 +27,7 @@ class Functions():
         self.ui.txtVertTailAspectRatio.setText(str(mainSheet["H19"].value))
         self.ui.txtVertTailTaperRatio.setText(str(mainSheet["H20"].value))
         self.ui.txtVertTailSweep.setText(str(mainSheet["H21"].value))
-        self.ui.txtCruiseAltitude.setText(str(mainSheet["N38"].value + mainSheet["M38"].value + mainSheet["P38"].value + mainSheet["L38"].value))
+        self.ui.txtDropDistance.setText(str(mainSheet["N38"].value + mainSheet["M38"].value + mainSheet["P38"].value + mainSheet["L38"].value))
 
         wb.close()
         xl.quit()
@@ -128,7 +128,7 @@ class Functions():
         vertTailAspectRatio = self.ui.txtVertTailAspectRatio.text()
         vertTailTaperRatio = self.ui.txtVertTailTaperRatio.text()
         vertTailSweep = self.ui.txtVertTailSweep.text()
-        payloadDropDistance = self.ui.txtDropDistance.text()
+        payloadDropDistance = float(self.ui.txtDropDistance.text())
 
         mainSheet["B18"].value = wingSqFt
         mainSheet["B19"].value = wingAspectRatio
@@ -144,22 +144,26 @@ class Functions():
         dryWeight = mainSheet["O23"].value
         fuelCapacity = mainSheet["O18"].value
         specificFuelConsumption = mainSheet["C30"].value
+        maxLiftToDragRatio = 0
+        for i in range(26, 47):
+            liftToDragRatio = performanceSheet['Z'+str(i)].value
+            if liftToDragRatio > maxLiftToDragRatio:
+                maxLiftToDragRatio = liftToDragRatio
 
-        wb.save("new_BWB_tanker.xlsm")
+        bwb = BWB(wingSqFt, vertTailSqFt, wingAspectRatio, vertTailAspectRatio, wingTaperRatio, vertTailTaperRatio, wingSweep, vertTailSweep,
+                dryWeight, fuelCapacity, specificFuelConsumption, maxLiftToDragRatio, payloadDropDistance)
+        get_number_f_35s(bwb, mainSheet)
+        calculate_max_range(bwb, mainSheet)
+
         wb.close()
         xl.quit()
         print("Finished")
-
-        bwb = BWB(wingSqFt, vertTailSqFt, wingAspectRatio, vertTailAspectRatio, wingTaperRatio, vertTailTaperRatio, wingSweep, vertTailSweep,
-                dryWeight, fuelCapacity, specificFuelConsumption, maxLiftToDragRatio, maxMachNumber, cruiseAltitude)
-        get_number_f_35s(bwb, mainSheet)
-        calculate_max_range(bwb, mainSheet)
-        print(bwb.maxRange)
         self.bwb_configurations_list.append(bwb)
 
-def calculate_max_range(bwb):
-    for nautical_miles in range(1, 999999):
-        mainSheet["017"].value = nautical_miles
-        if mainSheet["X40"] > mainSheet["O18"]:
-            bwb.maxRange = nautical_miles
+def calculate_max_range(bwb, mainSheet):
+    mainSheet["O17"].value = 0
+    for nautical_miles in range(1, 99999):
+        mainSheet["N38"].value = nautical_miles*50 - mainSheet["M38"].value - mainSheet["P38"].value - mainSheet["L38"].value
+        if mainSheet["X40"].value > mainSheet["O18"].value:
+            bwb.maxRange = (nautical_miles-1)*100
             break

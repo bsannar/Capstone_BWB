@@ -12,8 +12,7 @@ class BWB:
     fuelCap,
     sFuelConsum,
     liftDrag,
-    machNumber,
-    cruiseAltitude,
+    payloadDropDistance,
     resFraction=0.1):
         self.sqFtWing = sqFtWing
         self.sqFtVertTail = sqFtVertTail
@@ -28,7 +27,6 @@ class BWB:
         self.sFuelConsum = sFuelConsum
         self.liftDrag = liftDrag
         self.resFraction = resFraction
-        self.machNumber = machNumber
-        self.cruiseAltitude = cruiseAltitude
+        self.payloadDropDistance = payloadDropDistance
         self.numFighter = None
         self.maxRange = None
