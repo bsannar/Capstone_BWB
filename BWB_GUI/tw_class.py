@@ -1,23 +1,22 @@
 import csv
 from datetime import datetime
 
-class BWB:
+class TW:
     def __init__(self,
-    sqFtWing,
-    sqFtVertTail,
-    aspectWing,
-    aspectVertTail,
-    taperRatioWing,
-    taperRatioVertTail,
-    sweepWing,
-    sweepVertTail,
-    dryWeight,
-    fuelCap,
-    sFuelConsum,
-    liftDrag,
-    payloadDropDistance,
-    resFraction=0.1):
-
+                 sqFtWing,
+                 sqFtVertTail,
+                 aspectWing,
+                 aspectVertTail,
+                 taperRatioWing,
+                 taperRatioVertTail,
+                 sweepWing,
+                 sweepVertTail,
+                 dryWeight,
+                 fuelCap,
+                 sFuelConsum,
+                 liftDrag,
+                 machNumber,
+                 resFraction=0.1):
         self.sqFtWing = sqFtWing
         self.sqFtVertTail = sqFtVertTail
         self.aspectWing = aspectWing
@@ -31,9 +30,8 @@ class BWB:
         self.sFuelConsum = sFuelConsum
         self.liftDrag = liftDrag
         self.resFraction = resFraction
-        self.payloadDropDistance = payloadDropDistance
+        self.machNumber = machNumber
         self.numFighter = None
-        self.maxRange = None
         
         # Update CSV with the current instance's data
         self.update_csv()
@@ -43,10 +41,10 @@ class BWB:
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
         # Create a list of the current values
-        values = ["BWB",self.sqFtWing, self.sqFtVertTail, self.aspectWing, self.aspectVertTail,
+        values = ["T&W",self.sqFtWing, self.sqFtVertTail, self.aspectWing, self.aspectVertTail,
                   self.taperRatioWing, self.taperRatioVertTail, self.sweepWing, self.sweepVertTail,
                   self.dryWeight, self.fuelCap, self.sFuelConsum, self.liftDrag, self.resFraction,
-                  self.payloadDropDistance, self.numFighter, self.maxRange]
+                  self.machNumber]
               
         # Data to be written to the CSV
         row = [current_time] + values
