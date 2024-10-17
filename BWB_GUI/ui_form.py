@@ -138,10 +138,13 @@ class Ui_Widget(object):
         self.tbTW.setObjectName(u"tbTW")
         self.tbTW.setEnabled(True)
         self.tabWidget.addTab(self.tbTW, "")
+        self.tab = QWidget()
+        self.tab.setObjectName(u"tab")
+        self.tabWidget.addTab(self.tab, "")
 
         self.retranslateUi(Widget)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(Widget)
@@ -162,5 +165,6 @@ class Ui_Widget(object):
         self.lbDropDistance.setText(QCoreApplication.translate("Widget", u"Payload drop off distance:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbBWB), QCoreApplication.translate("Widget", u"BWB", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbTW), QCoreApplication.translate("Widget", u"Tube And Wing", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("Widget", u"Mission Parameters", None))
     # retranslateUi
 

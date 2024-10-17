@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="tbMain">
     <attribute name="title">
@@ -183,6 +183,11 @@
     </property>
     <attribute name="title">
      <string>Tube And Wing</string>
+    </attribute>
+   </widget>
+   <widget class="QWidget" name="tab">
+    <attribute name="title">
+     <string>Mission Parameters</string>
     </attribute>
    </widget>
   </widget>

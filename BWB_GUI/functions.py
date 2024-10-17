@@ -72,7 +72,7 @@ class Functions():
         vsp.WriteVSPFile("wing_model.vsp3")
 
     def add_plot(self):
-        x = np.arange(3)
+        x = np.arange(4)
         width = 0.2  # the width of the bars
         multiplier = 0
 
@@ -84,15 +84,17 @@ class Functions():
         rangeNormalizer = max([bwb.maxRange for bwb in self.bwb_configurations_list])
         bwbsRefueledNormalizer = 1 if max([bwb.numFighter for bwb in self.bwb_configurations_list]) == 0 else max([bwb.numFighter for bwb in self.bwb_configurations_list])
         dryWeightNormalizer = max([bwb.dryWeight for bwb in self.bwb_configurations_list])
+        liftToDragNormalizer = max([bwb.liftDrag for bwb in self.bwb_configurations_list])
 
         values = []
         bar_labels = []
         for i, bwb in enumerate(self.bwb_configurations_list):
             offset = width * multiplier
-            rects = ax.bar(x + offset, [bwb.maxRange / rangeNormalizer, bwb.numFighter / bwbsRefueledNormalizer, bwb.dryWeight / dryWeightNormalizer], width, label="Config "+str(i+1))
+            rects = ax.bar(x + offset, [bwb.maxRange / rangeNormalizer, bwb.numFighter / bwbsRefueledNormalizer, bwb.dryWeight / dryWeightNormalizer, bwb.liftDrag / liftToDragNormalizer], width, label="Config "+str(i+1))
             values.append(bwb.maxRange)
             values.append(bwb.numFighter)
             values.append(bwb.dryWeight)
+            values.append(bwb.liftDrag)
             labels = ax.bar_label(rects, padding=3)
             bar_labels.extend(labels)
             multiplier += 1
@@ -104,7 +106,7 @@ class Functions():
         numBWBs = len(self.bwb_configurations_list)
         ax.set_ylabel('Normalized Performance')
         ax.set_title('BWB Performance')
-        ax.set_xticks(x + (width * (numBWBs - 1))/2, ["Range (nautical mi)", "F35s Refueled", "Dry Weight (lbs)"])
+        ax.set_xticks(x + (width * (numBWBs - 1))/2, ["Range (nautical mi)", "F35s Refueled", "Dry Weight (lbs)", "Lift/Drag"])
         ax.legend(loc='upper left', ncols=numBWBs)
         ax.set_ylim(0, 1.2)
 
@@ -138,7 +140,7 @@ class Functions():
         mainSheet["H19"].value = vertTailAspectRatio
         mainSheet["H20"].value = vertTailTaperRatio
         mainSheet["H21"].value = vertTailSweep
-        mainSheet["N38"].value = payloadDropDistance - mainSheet["M38"].value - mainSheet["P38"].value - mainSheet["L38"].value
+        set_payload_drop_distance(mainSheet, payloadDropDistance)
 
         takeOffWeight = mainSheet["O15"].value
         dryWeight = mainSheet["O23"].value
@@ -160,10 +162,13 @@ class Functions():
         print("Finished")
         self.bwb_configurations_list.append(bwb)
 
+def set_payload_drop_distance(mainSheet, payloadDropDistance):
+    mainSheet["N38"].value = payloadDropDistance - mainSheet["M38"].value - mainSheet["P38"].value - mainSheet["L38"].value
+
 def calculate_max_range(bwb, mainSheet):
     mainSheet["O17"].value = 0
-    for nautical_miles in range(1, 99999):
-        mainSheet["N38"].value = nautical_miles*50 - mainSheet["M38"].value - mainSheet["P38"].value - mainSheet["L38"].value
+    for nautical_miles in range(1, 10000):
+        set_payload_drop_distance(mainSheet, nautical_miles*50)
         if mainSheet["X40"].value > mainSheet["O18"].value:
             bwb.maxRange = (nautical_miles-1)*100
             break
