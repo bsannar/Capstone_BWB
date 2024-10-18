@@ -16,7 +16,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QGridLayout, QLabel, QLineEdit,
-    QPushButton, QSizePolicy, QTabWidget, QWidget)
+    QPushButton, QSizePolicy, QTabWidget, QToolButton,
+    QWidget)
 
 class Ui_Widget(object):
     def setupUi(self, Widget):
@@ -30,11 +31,16 @@ class Ui_Widget(object):
         self.tbMain.setObjectName(u"tbMain")
         self.imgPlot = QLabel(self.tbMain)
         self.imgPlot.setObjectName(u"imgPlot")
-        self.imgPlot.setGeometry(QRect(20, 20, 751, 471))
+        self.imgPlot.setGeometry(QRect(20, 20, 611, 471))
         self.imgPlot.setPixmap(QPixmap(u"plot_placeholder.png"))
         self.btnPlot = QPushButton(self.tbMain)
         self.btnPlot.setObjectName(u"btnPlot")
-        self.btnPlot.setGeometry(QRect(350, 500, 83, 29))
+        self.btnPlot.setGeometry(QRect(280, 500, 83, 29))
+        self.ddMissionParameters = QToolButton(self.tbMain)
+        self.ddMissionParameters.setObjectName(u"ddMissionParameters")
+        self.ddMissionParameters.setGeometry(QRect(650, 20, 131, 31))
+        self.ddMissionParameters.setAcceptDrops(False)
+        self.ddMissionParameters.setCheckable(False)
         self.tabWidget.addTab(self.tbMain, "")
         self.tbBWB = QWidget()
         self.tbBWB.setObjectName(u"tbBWB")
@@ -154,6 +160,7 @@ class Ui_Widget(object):
         Widget.setWindowTitle(QCoreApplication.translate("Widget", u"Widget", None))
         self.imgPlot.setText("")
         self.btnPlot.setText(QCoreApplication.translate("Widget", u"plot", None))
+        self.ddMissionParameters.setText(QCoreApplication.translate("Widget", u"Mission Parameters", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbMain), QCoreApplication.translate("Widget", u"Main", None))
         self.btnUpdate.setText(QCoreApplication.translate("Widget", u"Update", None))
         self.label_6.setText(QCoreApplication.translate("Widget", u"Sweep:", None))

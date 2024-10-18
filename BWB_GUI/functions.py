@@ -6,6 +6,7 @@ from PySide6.QtGui import QPixmap
 from bwb_class import BWB
 from f_35s_refueled import get_number_f_35s
 import numpy as np
+import dropdowns
 
 class Functions():
     def __init__(self, ui):
@@ -72,7 +73,9 @@ class Functions():
         vsp.WriteVSPFile("wing_model.vsp3")
 
     def add_plot(self):
-        x = np.arange(4)
+        plotVars = [item.text() for item in self.ui.ddMissionParameters.menu().actions() if item.isChecked()]
+        print(plotVars)
+        x = np.arange(len(plotVars))
         width = 0.2  # the width of the bars
         multiplier = 0
 
@@ -81,32 +84,27 @@ class Functions():
         plt.figure(figsize=(size.width()*px, size.height()*px))
         fig, ax = plt.subplots(layout='constrained', figsize=(size.width()*px, size.height()*px))
 
-        rangeNormalizer = max([bwb.maxRange for bwb in self.bwb_configurations_list])
-        bwbsRefueledNormalizer = 1 if max([bwb.numFighter for bwb in self.bwb_configurations_list]) == 0 else max([bwb.numFighter for bwb in self.bwb_configurations_list])
-        dryWeightNormalizer = max([bwb.dryWeight for bwb in self.bwb_configurations_list])
-        liftToDragNormalizer = max([bwb.liftDrag for bwb in self.bwb_configurations_list])
-
+        normalizers = [max([float(vars(bwb)[plotVar]) for bwb in self.bwb_configurations_list]) for plotVar in plotVars]
         values = []
         bar_labels = []
         for i, bwb in enumerate(self.bwb_configurations_list):
             offset = width * multiplier
-            rects = ax.bar(x + offset, [bwb.maxRange / rangeNormalizer, bwb.numFighter / bwbsRefueledNormalizer, bwb.dryWeight / dryWeightNormalizer, bwb.liftDrag / liftToDragNormalizer], width, label="Config "+str(i+1))
-            values.append(bwb.maxRange)
-            values.append(bwb.numFighter)
-            values.append(bwb.dryWeight)
-            values.append(bwb.liftDrag)
+            labelValues = [float(vars(bwb)[plotVar]) for plotVar in plotVars]
+            normalizedValues = [var/norm for var, norm in zip(labelValues, normalizers)]
+            rects = ax.bar(x + offset, normalizedValues, width, label="Config "+str(i+1))
+            values.extend(labelValues)
             labels = ax.bar_label(rects, padding=3)
             bar_labels.extend(labels)
             multiplier += 1
 
         for label, value in zip(bar_labels, values):
-            label.set_text(int(np.round(value)))
+            label.set_text(value)
 
         # Add some text for labels, title and custom x-axis tick labels, etc.
         numBWBs = len(self.bwb_configurations_list)
         ax.set_ylabel('Normalized Performance')
         ax.set_title('BWB Performance')
-        ax.set_xticks(x + (width * (numBWBs - 1))/2, ["Range (nautical mi)", "F35s Refueled", "Dry Weight (lbs)", "Lift/Drag"])
+        ax.set_xticks(x + (width * (numBWBs - 1))/2, plotVars)
         ax.legend(loc='upper left', ncols=numBWBs)
         ax.set_ylim(0, 1.2)
 
@@ -161,6 +159,8 @@ class Functions():
         xl.quit()
         print("Finished")
         self.bwb_configurations_list.append(bwb)
+
+        dropdowns.setup_dropdown(self.ui.ddMissionParameters, vars(bwb))
 
 def set_payload_drop_distance(mainSheet, payloadDropDistance):
     mainSheet["N38"].value = payloadDropDistance - mainSheet["M38"].value - mainSheet["P38"].value - mainSheet["L38"].value

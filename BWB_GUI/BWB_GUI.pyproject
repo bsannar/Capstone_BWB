@@ -4,6 +4,7 @@
         "form.ui",
         "functions.py",
         "f_35s_refueled.py",
-        "bwb_class.py"
+        "bwb_class.py",
+        "dropdowns.py"
     ]
 }
