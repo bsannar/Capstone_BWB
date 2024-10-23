@@ -5,6 +5,9 @@
         "functions.py",
         "f_35s_refueled.py",
         "bwb_class.py",
-        "dropdowns.py"
+        "dropdowns.py",
+        "DST_md.csv",
+        "tw_class.py",
+        "config_saver.py"
     ]
 }
