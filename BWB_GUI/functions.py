@@ -74,7 +74,6 @@ class Functions():
 
     def add_plot(self):
         plotVars = [item.text() for item in self.ui.ddMissionParameters.menu().actions() if item.isChecked()]
-        print(plotVars)
         x = np.arange(len(plotVars))
         width = 0.2  # the width of the bars
         multiplier = 0
@@ -93,19 +92,20 @@ class Functions():
             normalizedValues = [var/norm for var, norm in zip(labelValues, normalizers)]
             rects = ax.bar(x + offset, normalizedValues, width, label="Config "+str(i+1))
             values.extend(labelValues)
-            labels = ax.bar_label(rects, padding=3)
+            labels = ax.bar_label(rects, rotation=40)
             bar_labels.extend(labels)
             multiplier += 1
 
         for label, value in zip(bar_labels, values):
-            label.set_text(value)
+            label.set_text(f"{value:.2e}")
+
 
         # Add some text for labels, title and custom x-axis tick labels, etc.
         numBWBs = len(self.bwb_configurations_list)
         ax.set_ylabel('Normalized Performance')
         ax.set_title('BWB Performance')
-        ax.set_xticks(x + (width * (numBWBs - 1))/2, plotVars)
-        ax.legend(loc='upper left', ncols=numBWBs)
+        ax.set_xticks(x + (width * (numBWBs - 1))/2, plotVars, rotation=20)
+        ax.legend(bbox_to_anchor=(1, 1), loc='upper left')
         ax.set_ylim(0, 1.2)
 
         plt.savefig("BWB_performance.png")

@@ -1,215 +1,223 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Widget</class>
- <widget class="QWidget" name="Widget">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>837</width>
+    <height>628</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Widget</string>
   </property>
-  <widget class="QTabWidget" name="tabWidget">
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_5" rowstretch="0" columnstretch="0">
+    <property name="sizeConstraint">
+     <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+    </property>
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tbMain">
+       <attribute name="title">
+        <string>Main</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0">
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="1">
+           <widget class="QToolButton" name="ddMissionParameters">
+            <property name="acceptDrops">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Mission Parameters</string>
+            </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="btnPlot">
+            <property name="text">
+             <string>plot</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="imgPlot">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap>plot_placeholder.png</pixmap>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tbBWB">
+       <attribute name="title">
+        <string>BWB</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_6">
+        <item row="0" column="0">
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>Sweep:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="2">
+           <widget class="QLineEdit" name="txtVertTailSweep"/>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLineEdit" name="txtWingSweep"/>
+          </item>
+          <item row="2" column="2">
+           <widget class="QLineEdit" name="txtVertTailAspectRatio"/>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>Taper Ratio:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="lbTailspan">
+            <property name="text">
+             <string>Aspect Ratio:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="txtWingTaperRatio"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="lbWingspan">
+            <property name="text">
+             <string>Square Footage:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLineEdit" name="txtVertTailSqFt"/>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="txtWingAspectRatio"/>
+          </item>
+          <item row="3" column="2">
+           <widget class="QLineEdit" name="txtVertTailTaperRatio"/>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="txtWingSqFt"/>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="lbWingspan_2">
+            <property name="text">
+             <string>Wing</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="lbWingspan_3">
+            <property name="text">
+             <string>Vertical Tail</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="0" column="1">
+         <widget class="QPushButton" name="btnUpdate">
+          <property name="text">
+           <string>Update</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbDropDistance">
+            <property name="text">
+             <string>Payload drop off distance:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="txtDropDistance"/>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tbTW">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <attribute name="title">
+        <string>Tube And Wing</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tbMissionParameters">
+       <attribute name="title">
+        <string>Mission Parameters</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tbAssumptions">
+       <attribute name="title">
+        <string>Assumptions</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>801</width>
-     <height>601</height>
+     <width>837</width>
+     <height>25</height>
     </rect>
    </property>
-   <property name="currentIndex">
-    <number>0</number>
-   </property>
-   <widget class="QWidget" name="tbMain">
-    <attribute name="title">
-     <string>Main</string>
-    </attribute>
-    <widget class="QLabel" name="imgPlot">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>20</y>
-       <width>611</width>
-       <height>471</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap>plot_placeholder.png</pixmap>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="btnPlot">
-     <property name="geometry">
-      <rect>
-       <x>280</x>
-       <y>500</y>
-       <width>83</width>
-       <height>29</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>plot</string>
-     </property>
-    </widget>
-    <widget class="QToolButton" name="ddMissionParameters">
-     <property name="geometry">
-      <rect>
-       <x>650</x>
-       <y>20</y>
-       <width>131</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="acceptDrops">
-      <bool>false</bool>
-     </property>
-     <property name="text">
-      <string>Mission Parameters</string>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="tbBWB">
-    <attribute name="title">
-     <string>BWB</string>
-    </attribute>
-    <widget class="QPushButton" name="btnUpdate">
-     <property name="geometry">
-      <rect>
-       <x>660</x>
-       <y>30</y>
-       <width>83</width>
-       <height>29</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Update</string>
-     </property>
-    </widget>
-    <widget class="QWidget" name="gridLayoutWidget">
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>20</y>
-       <width>341</width>
-       <height>171</height>
-      </rect>
-     </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="4" column="0">
-       <widget class="QLabel" name="label_6">
-        <property name="text">
-         <string>Sweep:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="2">
-       <widget class="QLineEdit" name="txtVertTailSweep"/>
-      </item>
-      <item row="4" column="1">
-       <widget class="QLineEdit" name="txtWingSweep"/>
-      </item>
-      <item row="2" column="2">
-       <widget class="QLineEdit" name="txtVertTailAspectRatio"/>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>Taper Ratio:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="lbTailspan">
-        <property name="text">
-         <string>Aspect Ratio:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QLineEdit" name="txtWingTaperRatio"/>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="lbWingspan">
-        <property name="text">
-         <string>Square Footage:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QLineEdit" name="txtVertTailSqFt"/>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLineEdit" name="txtWingAspectRatio"/>
-      </item>
-      <item row="3" column="2">
-       <widget class="QLineEdit" name="txtVertTailTaperRatio"/>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="txtWingSqFt"/>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="lbWingspan_2">
-        <property name="text">
-         <string>Wing</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QLabel" name="lbWingspan_3">
-        <property name="text">
-         <string>Vertical Tail</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QWidget" name="gridLayoutWidget_2">
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>210</y>
-       <width>341</width>
-       <height>80</height>
-      </rect>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0">
-       <widget class="QLabel" name="lbDropDistance">
-        <property name="text">
-         <string>Payload drop off distance:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="txtDropDistance"/>
-      </item>
-     </layout>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="tbTW">
-    <property name="enabled">
-     <bool>true</bool>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
     </property>
-    <attribute name="title">
-     <string>Tube And Wing</string>
-    </attribute>
+    <addaction name="actionSave"/>
+    <addaction name="actionOpen"/>
+    <addaction name="actionExit"/>
    </widget>
-   <widget class="QWidget" name="tab">
-    <attribute name="title">
-     <string>Mission Parameters</string>
-    </attribute>
-   </widget>
+   <addaction name="menuFile"/>
   </widget>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

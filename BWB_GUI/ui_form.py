@@ -11,36 +11,57 @@
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QGridLayout, QLabel, QLineEdit,
-    QPushButton, QSizePolicy, QTabWidget, QToolButton,
-    QWidget)
+from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
+    QCursor, QFont, QFontDatabase, QGradient,
+    QIcon, QImage, QKeySequence, QLinearGradient,
+    QPainter, QPalette, QPixmap, QRadialGradient,
+    QTransform)
+from PySide6.QtWidgets import (QApplication, QGridLayout, QLabel, QLayout,
+    QLineEdit, QMainWindow, QMenu, QMenuBar,
+    QPushButton, QSizePolicy, QStatusBar, QTabWidget,
+    QToolButton, QWidget)
 
-class Ui_Widget(object):
-    def setupUi(self, Widget):
-        if not Widget.objectName():
-            Widget.setObjectName(u"Widget")
-        Widget.resize(800, 600)
-        self.tabWidget = QTabWidget(Widget)
+class Ui_MainWindow(object):
+    def setupUi(self, MainWindow):
+        if not MainWindow.objectName():
+            MainWindow.setObjectName(u"MainWindow")
+        MainWindow.resize(837, 628)
+        self.actionExit = QAction(MainWindow)
+        self.actionExit.setObjectName(u"actionExit")
+        self.centralwidget = QWidget(MainWindow)
+        self.centralwidget.setObjectName(u"centralwidget")
+        self.gridLayout_5 = QGridLayout(self.centralwidget)
+        self.gridLayout_5.setObjectName(u"gridLayout_5")
+        self.gridLayout_5.setSizeConstraint(QLayout.SizeConstraint.SetNoConstraint)
+        self.tabWidget = QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName(u"tabWidget")
-        self.tabWidget.setGeometry(QRect(0, 0, 801, 601))
         self.tbMain = QWidget()
         self.tbMain.setObjectName(u"tbMain")
-        self.imgPlot = QLabel(self.tbMain)
-        self.imgPlot.setObjectName(u"imgPlot")
-        self.imgPlot.setGeometry(QRect(20, 20, 611, 471))
-        self.imgPlot.setPixmap(QPixmap(u"plot_placeholder.png"))
-        self.btnPlot = QPushButton(self.tbMain)
-        self.btnPlot.setObjectName(u"btnPlot")
-        self.btnPlot.setGeometry(QRect(280, 500, 83, 29))
+        self.gridLayout_4 = QGridLayout(self.tbMain)
+        self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.gridLayout_3 = QGridLayout()
+        self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.ddMissionParameters = QToolButton(self.tbMain)
         self.ddMissionParameters.setObjectName(u"ddMissionParameters")
-        self.ddMissionParameters.setGeometry(QRect(650, 20, 131, 31))
         self.ddMissionParameters.setAcceptDrops(False)
         self.ddMissionParameters.setCheckable(False)
+
+        self.gridLayout_3.addWidget(self.ddMissionParameters, 0, 1, 1, 1)
+
+        self.btnPlot = QPushButton(self.tbMain)
+        self.btnPlot.setObjectName(u"btnPlot")
+
+        self.gridLayout_3.addWidget(self.btnPlot, 1, 0, 1, 1)
+
+        self.imgPlot = QLabel(self.tbMain)
+        self.imgPlot.setObjectName(u"imgPlot")
+        self.imgPlot.setPixmap(QPixmap(u"plot_placeholder.png"))
+
+        self.gridLayout_3.addWidget(self.imgPlot, 0, 0, 1, 1)
+
+
+        self.gridLayout_4.addLayout(self.gridLayout_3, 0, 0, 1, 1)
+
         self.tabWidget.addTab(self.tbMain, "")
         self.tbBWB = QWidget()
         self.tbBWB.setObjectName(u"tbBWB")
@@ -148,30 +169,48 @@ class Ui_Widget(object):
         self.tab.setObjectName(u"tab")
         self.tabWidget.addTab(self.tab, "")
 
-        self.retranslateUi(Widget)
+        self.gridLayout_5.addWidget(self.tabWidget, 0, 0, 1, 1)
+
+        MainWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QMenuBar(MainWindow)
+        self.menubar.setObjectName(u"menubar")
+        self.menubar.setGeometry(QRect(0, 0, 837, 25))
+        self.menuFile = QMenu(self.menubar)
+        self.menuFile.setObjectName(u"menuFile")
+        MainWindow.setMenuBar(self.menubar)
+        self.statusbar = QStatusBar(MainWindow)
+        self.statusbar.setObjectName(u"statusbar")
+        MainWindow.setStatusBar(self.statusbar)
+
+        self.menubar.addAction(self.menuFile.menuAction())
+        self.menuFile.addAction(self.actionExit)
+
+        self.retranslateUi(MainWindow)
 
         self.tabWidget.setCurrentIndex(0)
 
 
-        QMetaObject.connectSlotsByName(Widget)
+        QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
 
-    def retranslateUi(self, Widget):
-        Widget.setWindowTitle(QCoreApplication.translate("Widget", u"Widget", None))
+    def retranslateUi(self, MainWindow):
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Widget", None))
+        self.actionExit.setText(QCoreApplication.translate("MainWindow", u"Exit", None))
+        self.ddMissionParameters.setText(QCoreApplication.translate("MainWindow", u"Mission Parameters", None))
+        self.btnPlot.setText(QCoreApplication.translate("MainWindow", u"plot", None))
         self.imgPlot.setText("")
-        self.btnPlot.setText(QCoreApplication.translate("Widget", u"plot", None))
-        self.ddMissionParameters.setText(QCoreApplication.translate("Widget", u"Mission Parameters", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbMain), QCoreApplication.translate("Widget", u"Main", None))
-        self.btnUpdate.setText(QCoreApplication.translate("Widget", u"Update", None))
-        self.label_6.setText(QCoreApplication.translate("Widget", u"Sweep:", None))
-        self.label_5.setText(QCoreApplication.translate("Widget", u"Taper Ratio:", None))
-        self.lbTailspan.setText(QCoreApplication.translate("Widget", u"Aspect Ratio:", None))
-        self.lbWingspan.setText(QCoreApplication.translate("Widget", u"Square Footage:", None))
-        self.lbWingspan_2.setText(QCoreApplication.translate("Widget", u"Wing", None))
-        self.lbWingspan_3.setText(QCoreApplication.translate("Widget", u"Vertical Tail", None))
-        self.lbDropDistance.setText(QCoreApplication.translate("Widget", u"Payload drop off distance:", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbBWB), QCoreApplication.translate("Widget", u"BWB", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbTW), QCoreApplication.translate("Widget", u"Tube And Wing", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("Widget", u"Mission Parameters", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbMain), QCoreApplication.translate("MainWindow", u"Main", None))
+        self.btnUpdate.setText(QCoreApplication.translate("MainWindow", u"Update", None))
+        self.label_6.setText(QCoreApplication.translate("MainWindow", u"Sweep:", None))
+        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Taper Ratio:", None))
+        self.lbTailspan.setText(QCoreApplication.translate("MainWindow", u"Aspect Ratio:", None))
+        self.lbWingspan.setText(QCoreApplication.translate("MainWindow", u"Square Footage:", None))
+        self.lbWingspan_2.setText(QCoreApplication.translate("MainWindow", u"Wing", None))
+        self.lbWingspan_3.setText(QCoreApplication.translate("MainWindow", u"Vertical Tail", None))
+        self.lbDropDistance.setText(QCoreApplication.translate("MainWindow", u"Payload drop off distance:", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbBWB), QCoreApplication.translate("MainWindow", u"BWB", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbTW), QCoreApplication.translate("MainWindow", u"Tube And Wing", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Mission Parameters", None))
+        self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
     # retranslateUi
 

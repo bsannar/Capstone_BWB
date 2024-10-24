@@ -1,6 +1,6 @@
 {
     "files": [
-        "widget.py",
+        "mainwindow.py",
         "form.ui",
         "functions.py",
         "f_35s_refueled.py",
