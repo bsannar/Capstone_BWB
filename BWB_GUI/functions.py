@@ -11,15 +11,14 @@ import dropdowns
 class Functions():
     def __init__(self, ui):
         self.ui = ui
+        self.xl = xw.App(visible=False)
+        self.wb = self.xl.books.open("Assets/BWB_tanker.xlsm")
         self.setupGUI()
         self.connect_all()
         self.bwb_configurations_list = []
 
     def setupGUI(self):
-        xl = xw.App(visible=False)
-        wb = xl.books.open("Assets/BWB_tanker.xlsm")
-        mainSheet = wb.sheets["Main"]
-
+        mainSheet = self.wb.sheets["Main"]
         self.ui.txtWingSqFt.setText(str(mainSheet["B18"].value))
         self.ui.txtWingAspectRatio.setText(str(mainSheet["B19"].value))
         self.ui.txtWingTaperRatio.setText(str(mainSheet["B20"].value))
@@ -29,9 +28,6 @@ class Functions():
         self.ui.txtVertTailTaperRatio.setText(str(mainSheet["H20"].value))
         self.ui.txtVertTailSweep.setText(str(mainSheet["H21"].value))
         self.ui.txtDropDistance.setText(str(mainSheet["N38"].value + mainSheet["M38"].value + mainSheet["P38"].value + mainSheet["L38"].value))
-
-        wb.close()
-        xl.quit()
 
     def connect_all(self):
         self.ui.btnPlot.clicked.connect(self.add_plot)
@@ -46,18 +42,6 @@ class Functions():
         else:
             self.ui.textBrowser.setText("Na")
 
-    def insert(self):
-
-        if len(self.ui.lst_excel.selectedItems()) == 1:
-            xl = xw.App(visible=False)
-            wb = xl.books.open("test.xlsx")
-            mainSheet = wb.mainSheets[0]
-            mainSheet[self.ui.lst_excel.selectedItems()[0].text()].value = self.ui.txt_excel.text()
-            wb.save("test.xlsx")
-            wb.close()
-            xl.quit()
-        else:
-            print("Please select an excel box")
 
     def open_vsp(self):
         vsp.ReadVSPFile("wing_model.vsp3")
@@ -114,11 +98,9 @@ class Functions():
 
     def update_geometry(self):
         print("Updating...")
-        xl = xw.App(visible=False)
-        wb = xl.books.open("Assets/BWB_tanker.xlsm")
-        mainSheet = wb.sheets["Main"]
-        weightSheet = wb.sheets["Wt"]
-        performanceSheet = wb.sheets["Perf"]
+        mainSheet = self.wb.sheets["Main"]
+        weightSheet = self.wb.sheets["Wt"]
+        performanceSheet = self.wb.sheets["Perf"]
 
         wingSqFt = self.ui.txtWingSqFt.text()
         wingAspectRatio = self.ui.txtWingAspectRatio.text()
@@ -154,12 +136,8 @@ class Functions():
                 dryWeight, fuelCapacity, specificFuelConsumption, maxLiftToDragRatio, payloadDropDistance)
         get_number_f_35s(bwb, mainSheet)
         calculate_max_range(bwb, mainSheet)
-
-        wb.close()
-        xl.quit()
         print("Finished")
         self.bwb_configurations_list.append(bwb)
-
         dropdowns.setup_dropdown(self.ui.ddMissionParameters, vars(bwb))
 
 def set_payload_drop_distance(mainSheet, payloadDropDistance):

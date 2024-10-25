@@ -23,6 +23,14 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.functions = Functions(self.ui)
+        self.xl = self.functions.xl
+        self.wb = self.functions.wb
+
+    def closeEvent(self, *args, **kwargs):
+        super(QMainWindow, self).closeEvent(*args, **kwargs)
+        self.wb.close()
+        self.xl.quit()
+        print( "you just closed the pyqt window!!! you are awesome!!!")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
