@@ -7,6 +7,7 @@ from bwb_class import BWB
 from f_35s_refueled import get_number_f_35s
 import numpy as np
 import dropdowns
+import config_saver as save
 
 class Functions():
     def __init__(self, ui):
@@ -32,6 +33,8 @@ class Functions():
     def connect_all(self):
         self.ui.btnPlot.clicked.connect(self.add_plot)
         self.ui.btnUpdate.clicked.connect(self.update_geometry)
+        self.ui.actionSave.triggered.connect(lambda: save.class_to_csv(self.bwb_configurations_list))
+
 
     def add(self):
         txt_one = self.ui.lineEdit.text()

@@ -1,42 +1,25 @@
-import csv
-import os
+# config_saver.py
+def class_to_csv(bwb_configurations_list):
+    import csv
 
-class MyClass:
-    def __init__(self, name, age, city):
-        self.name = name
-        self.age = age
-        self.city = city
+    # Check if there is at least one configuration in the list to define the headers
+    if not bwb_configurations_list:
+        print("No configurations to save.")
+        return
 
-def class_to_csv(obj, filename):
-    # Get the attributes of the class as a dictionary
-    class_attributes = vars(obj)
-    
-    # Check if the file already exists
-    file_exists = os.path.isfile(filename)
-    
-    # Determine the next config number
-    next_config = 1
-    if file_exists:
-        with open(filename, mode='r', newline='') as file:
-            reader = csv.reader(file)
-            rows = list(reader)
-            if len(rows) > 1:  # There are existing rows besides the header
-                next_config = len(rows)
+    # Use vars() on the first item to get the attribute names dynamically
+    headers = list(vars(bwb_configurations_list[0]).keys())
 
-    # Append to the CSV file
-    with open(filename, mode='a', newline='') as file:
+    # Open or create the CSV file to save the configurations
+    with open('bwb_configurations.csv', mode='w', newline='') as file:
         writer = csv.writer(file)
-        
-        # Write the header (including "Config") if the file does not exist
-        if not file_exists:
-            writer.writerow(['Config'] + list(class_attributes.keys()))
-        
-        # Write the config number and the values of the dictionary
-        writer.writerow([next_config] + list(class_attributes.values()))
 
-# Example usage
-my_obj1 = MyClass("Alice", 30, "New York")
-class_to_csv(my_obj1, "output.csv")
+        # Write the header row
+        writer.writerow(headers)
 
-my_obj2 = MyClass("Ben", 26, "Gridley")
-class_to_csv(my_obj2, "output.csv")
+        # Write each configuration's values
+        for bwb in bwb_configurations_list:
+            # Get the values of all attributes dynamically using vars()
+            values = list(vars(bwb).values())
+            writer.writerow(values)
+
