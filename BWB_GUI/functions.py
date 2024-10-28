@@ -39,6 +39,7 @@ class Functions():
         self.ui.tabWidget.currentChanged.connect(self.tab_changed)
         self.ui.btnSensitivities.clicked.connect(lambda: sens.calculate_sensitivity_from_jet(self.bwb_configurations_list[-1], self.wb.sheets["Main"], "B18"))
 
+
     def open_save_dialog(self):
         file_path, _ = QFileDialog.getSaveFileName(None, "Save Workspace", "", "DST Workspace (*.csv);;All Files (*)")
         if file_path:

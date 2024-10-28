@@ -8,7 +8,7 @@
         "dropdowns.py",
         "tw_class.py",
         "config_saver.py",
-        "sensitivities.py"
-        "DST_md.csv",
+        "sensitivities.py",
+        "DST_md.csv"
     ]
 }
