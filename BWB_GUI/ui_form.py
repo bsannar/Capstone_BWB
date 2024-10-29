@@ -16,10 +16,10 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QApplication, QGridLayout, QLabel, QLayout,
-    QLineEdit, QMainWindow, QMenu, QMenuBar,
-    QPushButton, QSizePolicy, QTabWidget, QToolButton,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QGridLayout, QHeaderView, QLabel,
+    QLayout, QLineEdit, QMainWindow, QMenu,
+    QMenuBar, QPushButton, QSizePolicy, QTabWidget,
+    QTableWidget, QTableWidgetItem, QToolButton, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -173,6 +173,18 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.tbTW, "")
         self.tbMissionParameters = QWidget()
         self.tbMissionParameters.setObjectName(u"tbMissionParameters")
+        self.gridLayout_7 = QGridLayout(self.tbMissionParameters)
+        self.gridLayout_7.setObjectName(u"gridLayout_7")
+        self.tblSensitivities = QTableWidget(self.tbMissionParameters)
+        self.tblSensitivities.setObjectName(u"tblSensitivities")
+
+        self.gridLayout_7.addWidget(self.tblSensitivities, 0, 0, 1, 1)
+
+        self.btnSensitivities = QPushButton(self.tbMissionParameters)
+        self.btnSensitivities.setObjectName(u"btnSensitivities")
+
+        self.gridLayout_7.addWidget(self.btnSensitivities, 0, 1, 1, 1)
+
         self.tabWidget.addTab(self.tbMissionParameters, "")
         self.tbAssumptions = QWidget()
         self.tbAssumptions.setObjectName(u"tbAssumptions")
@@ -195,7 +207,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(3)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -220,6 +232,7 @@ class Ui_MainWindow(object):
         self.lbDropDistance.setText(QCoreApplication.translate("MainWindow", u"Payload drop off distance:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbBWB), QCoreApplication.translate("MainWindow", u"BWB", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbTW), QCoreApplication.translate("MainWindow", u"Tube And Wing", None))
+        self.btnSensitivities.setText(QCoreApplication.translate("MainWindow", u"Calculate Sensitivities", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbMissionParameters), QCoreApplication.translate("MainWindow", u"Mission Parameters", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbAssumptions), QCoreApplication.translate("MainWindow", u"Assumptions", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))

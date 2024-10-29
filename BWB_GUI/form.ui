@@ -21,7 +21,11 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
+<<<<<<< HEAD
        <number>1</number>
+=======
+       <number>3</number>
+>>>>>>> 165311a (Added very rough functionality for calculating sensitivities.)
       </property>
       <widget class="QWidget" name="tbMain">
        <attribute name="title">
@@ -174,6 +178,18 @@
        <attribute name="title">
         <string>Mission Parameters</string>
        </attribute>
+       <layout class="QGridLayout" name="gridLayout_7">
+        <item row="0" column="0">
+         <widget class="QTableWidget" name="tblSensitivities"/>
+        </item>
+        <item row="0" column="1">
+         <widget class="QPushButton" name="btnSensitivities">
+          <property name="text">
+           <string>Calculate Sensitivities</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="tbAssumptions">
        <attribute name="title">

@@ -1,13 +1,13 @@
 import xlwings as xw
 import openvsp as vsp
 import matplotlib.pyplot as plt
-import random as rnd
 from PySide6.QtGui import QPixmap
 from bwb_class import BWB
 from f_35s_refueled import get_number_f_35s
 import numpy as np
 import dropdowns
 import config_saver as save
+import sensitivities as sens
 
 class Functions():
     def __init__(self, ui):
@@ -34,17 +34,13 @@ class Functions():
         self.ui.btnPlot.clicked.connect(self.add_plot)
         self.ui.btnUpdate.clicked.connect(self.update_geometry)
         self.ui.actionSave.triggered.connect(lambda: save.class_to_csv(self.bwb_configurations_list))
+        self.ui.tabWidget.currentChanged.connect(self.tab_changed)
+        self.ui.btnSensitivities.clicked.connect(lambda: sens.calculate_sensitivity_from_jet(self.bwb_configurations_list[-1], self.wb.sheets["Main"], "B18"))
 
-
-    def add(self):
-        txt_one = self.ui.lineEdit.text()
-        txt_two = self.ui.lineEdit_2.text()
-        if txt_one.isdigit and txt_two.isdigit():
-            sum = int(txt_one) + int(txt_two)
-            self.ui.textBrowser.setText(str(sum))
-        else:
-            self.ui.textBrowser.setText("Na")
-
+    def tab_changed(self):
+        tabName = self.ui.tabWidget.currentWidget().objectName()
+        if tabName == "tbMain":
+            dropdowns.setup_dropdown(self.ui.ddMissionParameters, vars(self.bwb_configurations_list[-1]))
 
     def open_vsp(self):
         vsp.ReadVSPFile("wing_model.vsp3")
@@ -141,7 +137,6 @@ class Functions():
         calculate_max_range(bwb, mainSheet)
         print("Finished")
         self.bwb_configurations_list.append(bwb)
-        dropdowns.setup_dropdown(self.ui.ddMissionParameters, vars(bwb))
 
 def set_payload_drop_distance(mainSheet, payloadDropDistance):
     mainSheet["N38"].value = payloadDropDistance - mainSheet["M38"].value - mainSheet["P38"].value - mainSheet["L38"].value
