@@ -8,6 +8,7 @@ import numpy as np
 import dropdowns
 import config_saver as save
 import sensitivities as sens
+from PySide6.QtWidgets import QFileDialog
 
 class Functions():
     def __init__(self, ui):
@@ -33,9 +34,15 @@ class Functions():
     def connect_all(self):
         self.ui.btnPlot.clicked.connect(self.add_plot)
         self.ui.btnUpdate.clicked.connect(self.update_geometry)
-        self.ui.actionSave.triggered.connect(lambda: save.class_to_csv(self.bwb_configurations_list))
+        self.ui.actionSave.triggered.connect(self.open_save_dialog)
         self.ui.tabWidget.currentChanged.connect(self.tab_changed)
         self.ui.btnSensitivities.clicked.connect(lambda: sens.calculate_sensitivity_from_jet(self.bwb_configurations_list[-1], self.wb.sheets["Main"], "B18"))
+
+    def open_save_dialog(self):
+        file_path, _ = QFileDialog.getSaveFileName(None, "Save Workspace", "", "DST Workspace (*.csv);;All Files (*)")
+        if file_path:
+            save.class_to_csv(self.bwb_configurations_list, file_path)
+
 
     def tab_changed(self):
         tabName = self.ui.tabWidget.currentWidget().objectName()

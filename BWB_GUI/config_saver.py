@@ -1,5 +1,5 @@
 # config_saver.py
-def class_to_csv(bwb_configurations_list):
+def class_to_csv(bwb_configurations_list,file_name):
     import csv
 
     # Check if there is at least one configuration in the list to define the headers
@@ -11,7 +11,7 @@ def class_to_csv(bwb_configurations_list):
     headers = list(vars(bwb_configurations_list[0]).keys())
 
     # Open or create the CSV file to save the configurations
-    with open('bwb_configurations.csv', mode='w', newline='') as file:
+    with open(file_name, mode='w', newline='') as file:
         writer = csv.writer(file)
 
         # Write the header row
