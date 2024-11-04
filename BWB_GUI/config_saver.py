@@ -23,3 +23,31 @@ def class_to_csv(bwb_configurations_list,file_name):
             values = list(vars(bwb).values())
             writer.writerow(values)
 
+
+# config_loader.py
+def csv_to_class(file_name):
+    import csv
+    from bwb_class import BWB  # Import the bwb class
+
+    instances = []
+
+    # Open the CSV file to read the configurations
+    with open(file_name, mode='r', newline='') as file:
+        reader = csv.reader(file)
+
+        # Read the header row to get attribute names
+        headers = next(reader)
+
+        # Read each row and create an instance of BWB
+        for row in reader:
+            # Create an instance of the BWB class without calling __init__
+            instance = BWB.__new__(BWB)
+
+            # Set the attributes dynamically based on headers and values
+            for attr, value in zip(headers, row):
+                setattr(instance, attr, value)
+
+            # Append the instance to the list
+            instances.append(instance)
+
+    return instances
