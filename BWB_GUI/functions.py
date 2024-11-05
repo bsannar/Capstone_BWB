@@ -39,7 +39,6 @@ class Functions():
         self.ui.tabWidget.currentChanged.connect(self.tab_changed)
         self.ui.btnSensitivities.clicked.connect(lambda: sens.calculate_sensitivity_from_jet(self.ui, self.bwb_configurations_list[-1], self.wb.sheets["Main"], "B18"))
 
-
     def open_save_dialog(self):
         file_path, _ = QFileDialog.getSaveFileName(None, "Save Workspace", "", "DST Workspace (*.csv);;All Files (*)")
         if file_path:
@@ -59,6 +58,7 @@ class Functions():
         tabName = self.ui.tabWidget.currentWidget().objectName()
         if tabName == "tbMain":
             if self.bwb_configurations_list:
+                dropdowns.setup_dropdown(self.ui.ddGeometry, self.bwb_configurations_list[-1].list_independent_vars())
                 dropdowns.setup_dropdown(self.ui.ddMissionParameters, self.bwb_configurations_list[-1].list_dependent_vars())
             else:
                 print("No configurations available to set up dropdown.")
@@ -78,6 +78,7 @@ class Functions():
 
     def add_plot(self):
         plotVars = [bwb_class.convert_to_camel_casing(item.text()) for item in self.ui.ddMissionParameters.menu().actions() if item.isChecked()]
+        legendLabels = [item.text() for item in self.ui.ddGeometry.menu().actions() if item.isChecked()]
         x = np.arange(len(plotVars))
         width = 0.2  # the width of the bars
         multiplier = 0
@@ -93,8 +94,9 @@ class Functions():
         for i, bwb in enumerate(self.bwb_configurations_list):
             offset = width * multiplier
             labelValues = [float(vars(bwb.dependentVars)[plotVar]) for plotVar in plotVars]
+            legendLabelValues = [str(vars(bwb.independentVars)[bwb_class.convert_to_camel_casing(legendVar)]) for legendVar in legendLabels]
             normalizedValues = [var/norm for var, norm in zip(labelValues, normalizers)]
-            rects = ax.bar(x + offset, normalizedValues, width, label="Config "+str(i+1))
+            rects = ax.bar(x + offset, normalizedValues, width, label="\n".join([name+": "+value for name, value in zip(legendLabels, legendLabelValues)]))
             values.extend(labelValues)
             labels = ax.bar_label(rects, rotation=40)
             bar_labels.extend(labels)
@@ -148,13 +150,14 @@ class Functions():
         specificFuelConsumption = mainSheet["C30"].value
 
         bwb = bwb_class.Bwb(bwb_class.BwbJetIndependentVars(wingSqFt, vertTailSqFt, wingAspectRatio, vertTailAspectRatio, wingTaperRatio, vertTailTaperRatio, wingSweep, vertTailSweep,
-                dryWeight, fuelCapacity, specificFuelConsumption, payloadDropDistance), bwb_class.BwbDependentVars())
+                fuelCapacity, specificFuelConsumption, payloadDropDistance), bwb_class.BwbDependentVars())
         maxLiftToDragRatio = 0
         for i in range(26, 47):
             liftToDragRatio = performanceSheet['Z'+str(i)].value
             if liftToDragRatio > maxLiftToDragRatio:
                 maxLiftToDragRatio = liftToDragRatio
         bwb.dependentVars.liftOverDrag = maxLiftToDragRatio
+        bwb.dependentVars.dryWeight = dryWeight
         get_number_f_35s(bwb, mainSheet)
         calculate_max_range(bwb, mainSheet)
         print("Finished")

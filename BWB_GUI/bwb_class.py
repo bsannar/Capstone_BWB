@@ -40,7 +40,6 @@ class BwbJetIndependentVars:
     verticalTailTaperRatio,
     wingSweepAngle,
     verticalTailSweepAngle,
-    dryWeight,
     fuelCapacity,
     thrustSpecificFuelConsumption,
     payloadTransportDistance,
@@ -53,7 +52,6 @@ class BwbJetIndependentVars:
         self.verticalTailTaperRatio = verticalTailTaperRatio
         self.wingSweepAngle = wingSweepAngle
         self.verticalTailSweepAngle = verticalTailSweepAngle
-        self.dryWeight = dryWeight
         self.fuelCapacity = fuelCapacity
         self.thrustSpecificFuelConsumption = thrustSpecificFuelConsumption
         self.fractionOfRemainingFuelInF35sWhenRefueled = fractionOfRemainingFuelInF35sWhenRefueled
@@ -82,6 +80,7 @@ class BwbOpenVspIndependentVars:
 
 class BwbDependentVars:
     def __init__(self):
+        self.dryWeight = None
         self.liftOverDrag = None
         self.f35sRefueled = None
         self.maxRange = None

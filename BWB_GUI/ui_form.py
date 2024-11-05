@@ -19,7 +19,8 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
 from PySide6.QtWidgets import (QApplication, QGridLayout, QHeaderView, QLabel,
     QLayout, QLineEdit, QMainWindow, QMenu,
     QMenuBar, QPushButton, QSizePolicy, QTabWidget,
-    QTableWidget, QTableWidgetItem, QToolButton, QWidget)
+    QTableWidget, QTableWidgetItem, QToolButton, QVBoxLayout,
+    QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -45,20 +46,47 @@ class Ui_MainWindow(object):
         self.gridLayout_4.setObjectName(u"gridLayout_4")
         self.gridLayout_3 = QGridLayout()
         self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.ddMissionParameters = QToolButton(self.tbMain)
-        self.ddMissionParameters.setObjectName(u"ddMissionParameters")
-        self.ddMissionParameters.setAcceptDrops(False)
-        self.ddMissionParameters.setCheckable(False)
-
-        self.gridLayout_3.addWidget(self.ddMissionParameters, 0, 1, 1, 1)
-
         self.btnPlot = QPushButton(self.tbMain)
         self.btnPlot.setObjectName(u"btnPlot")
+        sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.btnPlot.sizePolicy().hasHeightForWidth())
+        self.btnPlot.setSizePolicy(sizePolicy)
 
         self.gridLayout_3.addWidget(self.btnPlot, 1, 0, 1, 1)
 
+        self.verticalLayout = QVBoxLayout()
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.ddGeometry = QToolButton(self.tbMain)
+        self.ddGeometry.setObjectName(u"ddGeometry")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.ddGeometry.sizePolicy().hasHeightForWidth())
+        self.ddGeometry.setSizePolicy(sizePolicy1)
+
+        self.verticalLayout.addWidget(self.ddGeometry)
+
+        self.ddMissionParameters = QToolButton(self.tbMain)
+        self.ddMissionParameters.setObjectName(u"ddMissionParameters")
+        sizePolicy1.setHeightForWidth(self.ddMissionParameters.sizePolicy().hasHeightForWidth())
+        self.ddMissionParameters.setSizePolicy(sizePolicy1)
+        self.ddMissionParameters.setAcceptDrops(False)
+        self.ddMissionParameters.setCheckable(False)
+
+        self.verticalLayout.addWidget(self.ddMissionParameters)
+
+
+        self.gridLayout_3.addLayout(self.verticalLayout, 0, 1, 1, 1)
+
         self.imgPlot = QLabel(self.tbMain)
         self.imgPlot.setObjectName(u"imgPlot")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.imgPlot.sizePolicy().hasHeightForWidth())
+        self.imgPlot.setSizePolicy(sizePolicy2)
         self.imgPlot.setPixmap(QPixmap(u"plot_placeholder.png"))
 
         self.gridLayout_3.addWidget(self.imgPlot, 0, 0, 1, 1)
@@ -218,8 +246,9 @@ class Ui_MainWindow(object):
         self.actionExit.setText(QCoreApplication.translate("MainWindow", u"Exit", None))
         self.actionSave.setText(QCoreApplication.translate("MainWindow", u"Save", None))
         self.actionOpen.setText(QCoreApplication.translate("MainWindow", u"Open", None))
-        self.ddMissionParameters.setText(QCoreApplication.translate("MainWindow", u"Mission Parameters", None))
         self.btnPlot.setText(QCoreApplication.translate("MainWindow", u"plot", None))
+        self.ddGeometry.setText(QCoreApplication.translate("MainWindow", u"Geometry", None))
+        self.ddMissionParameters.setText(QCoreApplication.translate("MainWindow", u"Mission Parameters", None))
         self.imgPlot.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbMain), QCoreApplication.translate("MainWindow", u"Main", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"Sweep:", None))
