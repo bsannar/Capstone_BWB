@@ -37,6 +37,9 @@ def csv_to_class(file_name):
 
     instances = []
 
+    # Get the list of attributes from the BWB class (e.g., by checking its __init__ method or defined attributes)
+    expected_headers = [attr for attr in dir(BWB) if not callable(getattr(BWB, attr)) and not attr.startswith("__")]
+
     # Open the CSV file to read the configurations
     with open(file_name, mode='r', newline='') as file:
         reader = csv.reader(file)
@@ -71,5 +74,4 @@ def csv_to_class(file_name):
             instances.append(instance)
 
     return instances
-
 
