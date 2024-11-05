@@ -26,12 +26,44 @@ def class_to_csv(bwb_configurations_list,file_name):
             writer.writerow(values)
 
 
+# # config_loader.py
+# def csv_to_class(file_name):
+#     import csv
+#     from bwb_class import BWB  # Import the bwb class
+
+#     instances = []
+
+#     # Open the CSV file to read the configurations
+#     with open(file_name, mode='r', newline='') as file:
+#         reader = csv.reader(file)
+
+#         # Read the header row to get attribute names
+#         headers = next(reader)
+
+#         # Read each row and create an instance of BWB
+#         for row in reader:
+#             # Create an instance of the BWB class without calling __init__
+#             instance = BWB.__new__(BWB)
+
+#             # Set the attributes dynamically based on headers and values
+#             for attr, value in zip(headers, row):
+#                 setattr(instance, attr, value)
+
+#             # Append the instance to the list
+#             instances.append(instance)
+
+#     return instances
+
+
 # config_loader.py
 def csv_to_class(file_name):
     import csv
-    from bwb_class import BWB  # Import the bwb class
+    from bwb_class import BWB  # Import the BWB class
 
     instances = []
+
+    # Get the list of attributes from the BWB class (e.g., by checking its __init__ method or defined attributes)
+    expected_headers = [attr for attr in dir(BWB) if not callable(getattr(BWB, attr)) and not attr.startswith("__")]
 
     # Open the CSV file to read the configurations
     with open(file_name, mode='r', newline='') as file:
@@ -39,6 +71,11 @@ def csv_to_class(file_name):
 
         # Read the header row to get attribute names
         headers = next(reader)
+
+        # Check if headers match expected attributes
+        if set(headers) != set(expected_headers):
+            print("Error: CSV headers do not match the BWB class attributes.")
+            return None  # Exit function if headers do not match
 
         # Read each row and create an instance of BWB
         for row in reader:
@@ -53,3 +90,4 @@ def csv_to_class(file_name):
             instances.append(instance)
 
     return instances
+
