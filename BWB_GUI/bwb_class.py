@@ -14,9 +14,9 @@ def convert_to_camel_casing(string):
     return str.lower(string[0]) + string[1:].replace(" ", "")
 
 class Bwb():
-    def __init__(self, dependentVars, independentVars):
-        self.dependentVars = dependentVars
+    def __init__(self, independentVars, dependentVars):
         self.independentVars = independentVars
+        self.dependentVars = dependentVars
 
     def list_dependent_vars(self):
         names = vars(self.dependentVars).keys()
@@ -30,7 +30,7 @@ class Bwb():
         names = {**vars(self.dependentVars), **vars(self.independentVars)}.keys()
         return [convert_from_camel_casing(name) for name in names]
 
-class BwbJetDependentVars:
+class BwbJetIndependentVars:
     def __init__(self,
     wingSquareFootage,
     verticalTailSquareFootage,
@@ -43,7 +43,6 @@ class BwbJetDependentVars:
     dryWeight,
     fuelCapacity,
     thrustSpecificFuelConsumption,
-    liftOverDrag,
     payloadTransportDistance,
     fractionOfRemainingFuelInF35sWhenRefueled=0.1):
         self.wingSquareFootage = wingSquareFootage
@@ -57,7 +56,6 @@ class BwbJetDependentVars:
         self.dryWeight = dryWeight
         self.fuelCapacity = fuelCapacity
         self.thrustSpecificFuelConsumption = thrustSpecificFuelConsumption
-        self.liftOverDrag = liftOverDrag
         self.fractionOfRemainingFuelInF35sWhenRefueled = fractionOfRemainingFuelInF35sWhenRefueled
         self.payloadTransportDistance = payloadTransportDistance
         self.update_csv()
@@ -78,11 +76,12 @@ class BwbJetDependentVars:
             writer = csv.writer(file)
             writer.writerow(row)
 
-class BwbOpenVspDependentVars:
+class BwbOpenVspIndependentVars:
     def __init__(self):
         self.vars = 0
 
-class BwbIndependentVars:
+class BwbDependentVars:
     def __init__(self):
+        self.liftOverDrag = None
         self.f35sRefueled = None
         self.maxRange = None

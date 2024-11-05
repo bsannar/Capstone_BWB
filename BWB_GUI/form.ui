@@ -21,11 +21,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-<<<<<<< HEAD
-       <number>3</number>
-=======
-       <number>1</number>
->>>>>>> b4bd099 (includes changes to config_saver.py form.ui functions.py to allow saving to CSV)
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tbMain">
        <attribute name="title">
@@ -206,7 +202,7 @@
      <x>0</x>
      <y>0</y>
      <width>837</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

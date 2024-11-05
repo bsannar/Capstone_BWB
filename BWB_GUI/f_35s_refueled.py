@@ -113,7 +113,7 @@ def get_number_f_35s(bwb, mainSheet):       # compare_x40_to_018()
 
         # Count number of iterations to know how many f-35s can be refueled
         if mainSheet["X40"].value > mainSheet["O18"].value:
-            bwb.numFighter = i-1
+            bwb.dependentVars.f35sRefueled = i-1
             break
 
 

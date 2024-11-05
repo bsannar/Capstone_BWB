@@ -2,7 +2,7 @@ import xlwings as xw
 import openvsp as vsp
 import matplotlib.pyplot as plt
 from PySide6.QtGui import QPixmap
-from bwb_class import BWB
+import bwb_class
 from f_35s_refueled import get_number_f_35s
 import numpy as np
 import dropdowns
@@ -55,32 +55,13 @@ class Functions():
             else:
                 print("No configurations loaded from the CSV.")
 
-
-
-    def open_save_dialog(self):
-        file_path, _ = QFileDialog.getSaveFileName(None, "Save Workspace", "", "DST Workspace (*.csv);;All Files (*)")
-        if file_path:
-            save.class_to_csv(self.bwb_configurations_list, file_path)
-
-    def open_open_dialog(self):
-        file_path, _ = QFileDialog.getOpenFileName(None, "Open Workspace", "", "DST Workspace (*.csv);;All Files (*)")
-        if file_path:
-            new_configs = save.csv_to_class(file_path)
-            if new_configs:
-                self.bwb_configurations_list.extend(new_configs)
-                print(f"Configurations list updated: {self.bwb_configurations_list}")
-            else:
-                print("No configurations loaded from the CSV.")
-
-
     def tab_changed(self):
         tabName = self.ui.tabWidget.currentWidget().objectName()
         if tabName == "tbMain":
             if self.bwb_configurations_list:
-                dropdowns.setup_dropdown(self.ui.ddMissionParameters, vars(self.bwb_configurations_list[-1]))
+                dropdowns.setup_dropdown(self.ui.ddMissionParameters, self.bwb_configurations_list[-1].list_dependent_vars())
             else:
                 print("No configurations available to set up dropdown.")
-
 
     def open_vsp(self):
         vsp.ReadVSPFile("wing_model.vsp3")
@@ -96,7 +77,7 @@ class Functions():
         vsp.WriteVSPFile("wing_model.vsp3")
 
     def add_plot(self):
-        plotVars = [item.text() for item in self.ui.ddMissionParameters.menu().actions() if item.isChecked()]
+        plotVars = [bwb_class.convert_to_camel_casing(item.text()) for item in self.ui.ddMissionParameters.menu().actions() if item.isChecked()]
         x = np.arange(len(plotVars))
         width = 0.2  # the width of the bars
         multiplier = 0
@@ -106,12 +87,12 @@ class Functions():
         plt.figure(figsize=(size.width()*px, size.height()*px))
         fig, ax = plt.subplots(layout='constrained', figsize=(size.width()*px, size.height()*px))
 
-        normalizers = [max([float(vars(bwb)[plotVar]) for bwb in self.bwb_configurations_list]) for plotVar in plotVars]
+        normalizers = [max([float(vars(bwb.dependentVars)[plotVar]) for bwb in self.bwb_configurations_list]) for plotVar in plotVars]
         values = []
         bar_labels = []
         for i, bwb in enumerate(self.bwb_configurations_list):
             offset = width * multiplier
-            labelValues = [float(vars(bwb)[plotVar]) for plotVar in plotVars]
+            labelValues = [float(vars(bwb.dependentVars)[plotVar]) for plotVar in plotVars]
             normalizedValues = [var/norm for var, norm in zip(labelValues, normalizers)]
             rects = ax.bar(x + offset, normalizedValues, width, label="Config "+str(i+1))
             values.extend(labelValues)
@@ -127,7 +108,7 @@ class Functions():
         numBWBs = len(self.bwb_configurations_list)
         ax.set_ylabel('Normalized Performance')
         ax.set_title('BWB Performance')
-        ax.set_xticks(x + (width * (numBWBs - 1))/2, plotVars, rotation=20)
+        ax.set_xticks(x + (width * (numBWBs - 1))/2, [bwb_class.convert_from_camel_casing(var) for var in plotVars], rotation=20)
         ax.legend(bbox_to_anchor=(1, 1), loc='upper left')
         ax.set_ylim(0, 1.2)
 
@@ -165,14 +146,15 @@ class Functions():
         dryWeight = mainSheet["O23"].value
         fuelCapacity = mainSheet["O18"].value
         specificFuelConsumption = mainSheet["C30"].value
+
+        bwb = bwb_class.Bwb(bwb_class.BwbJetIndependentVars(wingSqFt, vertTailSqFt, wingAspectRatio, vertTailAspectRatio, wingTaperRatio, vertTailTaperRatio, wingSweep, vertTailSweep,
+                dryWeight, fuelCapacity, specificFuelConsumption, payloadDropDistance), bwb_class.BwbDependentVars())
         maxLiftToDragRatio = 0
         for i in range(26, 47):
             liftToDragRatio = performanceSheet['Z'+str(i)].value
             if liftToDragRatio > maxLiftToDragRatio:
                 maxLiftToDragRatio = liftToDragRatio
-
-        bwb = BWB(wingSqFt, vertTailSqFt, wingAspectRatio, vertTailAspectRatio, wingTaperRatio, vertTailTaperRatio, wingSweep, vertTailSweep,
-                dryWeight, fuelCapacity, specificFuelConsumption, maxLiftToDragRatio, payloadDropDistance)
+        bwb.dependentVars.liftOverDrag = maxLiftToDragRatio
         get_number_f_35s(bwb, mainSheet)
         calculate_max_range(bwb, mainSheet)
         print("Finished")
@@ -186,5 +168,5 @@ def calculate_max_range(bwb, mainSheet):
     for nautical_miles in range(1, 10000):
         set_payload_drop_distance(mainSheet, nautical_miles*50)
         if mainSheet["X40"].value > mainSheet["O18"].value:
-            bwb.maxRange = (nautical_miles-1)*100
+            bwb.dependentVars.maxRange = (nautical_miles-1)*100
             break
