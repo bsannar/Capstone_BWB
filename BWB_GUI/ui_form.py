@@ -175,10 +175,10 @@ class Ui_MainWindow(object):
         self.tbMissionParameters.setObjectName(u"tbMissionParameters")
         self.gridLayout_7 = QGridLayout(self.tbMissionParameters)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
-        self.tbSensitivities = QTableWidget(self.tbMissionParameters)
-        self.tbSensitivities.setObjectName(u"tbSensitivities")
+        self.tblSensitivities = QTableWidget(self.tbMissionParameters)
+        self.tblSensitivities.setObjectName(u"tblSensitivities")
 
-        self.gridLayout_7.addWidget(self.tbSensitivities, 0, 0, 1, 1)
+        self.gridLayout_7.addWidget(self.tblSensitivities, 0, 0, 1, 1)
 
         self.btnSensitivities = QPushButton(self.tbMissionParameters)
         self.btnSensitivities.setObjectName(u"btnSensitivities")

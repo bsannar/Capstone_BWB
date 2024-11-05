@@ -37,7 +37,24 @@ class Functions():
         self.ui.actionSave.triggered.connect(self.open_save_dialog)
         self.ui.actionOpen.triggered.connect(self.open_open_dialog)
         self.ui.tabWidget.currentChanged.connect(self.tab_changed)
-        self.ui.btnSensitivities.clicked.connect(lambda: sens.calculate_sensitivity_from_jet(self.bwb_configurations_list[-1], self.wb.sheets["Main"], "B18"))
+        self.ui.btnSensitivities.clicked.connect(lambda: sens.calculate_sensitivity_from_jet(self.ui, self.bwb_configurations_list[-1], self.wb.sheets["Main"], "B18"))
+
+
+    def open_save_dialog(self):
+        file_path, _ = QFileDialog.getSaveFileName(None, "Save Workspace", "", "DST Workspace (*.csv);;All Files (*)")
+        if file_path:
+            save.class_to_csv(self.bwb_configurations_list, file_path)
+
+    def open_open_dialog(self):
+        file_path, _ = QFileDialog.getOpenFileName(None, "Open Workspace", "", "DST Workspace (*.csv);;All Files (*)")
+        if file_path:
+            new_configs = save.csv_to_class(file_path)
+            if new_configs:
+                self.bwb_configurations_list.extend(new_configs)
+                print(f"Configurations list updated: {self.bwb_configurations_list}")
+            else:
+                print("No configurations loaded from the CSV.")
+
 
 
     def open_save_dialog(self):

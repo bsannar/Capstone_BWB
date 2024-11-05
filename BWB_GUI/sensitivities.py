@@ -1,11 +1,20 @@
-def calculate_sensitivity_from_jet(bwb, mainSheet, cell):
+from PySide6.QtWidgets import QTableWidgetItem
+
+def calculate_sensitivity_from_jet(ui, bwb, mainSheet, cell):
     centerValue = float(bwb.sqFtWing)
     stepSize = centerValue * 0.1
     mainSheet[cell].value = centerValue + 0.5*stepSize
     forward = calculate_max_range(mainSheet)
     mainSheet[cell].value = centerValue - 0.5*stepSize
     backward = calculate_max_range(mainSheet)
-    print((forward - backward) / stepSize)
+    drange_dsqftwing = (forward - backward) / stepSize
+    rowPosition = ui.tblSensitivities.rowCount()
+    colPosition = ui.tblSensitivities.columnCount()
+    ui.tblSensitivities.insertColumn(colPosition)
+    ui.tblSensitivities.setHorizontalHeaderLabels(["Range"])
+    ui.tblSensitivities.insertRow(rowPosition)
+    ui.tblSensitivities.setVerticalHeaderLabels(["Wing Square Footage"])
+    ui.tblSensitivities.setItem(rowPosition, 0, QTableWidgetItem(str(drange_dsqftwing)))
 
 def calculate_max_range(mainSheet):
     mainSheet["O17"].value = 0
