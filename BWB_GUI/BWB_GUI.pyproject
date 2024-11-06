@@ -1,5 +1,6 @@
 {
     "files": [
+        ".gitignore",
         "mainwindow.py",
         "form.ui",
         "functions.py",
