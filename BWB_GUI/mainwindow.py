@@ -4,6 +4,7 @@ import os
 from functions import Functions
 
 from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtGui import QPixmap
 
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -22,6 +23,7 @@ class MainWindow(QMainWindow):
         super().__init__(parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.setWindowIcon(QPixmap("App_Icon.png"))
         self.functions = Functions(self.ui)
         self.xl = self.functions.xl
         self.wb = self.functions.wb

@@ -242,7 +242,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Widget", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"BWB Decision Support Tool", None))
         self.actionExit.setText(QCoreApplication.translate("MainWindow", u"Exit", None))
         self.actionSave.setText(QCoreApplication.translate("MainWindow", u"Save", None))
         self.actionOpen.setText(QCoreApplication.translate("MainWindow", u"Open", None))
