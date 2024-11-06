@@ -30,7 +30,6 @@ class MainWindow(QMainWindow):
         super(QMainWindow, self).closeEvent(*args, **kwargs)
         self.wb.close()
         self.xl.quit()
-        print( "you just closed the pyqt window!!! you are awesome!!!")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
