@@ -27,11 +27,15 @@ class MainWindow(QMainWindow):
         self.functions = Functions(self.ui)
         self.xl = self.functions.xl
         self.wb = self.functions.wb
+        self.hasPlotted = True
 
     def closeEvent(self, *args, **kwargs):
-        super(QMainWindow, self).closeEvent(*args, **kwargs)
+        super().closeEvent(*args, **kwargs)
         self.wb.close()
         self.xl.quit()
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

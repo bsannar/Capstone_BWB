@@ -103,7 +103,7 @@ class Functions():
             multiplier += 1
 
         for label, value in zip(bar_labels, values):
-            label.set_text(f"{value:.2e}")
+            label.set_text(f"{value:.0f}")
 
 
         # Add some text for labels, title and custom x-axis tick labels, etc.

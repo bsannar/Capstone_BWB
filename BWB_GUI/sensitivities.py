@@ -14,7 +14,7 @@ def calculate_sensitivity_from_jet(ui, bwb, mainSheet, cell):
     ui.tblSensitivities.setHorizontalHeaderLabels(["Range"])
     ui.tblSensitivities.insertRow(rowPosition)
     ui.tblSensitivities.setVerticalHeaderLabels(["Wing Square Footage"])
-    ui.tblSensitivities.setItem(rowPosition, 0, QTableWidgetItem(str(drange_dsqftwing)))
+    ui.tblSensitivities.setItem(rowPosition, colPosition, QTableWidgetItem(str(drange_dsqftwing)))
 
 def calculate_max_range(mainSheet):
     mainSheet["O17"].value = 0
