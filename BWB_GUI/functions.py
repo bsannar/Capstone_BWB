@@ -1,20 +1,24 @@
 import xlwings as xw
 import openvsp as vsp
 import matplotlib.pyplot as plt
-from PySide6.QtGui import QPixmap
+import time
+from win32gui import GetForegroundWindow
 import bwb_class
 from f_35s_refueled import get_number_f_35s
 import numpy as np
 import dropdowns
 import config_saver as save
 import sensitivities as sens
-from PySide6.QtWidgets import QFileDialog
+from PySide6.QtWidgets import QFileDialog, QWidget, QVBoxLayout
+from PySide6.QtGui import QPixmap, QWindow
+from PySide6.QtCore import QProcess
 
 class Functions():
     def __init__(self, ui):
         self.ui = ui
         self.xl = xw.App(visible=False)
         self.wb = self.xl.books.open("Assets/BWB_tanker.xlsm")
+        self.hasBWBView = False
         self.setupGUI()
         self.connect_all()
         self.bwb_configurations_list = []
@@ -38,6 +42,7 @@ class Functions():
         self.ui.actionOpen.triggered.connect(self.open_open_dialog)
         self.ui.tabWidget.currentChanged.connect(self.tab_changed)
         self.ui.btnSensitivities.clicked.connect(lambda: sens.calculate_sensitivity_from_jet(self.ui, self.bwb_configurations_list[-1], self.wb.sheets["Main"], "B18"))
+        self.ui.btnViewBWB.clicked.connect(self.open_tigl_viewer)
 
     def open_save_dialog(self):
         file_path, _ = QFileDialog.getSaveFileName(None, "Save Workspace", "", "DST Workspace (*.csv);;All Files (*)")
@@ -162,6 +167,20 @@ class Functions():
         calculate_max_range(bwb, mainSheet)
         print("Finished")
         self.bwb_configurations_list.append(bwb)
+
+    def open_tigl_viewer(self):
+        if not self.hasBWBView:
+            process = QProcess()
+            process.startDetached("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe", ["Assets/theAircraft.xml"])
+            time.sleep(.5)
+            hwnd = GetForegroundWindow()
+            window = QWindow.fromWinId(hwnd)
+            widget = QWidget.createWindowContainer(window)
+            layout = QVBoxLayout(self.ui.widTigl)
+            layout.addWidget(widget)
+            self.ui.widTigl.setLayout(layout)
+        else:
+            pass
 
 def set_payload_drop_distance(mainSheet, payloadDropDistance):
     mainSheet["N38"].value = payloadDropDistance - mainSheet["M38"].value - mainSheet["P38"].value - mainSheet["L38"].value
