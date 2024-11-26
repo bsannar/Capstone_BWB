@@ -166,6 +166,7 @@ class Functions():
         get_number_f_35s(bwb, mainSheet)
         calculate_max_range(bwb, mainSheet)
         print("Finished")
+        self.wb.app.macro("export_CPACS_file")()
         self.bwb_configurations_list.append(bwb)
 
     def open_tigl_viewer(self):
@@ -179,6 +180,7 @@ class Functions():
             layout = QVBoxLayout(self.ui.widTigl)
             layout.addWidget(widget)
             self.ui.widTigl.setLayout(layout)
+            self.hasBWBView = True
         else:
             pass
 
