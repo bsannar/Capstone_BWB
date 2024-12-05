@@ -12,11 +12,11 @@ import config_saver as save
 import sensitivities as sens
 from PySide6.QtWidgets import QFileDialog, QWidget, QVBoxLayout
 from PySide6.QtGui import QPixmap, QWindow
-from PySide6.QtCore import QProcess
 
 class Functions():
-    def __init__(self, ui):
+    def __init__(self, ui, process):
         self.ui = ui
+        self.process = process
         self.xl = xw.App(visible=False)
         self.wb = self.xl.books.open("Assets/BWB_tanker.xlsm")
         self.hasBWBView = False
@@ -173,8 +173,7 @@ class Functions():
     def open_tigl_viewer(self):
         if os.path.exists("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe"):
             if not self.hasBWBView:
-                process = QProcess()
-                process.startDetached("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe", ["Assets/theAircraft.xml"])
+                self.process.start("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe", ["Assets/theAircraft.xml"])
                 title = ""
                 while True:
                     hwnd = GetForegroundWindow()

@@ -1,10 +1,12 @@
 # This Python file uses the following encoding: utf-8
 import sys
 import os
+import signal
 from functions import Functions
 
 from PySide6.QtWidgets import QApplication, QMainWindow
 from PySide6.QtGui import QPixmap
+from PySide6.QtCore import QProcess
 
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -24,12 +26,15 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.setWindowIcon(QPixmap("App_Icon.png"))
-        self.functions = Functions(self.ui)
+        self.process = QProcess()
+        self.functions = Functions(self.ui, self.process)
         self.xl = self.functions.xl
         self.wb = self.functions.wb
         self.hasPlotted = True
 
     def closeEvent(self, *args, **kwargs):
+        if self.process.state == "ProcessState.Running":
+            os.kill(self.process.processId(), signal.SIGTERM)
         super().closeEvent(*args, **kwargs)
         self.wb.close()
         self.xl.quit()
