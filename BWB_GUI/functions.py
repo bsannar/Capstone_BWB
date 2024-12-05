@@ -2,6 +2,7 @@ import xlwings as xw
 import openvsp as vsp
 import matplotlib.pyplot as plt
 import time
+import os
 from win32gui import GetForegroundWindow, GetWindowText
 import bwb_class
 from f_35s_refueled import get_number_f_35s
@@ -170,21 +171,24 @@ class Functions():
         self.bwb_configurations_list.append(bwb)
 
     def open_tigl_viewer(self):
-        if not self.hasBWBView:
-            process = QProcess()
-            process.startDetached("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe", ["Assets/theAircraft.xml"])
-            title = ""
-            while True:
-                hwnd = GetForegroundWindow()
-                title = GetWindowText(hwnd)
-                if title == "TiGL Viewer 3":
-                    break
-            window = QWindow.fromWinId(hwnd)
-            widget = QWidget.createWindowContainer(window)
-            layout = QVBoxLayout(self.ui.widTigl)
-            layout.addWidget(widget)
-            self.ui.widTigl.setLayout(layout)
-            self.hasBWBView = True
+        if os.path.exists("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe"):
+            if not self.hasBWBView:
+                process = QProcess()
+                process.startDetached("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe", ["Assets/theAircraft.xml"])
+                title = ""
+                while True:
+                    hwnd = GetForegroundWindow()
+                    title = GetWindowText(hwnd)
+                    if title == "TiGL Viewer 3":
+                        break
+                window = QWindow.fromWinId(hwnd)
+                widget = QWidget.createWindowContainer(window)
+                layout = QVBoxLayout(self.ui.widTigl)
+                layout.addWidget(widget)
+                self.ui.widTigl.setLayout(layout)
+                self.hasBWBView = True
+        else:
+            print('The path "Executables/TIGL 3.4.0/bin/tiglviewer-3.exe" does not exist')
 
 def set_payload_drop_distance(mainSheet, payloadDropDistance):
     mainSheet["N38"].value = payloadDropDistance - mainSheet["M38"].value - mainSheet["P38"].value - mainSheet["L38"].value
