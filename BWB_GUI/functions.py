@@ -1,5 +1,5 @@
 import xlwings as xw
-import openvsp as vsp
+#import openvsp as vsp
 import matplotlib.pyplot as plt
 import time
 import os
