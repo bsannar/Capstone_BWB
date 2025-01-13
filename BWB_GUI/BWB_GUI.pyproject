@@ -10,6 +10,7 @@
         "tw_class.py",
         "config_saver.py",
         "sensitivities.py",
-        "DST_md.csv"
+        "DST_md.csv",
+        "missions.py"
     ]
 }

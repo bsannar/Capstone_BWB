@@ -33,7 +33,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tbMain">
        <attribute name="title">
@@ -308,6 +308,531 @@
         <string>Mission Parameters</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_7">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>11</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item row="8" column="0">
+         <widget class="QPushButton" name="btnAddMission">
+          <property name="text">
+           <string>Add</string>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="0">
+         <widget class="QListWidget" name="lwMissions"/>
+        </item>
+        <item row="4" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <layout class="QGridLayout" name="glDenseMissionParameters">
+            <item row="0" column="4">
+             <widget class="QLabel" name="label_15">
+              <property name="text">
+               <string>Cruise1</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="13">
+             <widget class="QLineEdit" name="txtLoiterAlt"/>
+            </item>
+            <item row="0" column="6">
+             <widget class="QLabel" name="label_13">
+              <property name="text">
+               <string>Service1</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QLabel" name="label_17">
+              <property name="text">
+               <string>Accel</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QLineEdit" name="txtTOPayload"/>
+            </item>
+            <item row="1" column="6">
+             <widget class="QLineEdit" name="txtService1Alt"/>
+            </item>
+            <item row="4" column="11">
+             <widget class="QLineEdit" name="txtClimb2Time"/>
+            </item>
+            <item row="0" column="12">
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>Cruise2</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="3">
+             <widget class="QLineEdit" name="txtClimb1Payload"/>
+            </item>
+            <item row="0" column="11">
+             <widget class="QLabel" name="label_7">
+              <property name="text">
+               <string>Climb2</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="5">
+             <widget class="QLabel" name="label_14">
+              <property name="text">
+               <string>Patrol1</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="10">
+             <widget class="QLineEdit" name="txtService3Dist"/>
+            </item>
+            <item row="0" column="9">
+             <widget class="QLabel" name="label_10">
+              <property name="text">
+               <string>Patrol3</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="14">
+             <widget class="QLineEdit" name="txtLandingPayload"/>
+            </item>
+            <item row="2" column="13">
+             <widget class="QLineEdit" name="txtLoiterMach"/>
+            </item>
+            <item row="3" column="12">
+             <widget class="QLineEdit" name="txtCruise2Dist"/>
+            </item>
+            <item row="3" column="11">
+             <widget class="QLineEdit" name="txtClimb2Dist"/>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="label_21">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Drop Payload (lb)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="5">
+             <widget class="QLineEdit" name="txtPatrol1Time"/>
+            </item>
+            <item row="1" column="10">
+             <widget class="QLineEdit" name="txtService3Alt"/>
+            </item>
+            <item row="1" column="3">
+             <widget class="QLineEdit" name="txtClimb1Alt"/>
+            </item>
+            <item row="2" column="9">
+             <widget class="QLineEdit" name="txtPatrol3Mach"/>
+            </item>
+            <item row="5" column="6">
+             <widget class="QLineEdit" name="txtService1Payload"/>
+            </item>
+            <item row="4" column="12">
+             <widget class="QLineEdit" name="txtCruise2Time"/>
+            </item>
+            <item row="3" column="9">
+             <widget class="QLineEdit" name="txtPatrol3Dist"/>
+            </item>
+            <item row="4" column="2">
+             <widget class="QLineEdit" name="txtAccelTime"/>
+            </item>
+            <item row="3" column="6">
+             <widget class="QLineEdit" name="txtService1Dist"/>
+            </item>
+            <item row="1" column="12">
+             <widget class="QLineEdit" name="txtCruise2Alt"/>
+            </item>
+            <item row="5" column="10">
+             <widget class="QLineEdit" name="txtService3Payload"/>
+            </item>
+            <item row="5" column="8">
+             <widget class="QLineEdit" name="txtService2Payload"/>
+            </item>
+            <item row="3" column="4">
+             <widget class="QLineEdit" name="txtCruise1Dist"/>
+            </item>
+            <item row="5" column="5">
+             <widget class="QLineEdit" name="txtPatrol1Payload"/>
+            </item>
+            <item row="5" column="11">
+             <widget class="QLineEdit" name="txtClimb2Payload"/>
+            </item>
+            <item row="2" column="12">
+             <widget class="QLineEdit" name="txtCruise2Mach"/>
+            </item>
+            <item row="1" column="5">
+             <widget class="QLineEdit" name="txtPatrol1Alt"/>
+            </item>
+            <item row="1" column="2">
+             <widget class="QLineEdit" name="txtAccelAlt"/>
+            </item>
+            <item row="4" column="14">
+             <widget class="QLineEdit" name="txtLandingTime"/>
+            </item>
+            <item row="2" column="8">
+             <widget class="QLineEdit" name="txtService2Mach"/>
+            </item>
+            <item row="0" column="14">
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>Landing</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="8">
+             <widget class="QLineEdit" name="txtService2Time"/>
+            </item>
+            <item row="0" column="7">
+             <widget class="QLabel" name="label_12">
+              <property name="text">
+               <string>Patrol2</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="13">
+             <widget class="QLineEdit" name="txtLoiterPayload"/>
+            </item>
+            <item row="2" column="11">
+             <widget class="QLineEdit" name="txtClimb2Mach"/>
+            </item>
+            <item row="4" column="7">
+             <widget class="QLineEdit" name="txtPatrol2Time"/>
+            </item>
+            <item row="2" column="3">
+             <widget class="QLineEdit" name="txtClimb1Mach"/>
+            </item>
+            <item row="2" column="7">
+             <widget class="QLineEdit" name="txtPatrol2Mach"/>
+            </item>
+            <item row="3" column="3">
+             <widget class="QLineEdit" name="txtClimb1Dist"/>
+            </item>
+            <item row="1" column="14">
+             <widget class="QLineEdit" name="txtLandingAlt"/>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_18">
+              <property name="text">
+               <string>Altitude (ft)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_20">
+              <property name="text">
+               <string>Time (min)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="6">
+             <widget class="QLineEdit" name="txtService1Time"/>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLineEdit" name="txtTODist"/>
+            </item>
+            <item row="4" column="13">
+             <widget class="QLineEdit" name="txtLoiterTime"/>
+            </item>
+            <item row="2" column="2">
+             <widget class="QLineEdit" name="txtAccelMach"/>
+            </item>
+            <item row="1" column="8">
+             <widget class="QLineEdit" name="txtService2Alt"/>
+            </item>
+            <item row="2" column="4">
+             <widget class="QLineEdit" name="txtCruise1Mach"/>
+            </item>
+            <item row="4" column="9">
+             <widget class="QLineEdit" name="txtPatrol3Time"/>
+            </item>
+            <item row="5" column="12">
+             <widget class="QLineEdit" name="txtCruise2Payload"/>
+            </item>
+            <item row="5" column="4">
+             <widget class="QLineEdit" name="txtCruise1Payload"/>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLineEdit" name="txtTOMach"/>
+            </item>
+            <item row="1" column="4">
+             <widget class="QLineEdit" name="txtCruise1Alt"/>
+            </item>
+            <item row="4" column="3">
+             <widget class="QLineEdit" name="txtClimb1Time"/>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_9">
+              <property name="text">
+               <string>Mach Number</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="5">
+             <widget class="QLineEdit" name="txtPatrol1Dist"/>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLineEdit" name="txtTOAlt"/>
+            </item>
+            <item row="3" column="8">
+             <widget class="QLineEdit" name="txtService2Dist"/>
+            </item>
+            <item row="3" column="13">
+             <widget class="QLineEdit" name="txtLoiterDist"/>
+            </item>
+            <item row="1" column="11">
+             <widget class="QLineEdit" name="txtClimb2Alt"/>
+            </item>
+            <item row="3" column="7">
+             <widget class="QLineEdit" name="txtPatrol2Dist"/>
+            </item>
+            <item row="1" column="9">
+             <widget class="QLineEdit" name="txtPatrol3Alt"/>
+            </item>
+            <item row="0" column="13">
+             <widget class="QLabel" name="label_8">
+              <property name="text">
+               <string>Loiter</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QLineEdit" name="txtAccelDist"/>
+            </item>
+            <item row="4" column="10">
+             <widget class="QLineEdit" name="txtService3Time"/>
+            </item>
+            <item row="1" column="7">
+             <widget class="QLineEdit" name="txtPatrol2Alt"/>
+            </item>
+            <item row="5" column="7">
+             <widget class="QLineEdit" name="txtPatrol2Payload"/>
+            </item>
+            <item row="0" column="8">
+             <widget class="QLabel" name="label_11">
+              <property name="text">
+               <string>Service2</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="14">
+             <widget class="QLineEdit" name="txtLandingDist"/>
+            </item>
+            <item row="5" column="2">
+             <widget class="QLineEdit" name="txtAccelPayload"/>
+            </item>
+            <item row="0" column="10">
+             <widget class="QLabel" name="lbService3">
+              <property name="text">
+               <string>Service3</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="4">
+             <widget class="QLineEdit" name="txtCruise1Time"/>
+            </item>
+            <item row="4" column="1">
+             <widget class="QLineEdit" name="txtTOTime"/>
+            </item>
+            <item row="2" column="5">
+             <widget class="QLineEdit" name="txtPatrol1Mach"/>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>STTO</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="6">
+             <widget class="QLineEdit" name="txtService1Mach"/>
+            </item>
+            <item row="5" column="9">
+             <widget class="QLineEdit" name="txtPatrol3Payload"/>
+            </item>
+            <item row="2" column="14">
+             <widget class="QLineEdit" name="txtLandingMach"/>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_19">
+              <property name="text">
+               <string>Distance (nm)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="10">
+             <widget class="QLineEdit" name="txtService3Mach"/>
+            </item>
+            <item row="0" column="3">
+             <widget class="QLabel" name="label_16">
+              <property name="text">
+               <string>Climb1</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <item>
+             <widget class="QLabel" name="label_23">
+              <property name="text">
+               <string>Permanent Payload</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="txtPermanentPayload"/>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_24">
+              <property name="text">
+               <string>Expendable Payload</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="txtExpendablePayload"/>
+            </item>
+            <item>
+             <spacer name="verticalSpacer">
+              <property name="orientation">
+               <enum>Qt::Orientation::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_22">
+            <property name="text">
+             <string>Name:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="txtMissionName"/>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item row="2" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QToolButton" name="ddChooseMission">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Choose Mission</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="glMissionParameters"/>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Sensitivities</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_2">
         <item row="0" column="0">
          <widget class="QTableWidget" name="tblSensitivities"/>
         </item>

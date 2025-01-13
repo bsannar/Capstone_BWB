@@ -12,6 +12,7 @@ import config_saver as save
 import sensitivities as sens
 from PySide6.QtWidgets import QFileDialog, QWidget, QVBoxLayout
 from PySide6.QtGui import QPixmap, QWindow
+import missions
 
 class Functions():
     def __init__(self, ui, process):
@@ -21,8 +22,9 @@ class Functions():
         self.wb = self.xl.books.open("Assets/BWB_tanker.xlsm")
         self.hasBWBView = False
         self.setupGUI()
-        self.connect_all()
         self.bwb_configurations_list = []
+        dropdowns.setup_dropdown(self.ui.ddChooseMission, ["Tanker", "Airdrop", "Cargo Carry"], False)
+        self.connect_all()
 
     def setupGUI(self):
         mainSheet = self.wb.sheets["Main"]
@@ -44,11 +46,19 @@ class Functions():
         self.ui.tabWidget.currentChanged.connect(self.tab_changed)
         self.ui.btnSensitivities.clicked.connect(lambda: sens.calculate_sensitivity_from_jet(self.ui, self.bwb_configurations_list[-1], self.wb.sheets["Main"], "B18"))
         self.ui.btnViewBWB.clicked.connect(self.open_tigl_viewer)
+        self.ui.ddChooseMission.menu().triggered.connect(self.on_choose_mission)
+        self.ui.btnAddMission.clicked.connect(self.add_mission)
 
     def open_save_dialog(self):
         file_path, _ = QFileDialog.getSaveFileName(None, "Save Workspace", "", "DST Workspace (*.csv);;All Files (*)")
         if file_path:
             save.class_to_csv(self.bwb_configurations_list, file_path)
+
+    def add_mission(self):
+        name = self.ui.txtMissionName.text()
+        if name == "":
+            name = "Mission " + str(self.ui.lwMissions.count()+1)
+        self.ui.lwMissions.addItem(name)
 
     def open_open_dialog(self):
         file_path, _ = QFileDialog.getOpenFileName(None, "Open Workspace", "", "DST Workspace (*.csv);;All Files (*)")
@@ -64,8 +74,8 @@ class Functions():
         tabName = self.ui.tabWidget.currentWidget().objectName()
         if tabName == "tbMain":
             if self.bwb_configurations_list:
-                dropdowns.setup_dropdown(self.ui.ddGeometry, self.bwb_configurations_list[-1].list_independent_vars())
-                dropdowns.setup_dropdown(self.ui.ddMissionParameters, self.bwb_configurations_list[-1].list_dependent_vars())
+                dropdowns.setup_dropdown(self.ui.ddGeometry, self.bwb_configurations_list[-1].list_independent_vars(), True)
+                dropdowns.setup_dropdown(self.ui.ddMissionParameters, self.bwb_configurations_list[-1].list_dependent_vars(), True)
             else:
                 print("No configurations available to set up dropdown.")
 
@@ -81,6 +91,18 @@ class Functions():
             vsp.SetParmVal(wing_id, "Scale", "XForm", float(scale_val))
             print("modified")
         vsp.WriteVSPFile("wing_model.vsp3")
+
+    def on_choose_mission(self):
+        clearLayout(self.ui.glMissionParameters)
+        match [item.text() for item in self.ui.ddChooseMission.menu().actions() if item.isChecked()][0]:
+            case "Tanker":
+                missions.setup_tanker_mission(self.ui)
+            case "Airdrop":
+                missions.setup_airdrop_mission(self.ui)
+            case "Cargo Carry":
+                missions.setup_cargo_carry_mission(self.ui)
+            case _:
+                print("No mission selected")
 
     def add_plot(self):
         plotVars = [bwb_class.convert_to_camel_casing(item.text()) for item in self.ui.ddMissionParameters.menu().actions() if item.isChecked()]
@@ -199,3 +221,9 @@ def calculate_max_range(bwb, mainSheet):
         if mainSheet["X40"].value > mainSheet["O18"].value:
             bwb.dependentVars.maxRange = (nautical_miles-1)*100
             break
+
+def clearLayout(layout):
+  while layout.count():
+    child = layout.takeAt(0)
+    if child.widget():
+      child.widget().deleteLater()
