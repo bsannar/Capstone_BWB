@@ -9,11 +9,13 @@ def setup_airdrop_mission(ui):
     txtDistanceToDropSite = QLineEdit()
     ui.glMissionParameters.addWidget(txtDistanceToDropSite, 0, 1)
     txtDistanceToDropSite.textChanged.connect(lambda text: set_drop_distance(text, ui))
+    txtDistanceToDropSite.setText(str(missionDict["Dist"]["Cruise1"]))
 
     ui.glMissionParameters.addWidget(QLabel("Payload weight (lb):"), 1, 0)
     txtPayloadWeight = QLineEdit()
     ui.glMissionParameters.addWidget(txtPayloadWeight, 1, 1)
     txtPayloadWeight.textChanged.connect(lambda text: set_payload_weight(text, ui))
+    txtPayloadWeight.setText(str(missionDict["Payload"]["Service2"]))
 
     # ui.glMissionParameters.addWidget(QLabel("Drop altitude:"), 2, 0)
     # txtDropAlt = QLineEdit()
@@ -35,6 +37,7 @@ def setup_tanker_mission(ui):
     txtDistanceToF35s = QLineEdit()
     ui.glMissionParameters.addWidget(txtDistanceToF35s, 0, 1)
     txtDistanceToF35s.textChanged.connect(lambda text: set_f35s_distance(text, ui))
+    txtDistanceToF35s.setText(str(missionDict["Dist"]["Cruise1"]))
 
     ui.glMissionParameters.addWidget(QLabel("F35s to refuel:"), 1, 0)
     txtF35sToRefuel = QLineEdit()
@@ -56,11 +59,13 @@ def setup_cargo_carry_mission(ui):
     txtDistanceToDropSite = QLineEdit()
     ui.glMissionParameters.addWidget(txtDistanceToDropSite, 0, 1)
     txtDistanceToDropSite.textChanged.connect(lambda text: set_carry_distance(text, ui))
+    txtDistanceToDropSite.setText(str(missionDict["Dist"]["Cruise1"]))
 
     ui.glMissionParameters.addWidget(QLabel("Payload weight (lb):"), 1, 0)
     txtPayloadWeight = QLineEdit()
     ui.glMissionParameters.addWidget(txtPayloadWeight, 1, 1)
     txtPayloadWeight.textChanged.connect(lambda text: set_carry_weight(text, ui))
+    txtPayloadWeight.setText("164900")
 
     ui_dict = generate_mission_ui_dictionary(ui)
     for key1, dict in ui_dict.items():
