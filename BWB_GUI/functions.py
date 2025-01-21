@@ -48,6 +48,8 @@ class Functions():
         self.ui.btnViewBWB.clicked.connect(self.open_tigl_viewer)
         self.ui.ddChooseMission.menu().triggered.connect(self.on_choose_mission)
         self.ui.btnAddMission.clicked.connect(self.add_mission)
+        self.ui.btnSetMission.clicked.connect(lambda: missions.populate_jet(self.ui, self.wb.sheets["Main"]))
+        self.ui.lwMissions.itemClicked.connect(lambda item: self.set_mission(item.text()))
 
     def open_save_dialog(self):
         file_path, _ = QFileDialog.getSaveFileName(None, "Save Workspace", "", "DST Workspace (*.csv);;All Files (*)")
@@ -59,6 +61,11 @@ class Functions():
         if name == "":
             name = "Mission " + str(self.ui.lwMissions.count()+1)
         self.ui.lwMissions.addItem(name)
+        missions.create_mission_csv(self.ui, name)
+
+    def set_mission(self, mission_name):
+        missions.populate_ui_from_csv(self.ui, mission_name)
+        missions.populate_jet(self.ui, self.wb.sheets["Main"])
 
     def open_open_dialog(self):
         file_path, _ = QFileDialog.getOpenFileName(None, "Open Workspace", "", "DST Workspace (*.csv);;All Files (*)")

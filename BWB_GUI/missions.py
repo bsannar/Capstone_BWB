@@ -1,21 +1,35 @@
 from PySide6.QtWidgets import QLabel, QLineEdit
 import re
 import csv
+import os
+
+def copy_mission_to_ui(mission_dict, ui_dict):
+    for key1, dict in ui_dict.items():
+        if key1 == "ExpPayload" or key1 == "PermPayload":
+            ui_dict[key1].setText(str(mission_dict[key1]))
+        else:
+            for key2, val in dict.items():
+                ui_dict[key1][key2].setText(str(mission_dict[key1][key2]))
+
+def populate_ui_from_csv(ui, name):
+    mission_dict = load_mission_from_csv(f"Assets/Missions/{name}.csv")
+    ui_dict = generate_mission_ui_dictionary(ui)
+    copy_mission_to_ui(mission_dict, ui_dict)
 
 def setup_airdrop_mission(ui):
-    missionDict = load_mission_from_csv("Assets/Airdrop.csv")
+    mission_dict = load_mission_from_csv("Assets/Airdrop.csv")
 
     ui.glMissionParameters.addWidget(QLabel("Distance to drop site (nm):"), 0, 0)
     txtDistanceToDropSite = QLineEdit()
     ui.glMissionParameters.addWidget(txtDistanceToDropSite, 0, 1)
     txtDistanceToDropSite.textChanged.connect(lambda text: set_drop_distance(text, ui))
-    txtDistanceToDropSite.setText(str(missionDict["Dist"]["Cruise1"]))
+    txtDistanceToDropSite.setText(str(mission_dict["Dist"]["Cruise1"]))
 
     ui.glMissionParameters.addWidget(QLabel("Payload weight (lb):"), 1, 0)
     txtPayloadWeight = QLineEdit()
     ui.glMissionParameters.addWidget(txtPayloadWeight, 1, 1)
     txtPayloadWeight.textChanged.connect(lambda text: set_payload_weight(text, ui))
-    txtPayloadWeight.setText(str(missionDict["Payload"]["Service2"]))
+    txtPayloadWeight.setText(str(mission_dict["Payload"]["Service2"]))
 
     # ui.glMissionParameters.addWidget(QLabel("Drop altitude:"), 2, 0)
     # txtDropAlt = QLineEdit()
@@ -23,21 +37,16 @@ def setup_airdrop_mission(ui):
     # txtDropAlt.textChanged.connect(lambda text: set_drop_altitude(text, ui))
 
     ui_dict = generate_mission_ui_dictionary(ui)
-    for key1, dict in ui_dict.items():
-        for key2, val in dict.items():
-            ui_dict[key1][key2].setText(str(missionDict[key1][key2]))
-
-    ui.txtPermanentPayload.setText("0")
-    ui.txtExpendablePayload.setText(ui_dict["Payload"]["Service2"].text())
+    copy_mission_to_ui(mission_dict, ui_dict)
 
 def setup_tanker_mission(ui):
-    missionDict = load_mission_from_csv("Assets/Tanker.csv")
+    mission_dict = load_mission_from_csv("Assets/Tanker.csv")
 
     ui.glMissionParameters.addWidget(QLabel("Distance to F35s:"), 0, 0)
     txtDistanceToF35s = QLineEdit()
     ui.glMissionParameters.addWidget(txtDistanceToF35s, 0, 1)
     txtDistanceToF35s.textChanged.connect(lambda text: set_f35s_distance(text, ui))
-    txtDistanceToF35s.setText(str(missionDict["Dist"]["Cruise1"]))
+    txtDistanceToF35s.setText(str(mission_dict["Dist"]["Cruise1"]))
 
     ui.glMissionParameters.addWidget(QLabel("F35s to refuel:"), 1, 0)
     txtF35sToRefuel = QLineEdit()
@@ -45,35 +54,25 @@ def setup_tanker_mission(ui):
     txtF35sToRefuel.textChanged.connect(lambda text: set_f35s_to_refuel(text, ui))
 
     ui_dict = generate_mission_ui_dictionary(ui)
-    for key1, dict in ui_dict.items():
-        for key2, val in dict.items():
-            ui_dict[key1][key2].setText(str(missionDict[key1][key2]))
-
-    ui.txtPermanentPayload.setText("0")
-    ui.txtExpendablePayload.setText(ui_dict["Payload"]["Service2"].text())
+    copy_mission_to_ui(mission_dict, ui_dict)
 
 def setup_cargo_carry_mission(ui):
-    missionDict = load_mission_from_csv("Assets/Cargo Carry.csv")
+    mission_dict = load_mission_from_csv("Assets/Cargo Carry.csv")
 
     ui.glMissionParameters.addWidget(QLabel("Distance to drop site (nm):"), 0, 0)
     txtDistanceToDropSite = QLineEdit()
     ui.glMissionParameters.addWidget(txtDistanceToDropSite, 0, 1)
     txtDistanceToDropSite.textChanged.connect(lambda text: set_carry_distance(text, ui))
-    txtDistanceToDropSite.setText(str(missionDict["Dist"]["Cruise1"]))
+    txtDistanceToDropSite.setText(str(mission_dict["Dist"]["Cruise1"]))
 
     ui.glMissionParameters.addWidget(QLabel("Payload weight (lb):"), 1, 0)
     txtPayloadWeight = QLineEdit()
     ui.glMissionParameters.addWidget(txtPayloadWeight, 1, 1)
     txtPayloadWeight.textChanged.connect(lambda text: set_carry_weight(text, ui))
-    txtPayloadWeight.setText("164900")
+    txtPayloadWeight.setText(mission_dict["PermPayload"])
 
     ui_dict = generate_mission_ui_dictionary(ui)
-    for key1, dict in ui_dict.items():
-        for key2, val in dict.items():
-            ui_dict[key1][key2].setText(str(missionDict[key1][key2]))
-
-    ui.txtPermanentPayload.setText("164900")
-    ui.txtExpendablePayload.setText("0")
+    copy_mission_to_ui(mission_dict, ui_dict)
 
 def set_drop_distance(text, ui):
     ui.txtCruise1Dist.setText(text)
@@ -131,6 +130,8 @@ def generate_mission_ui_dictionary(ui):
     for w in text_widgets:
         name = w.objectName()
         dict[get_last_word(name)][strip_last_word_and_prefix(name)] = w
+    dict["ExpPayload"] = ui.txtExpendablePayload
+    dict["PermPayload"] = ui.txtPermanentPayload
     return dict
 
 def load_mission_from_csv(file):
@@ -144,7 +145,66 @@ def load_mission_from_csv(file):
                 for j, val in enumerate(row):
                     if j == 0:
                         key = val
-                        dict[key] = {}
+                        if key != "ExpPayload" and key != "PermPayload":
+                            dict[key] = {}
                     else:
-                        dict[key][keys[j-1]] = val
+
+                        if key == "ExpPayload" or key == "PermPayload":
+                            dict[key] = val
+                            break
+                        else:
+                            dict[key][keys[j-1]] = val
     return dict
+
+def generate_jet_dict(ui):
+    cell_dict = {"Alt": "33", "Mach": "35", "Dist": "38", "Time": "39", "Payload": "41",
+        "TO": "K", "Accel": "L", "Climb1": "M", "Cruise1": "N", "Patrol1": "O", "Service1": "P", "Patrol2": "Q", "Service2": "R", "Patrol3": "S", "Service3": "T", "Climb2": "U", "Cruise2": "V", "Loiter": "W", "Landing": "X"}
+    dict = {}
+    widgets = [ui.glDenseMissionParameters.itemAt(i).widget() for i in range(ui.glDenseMissionParameters.count())]
+    text_widgets = [w for w in widgets if w.objectName().startswith("txt")]
+    for w in text_widgets:
+        key = get_last_word(w.objectName())
+        if key not in dict:
+            dict[key] = {}
+    for i, w in enumerate(text_widgets):
+        name = w.objectName()
+        key1 = get_last_word(name)
+        key2 = strip_last_word_and_prefix(name)
+        dict[key1][key2] = cell_dict[key2]+cell_dict[key1]
+    dict["ExpPayload"] = "O17"
+    dict["PermPayload"] = "O16"
+    print(dict)
+    return dict
+
+def populate_jet(ui, main_sheet):
+    ui_dict = generate_mission_ui_dictionary(ui)
+    jet_dict = generate_jet_dict(ui)
+    for key1, dict in ui_dict.items():
+        if key1 == "ExpPayload" or key1 == "PermPayload":
+            main_sheet[jet_dict[key1]].value = ui_dict[key1].text()
+        else:
+            for key2, val in dict.items():
+                main_sheet[jet_dict[key1][key2]].value = ui_dict[key1][key2].text()
+
+def create_mission_csv(ui, name):
+    ui_dict = generate_mission_ui_dictionary(ui)
+    if not os.path.exists("Assets/Missions/"):
+        os.makedirs("Assets/Missions/")
+    with open(f"Assets/Missions/{name}.csv", "w", newline="") as file:
+        writer = csv.writer(file)
+        header = ['']
+        header2 = [[key2 for key2, val in dict.items()] for key1, dict in ui_dict.items() if key1 != "ExpPayload" and key1 != "PermPayload"][0]
+        header.extend(header2)
+        row_dict = {key: i for i, key in enumerate(header)}
+        writer.writerow(header)
+        for key1, dict in ui_dict.items():
+            if key1 == "ExpPayload" or key1 == "PermPayload":
+                writer.writerow([key1, ui_dict[key1].text()])
+            else:
+                row = header
+                row[0] = key1
+                for key2, val in dict.items():
+                    row[row_dict[key2]] = (ui_dict[key1][key2].text())
+                writer.writerow(row)
+
+

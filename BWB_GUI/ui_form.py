@@ -249,10 +249,25 @@ class Ui_MainWindow(object):
         self.gridLayout_7 = QGridLayout(self.tbMissionParameters)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
         self.gridLayout_7.setContentsMargins(0, 11, 0, 0)
-        self.btnAddMission = QPushButton(self.tbMissionParameters)
-        self.btnAddMission.setObjectName(u"btnAddMission")
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.ddChooseMission = QToolButton(self.tbMissionParameters)
+        self.ddChooseMission.setObjectName(u"ddChooseMission")
+        sizePolicy3 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.ddChooseMission.sizePolicy().hasHeightForWidth())
+        self.ddChooseMission.setSizePolicy(sizePolicy3)
 
-        self.gridLayout_7.addWidget(self.btnAddMission, 8, 0, 1, 1)
+        self.horizontalLayout.addWidget(self.ddChooseMission)
+
+        self.glMissionParameters = QGridLayout()
+        self.glMissionParameters.setObjectName(u"glMissionParameters")
+
+        self.horizontalLayout.addLayout(self.glMissionParameters)
+
+
+        self.gridLayout_7.addLayout(self.horizontalLayout, 2, 0, 1, 1)
 
         self.lwMissions = QListWidget(self.tbMissionParameters)
         self.lwMissions.setObjectName(u"lwMissions")
@@ -357,11 +372,11 @@ class Ui_MainWindow(object):
 
         self.label_21 = QLabel(self.tbMissionParameters)
         self.label_21.setObjectName(u"label_21")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.label_21.sizePolicy().hasHeightForWidth())
-        self.label_21.setSizePolicy(sizePolicy3)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.label_21.sizePolicy().hasHeightForWidth())
+        self.label_21.setSizePolicy(sizePolicy4)
 
         self.glDenseMissionParameters.addWidget(self.label_21, 5, 0, 1, 1)
 
@@ -785,25 +800,15 @@ class Ui_MainWindow(object):
 
         self.gridLayout_7.addLayout(self.horizontalLayout_2, 1, 0, 1, 1)
 
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.ddChooseMission = QToolButton(self.tbMissionParameters)
-        self.ddChooseMission.setObjectName(u"ddChooseMission")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.ddChooseMission.sizePolicy().hasHeightForWidth())
-        self.ddChooseMission.setSizePolicy(sizePolicy4)
+        self.btnAddMission = QPushButton(self.tbMissionParameters)
+        self.btnAddMission.setObjectName(u"btnAddMission")
 
-        self.horizontalLayout.addWidget(self.ddChooseMission)
+        self.gridLayout_7.addWidget(self.btnAddMission, 8, 0, 1, 1)
 
-        self.glMissionParameters = QGridLayout()
-        self.glMissionParameters.setObjectName(u"glMissionParameters")
+        self.btnSetMission = QPushButton(self.tbMissionParameters)
+        self.btnSetMission.setObjectName(u"btnSetMission")
 
-        self.horizontalLayout.addLayout(self.glMissionParameters)
-
-
-        self.gridLayout_7.addLayout(self.horizontalLayout, 2, 0, 1, 1)
+        self.gridLayout_7.addWidget(self.btnSetMission, 10, 0, 1, 1)
 
         self.tabWidget.addTab(self.tbMissionParameters, "")
         self.tab = QWidget()
@@ -870,7 +875,7 @@ class Ui_MainWindow(object):
         self.btnViewBWB.setText(QCoreApplication.translate("MainWindow", u"View", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbBWB), QCoreApplication.translate("MainWindow", u"BWB", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbTW), QCoreApplication.translate("MainWindow", u"Tube And Wing", None))
-        self.btnAddMission.setText(QCoreApplication.translate("MainWindow", u"Add", None))
+        self.ddChooseMission.setText(QCoreApplication.translate("MainWindow", u"Choose Mission", None))
         self.label_15.setText(QCoreApplication.translate("MainWindow", u"Cruise1", None))
         self.label_13.setText(QCoreApplication.translate("MainWindow", u"Service1", None))
         self.label_17.setText(QCoreApplication.translate("MainWindow", u"Accel", None))
@@ -893,7 +898,8 @@ class Ui_MainWindow(object):
         self.label_23.setText(QCoreApplication.translate("MainWindow", u"Permanent Payload", None))
         self.label_24.setText(QCoreApplication.translate("MainWindow", u"Expendable Payload", None))
         self.label_22.setText(QCoreApplication.translate("MainWindow", u"Name:", None))
-        self.ddChooseMission.setText(QCoreApplication.translate("MainWindow", u"Choose Mission", None))
+        self.btnAddMission.setText(QCoreApplication.translate("MainWindow", u"Add", None))
+        self.btnSetMission.setText(QCoreApplication.translate("MainWindow", u"Set Mission", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbMissionParameters), QCoreApplication.translate("MainWindow", u"Mission Parameters", None))
         self.btnSensitivities.setText(QCoreApplication.translate("MainWindow", u"Calculate Sensitivities", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Sensitivities", None))
