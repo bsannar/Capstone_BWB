@@ -11,6 +11,9 @@
         "config_saver.py",
         "sensitivities.py",
         "DST_md.csv",
-        "missions.py"
+        "missions.py",
+        "datainterface.py",
+        "jetinterface.py",
+        "textprocessingutilities.py"
     ]
 }

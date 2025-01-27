@@ -133,90 +133,80 @@ class Ui_MainWindow(object):
         self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 1041, 582))
         self.verticalLayout_3 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.gridLayout = QGridLayout()
-        self.gridLayout.setObjectName(u"gridLayout")
-        self.lbWingspan = QLabel(self.scrollAreaWidgetContents_2)
-        self.lbWingspan.setObjectName(u"lbWingspan")
+        self.glBwbGeometry = QGridLayout()
+        self.glBwbGeometry.setObjectName(u"glBwbGeometry")
+        self.lbWingspan_2 = QLabel(self.scrollAreaWidgetContents_2)
+        self.lbWingspan_2.setObjectName(u"lbWingspan_2")
 
-        self.gridLayout.addWidget(self.lbWingspan, 1, 0, 1, 1)
+        self.glBwbGeometry.addWidget(self.lbWingspan_2, 0, 1, 1, 1)
 
-        self.label_5 = QLabel(self.scrollAreaWidgetContents_2)
-        self.label_5.setObjectName(u"label_5")
+        self.txtVertsurfSweepDeg = QLineEdit(self.scrollAreaWidgetContents_2)
+        self.txtVertsurfSweepDeg.setObjectName(u"txtVertsurfSweepDeg")
 
-        self.gridLayout.addWidget(self.label_5, 3, 0, 1, 1)
-
-        self.lbDropDistance = QLabel(self.scrollAreaWidgetContents_2)
-        self.lbDropDistance.setObjectName(u"lbDropDistance")
-
-        self.gridLayout.addWidget(self.lbDropDistance, 5, 0, 1, 1)
-
-        self.txtVertTailAspectRatio = QLineEdit(self.scrollAreaWidgetContents_2)
-        self.txtVertTailAspectRatio.setObjectName(u"txtVertTailAspectRatio")
-
-        self.gridLayout.addWidget(self.txtVertTailAspectRatio, 2, 2, 1, 1)
+        self.glBwbGeometry.addWidget(self.txtVertsurfSweepDeg, 4, 2, 1, 1)
 
         self.label_6 = QLabel(self.scrollAreaWidgetContents_2)
         self.label_6.setObjectName(u"label_6")
 
-        self.gridLayout.addWidget(self.label_6, 4, 0, 1, 1)
-
-        self.txtWingSweep = QLineEdit(self.scrollAreaWidgetContents_2)
-        self.txtWingSweep.setObjectName(u"txtWingSweep")
-
-        self.gridLayout.addWidget(self.txtWingSweep, 4, 1, 1, 1)
-
-        self.txtVertTailSweep = QLineEdit(self.scrollAreaWidgetContents_2)
-        self.txtVertTailSweep.setObjectName(u"txtVertTailSweep")
-
-        self.gridLayout.addWidget(self.txtVertTailSweep, 4, 2, 1, 1)
-
-        self.txtVertTailTaperRatio = QLineEdit(self.scrollAreaWidgetContents_2)
-        self.txtVertTailTaperRatio.setObjectName(u"txtVertTailTaperRatio")
-
-        self.gridLayout.addWidget(self.txtVertTailTaperRatio, 3, 2, 1, 1)
-
-        self.txtDropDistance = QLineEdit(self.scrollAreaWidgetContents_2)
-        self.txtDropDistance.setObjectName(u"txtDropDistance")
-
-        self.gridLayout.addWidget(self.txtDropDistance, 5, 1, 1, 1)
-
-        self.lbTailspan = QLabel(self.scrollAreaWidgetContents_2)
-        self.lbTailspan.setObjectName(u"lbTailspan")
-
-        self.gridLayout.addWidget(self.lbTailspan, 2, 0, 1, 1)
-
-        self.lbWingspan_2 = QLabel(self.scrollAreaWidgetContents_2)
-        self.lbWingspan_2.setObjectName(u"lbWingspan_2")
-
-        self.gridLayout.addWidget(self.lbWingspan_2, 0, 1, 1, 1)
-
-        self.txtVertTailSqFt = QLineEdit(self.scrollAreaWidgetContents_2)
-        self.txtVertTailSqFt.setObjectName(u"txtVertTailSqFt")
-
-        self.gridLayout.addWidget(self.txtVertTailSqFt, 1, 2, 1, 1)
-
-        self.lbWingspan_3 = QLabel(self.scrollAreaWidgetContents_2)
-        self.lbWingspan_3.setObjectName(u"lbWingspan_3")
-
-        self.gridLayout.addWidget(self.lbWingspan_3, 0, 2, 1, 1)
-
-        self.txtWingSqFt = QLineEdit(self.scrollAreaWidgetContents_2)
-        self.txtWingSqFt.setObjectName(u"txtWingSqFt")
-
-        self.gridLayout.addWidget(self.txtWingSqFt, 1, 1, 1, 1)
-
-        self.txtWingAspectRatio = QLineEdit(self.scrollAreaWidgetContents_2)
-        self.txtWingAspectRatio.setObjectName(u"txtWingAspectRatio")
-
-        self.gridLayout.addWidget(self.txtWingAspectRatio, 2, 1, 1, 1)
+        self.glBwbGeometry.addWidget(self.label_6, 4, 0, 1, 1)
 
         self.txtWingTaperRatio = QLineEdit(self.scrollAreaWidgetContents_2)
         self.txtWingTaperRatio.setObjectName(u"txtWingTaperRatio")
 
-        self.gridLayout.addWidget(self.txtWingTaperRatio, 3, 1, 1, 1)
+        self.glBwbGeometry.addWidget(self.txtWingTaperRatio, 3, 1, 1, 1)
+
+        self.txtWingAspectRatio = QLineEdit(self.scrollAreaWidgetContents_2)
+        self.txtWingAspectRatio.setObjectName(u"txtWingAspectRatio")
+
+        self.glBwbGeometry.addWidget(self.txtWingAspectRatio, 2, 1, 1, 1)
+
+        self.lbWingspan_3 = QLabel(self.scrollAreaWidgetContents_2)
+        self.lbWingspan_3.setObjectName(u"lbWingspan_3")
+
+        self.glBwbGeometry.addWidget(self.lbWingspan_3, 0, 2, 1, 1)
+
+        self.txtVertsurfSqFt = QLineEdit(self.scrollAreaWidgetContents_2)
+        self.txtVertsurfSqFt.setObjectName(u"txtVertsurfSqFt")
+
+        self.glBwbGeometry.addWidget(self.txtVertsurfSqFt, 1, 2, 1, 1)
+
+        self.txtVertsurfAspectRatio = QLineEdit(self.scrollAreaWidgetContents_2)
+        self.txtVertsurfAspectRatio.setObjectName(u"txtVertsurfAspectRatio")
+
+        self.glBwbGeometry.addWidget(self.txtVertsurfAspectRatio, 2, 2, 1, 1)
+
+        self.txtWingSweepDeg = QLineEdit(self.scrollAreaWidgetContents_2)
+        self.txtWingSweepDeg.setObjectName(u"txtWingSweepDeg")
+
+        self.glBwbGeometry.addWidget(self.txtWingSweepDeg, 4, 1, 1, 1)
+
+        self.lbWingspan = QLabel(self.scrollAreaWidgetContents_2)
+        self.lbWingspan.setObjectName(u"lbWingspan")
+
+        self.glBwbGeometry.addWidget(self.lbWingspan, 1, 0, 1, 1)
+
+        self.txtVertsurfTaperRatio = QLineEdit(self.scrollAreaWidgetContents_2)
+        self.txtVertsurfTaperRatio.setObjectName(u"txtVertsurfTaperRatio")
+
+        self.glBwbGeometry.addWidget(self.txtVertsurfTaperRatio, 3, 2, 1, 1)
+
+        self.txtWingSqFt = QLineEdit(self.scrollAreaWidgetContents_2)
+        self.txtWingSqFt.setObjectName(u"txtWingSqFt")
+
+        self.glBwbGeometry.addWidget(self.txtWingSqFt, 1, 1, 1, 1)
+
+        self.lbTailspan = QLabel(self.scrollAreaWidgetContents_2)
+        self.lbTailspan.setObjectName(u"lbTailspan")
+
+        self.glBwbGeometry.addWidget(self.lbTailspan, 2, 0, 1, 1)
+
+        self.label_5 = QLabel(self.scrollAreaWidgetContents_2)
+        self.label_5.setObjectName(u"label_5")
+
+        self.glBwbGeometry.addWidget(self.label_5, 3, 0, 1, 1)
 
 
-        self.verticalLayout_3.addLayout(self.gridLayout)
+        self.verticalLayout_3.addLayout(self.glBwbGeometry)
 
         self.btnUpdate = QPushButton(self.scrollAreaWidgetContents_2)
         self.btnUpdate.setObjectName(u"btnUpdate")
@@ -847,7 +837,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -864,13 +854,12 @@ class Ui_MainWindow(object):
         self.ddMissionParameters.setText(QCoreApplication.translate("MainWindow", u"Mission Parameters", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbMain), QCoreApplication.translate("MainWindow", u"Main", None))
-        self.lbWingspan.setText(QCoreApplication.translate("MainWindow", u"Square Footage:", None))
-        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Taper Ratio:", None))
-        self.lbDropDistance.setText(QCoreApplication.translate("MainWindow", u"Payload drop off distance:", None))
-        self.label_6.setText(QCoreApplication.translate("MainWindow", u"Sweep:", None))
-        self.lbTailspan.setText(QCoreApplication.translate("MainWindow", u"Aspect Ratio:", None))
         self.lbWingspan_2.setText(QCoreApplication.translate("MainWindow", u"Wing", None))
-        self.lbWingspan_3.setText(QCoreApplication.translate("MainWindow", u"Vertical Tail", None))
+        self.label_6.setText(QCoreApplication.translate("MainWindow", u"Sweep:", None))
+        self.lbWingspan_3.setText(QCoreApplication.translate("MainWindow", u"Vertical Surface", None))
+        self.lbWingspan.setText(QCoreApplication.translate("MainWindow", u"Square Footage:", None))
+        self.lbTailspan.setText(QCoreApplication.translate("MainWindow", u"Aspect Ratio:", None))
+        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Taper Ratio:", None))
         self.btnUpdate.setText(QCoreApplication.translate("MainWindow", u"Update", None))
         self.btnViewBWB.setText(QCoreApplication.translate("MainWindow", u"View", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbBWB), QCoreApplication.translate("MainWindow", u"BWB", None))

@@ -33,7 +33,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>3</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tbMain">
        <attribute name="title">
@@ -186,11 +186,63 @@
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
             <item>
-             <layout class="QGridLayout" name="gridLayout">
+             <layout class="QGridLayout" name="glBwbGeometry">
+              <item row="0" column="1">
+               <widget class="QLabel" name="lbWingspan_2">
+                <property name="text">
+                 <string>Wing</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="2">
+               <widget class="QLineEdit" name="txtVertsurfSweepDeg"/>
+              </item>
+              <item row="4" column="0">
+               <widget class="QLabel" name="label_6">
+                <property name="text">
+                 <string>Sweep:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QLineEdit" name="txtWingTaperRatio"/>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLineEdit" name="txtWingAspectRatio"/>
+              </item>
+              <item row="0" column="2">
+               <widget class="QLabel" name="lbWingspan_3">
+                <property name="text">
+                 <string>Vertical Surface</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QLineEdit" name="txtVertsurfSqFt"/>
+              </item>
+              <item row="2" column="2">
+               <widget class="QLineEdit" name="txtVertsurfAspectRatio"/>
+              </item>
+              <item row="4" column="1">
+               <widget class="QLineEdit" name="txtWingSweepDeg"/>
+              </item>
               <item row="1" column="0">
                <widget class="QLabel" name="lbWingspan">
                 <property name="text">
                  <string>Square Footage:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="2">
+               <widget class="QLineEdit" name="txtVertsurfTaperRatio"/>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="txtWingSqFt"/>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="lbTailspan">
+                <property name="text">
+                 <string>Aspect Ratio:</string>
                 </property>
                </widget>
               </item>
@@ -200,68 +252,6 @@
                  <string>Taper Ratio:</string>
                 </property>
                </widget>
-              </item>
-              <item row="5" column="0">
-               <widget class="QLabel" name="lbDropDistance">
-                <property name="text">
-                 <string>Payload drop off distance:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="2">
-               <widget class="QLineEdit" name="txtVertTailAspectRatio"/>
-              </item>
-              <item row="4" column="0">
-               <widget class="QLabel" name="label_6">
-                <property name="text">
-                 <string>Sweep:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="1">
-               <widget class="QLineEdit" name="txtWingSweep"/>
-              </item>
-              <item row="4" column="2">
-               <widget class="QLineEdit" name="txtVertTailSweep"/>
-              </item>
-              <item row="3" column="2">
-               <widget class="QLineEdit" name="txtVertTailTaperRatio"/>
-              </item>
-              <item row="5" column="1">
-               <widget class="QLineEdit" name="txtDropDistance"/>
-              </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="lbTailspan">
-                <property name="text">
-                 <string>Aspect Ratio:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QLabel" name="lbWingspan_2">
-                <property name="text">
-                 <string>Wing</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2">
-               <widget class="QLineEdit" name="txtVertTailSqFt"/>
-              </item>
-              <item row="0" column="2">
-               <widget class="QLabel" name="lbWingspan_3">
-                <property name="text">
-                 <string>Vertical Tail</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QLineEdit" name="txtWingSqFt"/>
-              </item>
-              <item row="2" column="1">
-               <widget class="QLineEdit" name="txtWingAspectRatio"/>
-              </item>
-              <item row="3" column="1">
-               <widget class="QLineEdit" name="txtWingTaperRatio"/>
               </item>
              </layout>
             </item>

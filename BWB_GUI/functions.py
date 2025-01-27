@@ -1,7 +1,5 @@
-import xlwings as xw
 #import openvsp as vsp
 import matplotlib.pyplot as plt
-import time
 import os
 from win32gui import GetForegroundWindow, GetWindowText
 import bwb_class
@@ -15,32 +13,19 @@ from PySide6.QtGui import QPixmap, QWindow
 import missions
 
 class Functions():
-    def __init__(self, ui, process):
+    def __init__(self, ui, process, interface):
         self.ui = ui
         self.process = process
-        self.xl = xw.App(visible=False)
-        self.wb = self.xl.books.open("Assets/BWB_tanker.xlsm")
+        self.interface = interface
         self.hasBWBView = False
-        self.setupGUI()
+        self.interface.pull_geometry_vars_into_gui()
         self.bwb_configurations_list = []
         dropdowns.setup_dropdown(self.ui.ddChooseMission, ["Tanker", "Airdrop", "Cargo Carry"], False)
         self.connect_all()
 
-    def setupGUI(self):
-        mainSheet = self.wb.sheets["Main"]
-        self.ui.txtWingSqFt.setText(str(mainSheet["B18"].value))
-        self.ui.txtWingAspectRatio.setText(str(mainSheet["B19"].value))
-        self.ui.txtWingTaperRatio.setText(str(mainSheet["B20"].value))
-        self.ui.txtWingSweep.setText(str(mainSheet["B21"].value))
-        self.ui.txtVertTailSqFt.setText(str(mainSheet["H18"].value))
-        self.ui.txtVertTailAspectRatio.setText(str(mainSheet["H19"].value))
-        self.ui.txtVertTailTaperRatio.setText(str(mainSheet["H20"].value))
-        self.ui.txtVertTailSweep.setText(str(mainSheet["H21"].value))
-        self.ui.txtDropDistance.setText(str(mainSheet["N38"].value + mainSheet["M38"].value + mainSheet["P38"].value + mainSheet["L38"].value))
-
     def connect_all(self):
         self.ui.btnPlot.clicked.connect(self.add_plot)
-        self.ui.btnUpdate.clicked.connect(self.update_geometry)
+        self.ui.btnUpdate.clicked.connect(self.interface.push_geometry_vars_from_gui)
         self.ui.actionSave.triggered.connect(self.open_save_dialog)
         self.ui.actionOpen.triggered.connect(self.open_open_dialog)
         self.ui.tabWidget.currentChanged.connect(self.tab_changed)
@@ -85,19 +70,6 @@ class Functions():
                 dropdowns.setup_dropdown(self.ui.ddMissionParameters, self.bwb_configurations_list[-1].list_dependent_vars(), True)
             else:
                 print("No configurations available to set up dropdown.")
-
-    def open_vsp(self):
-        vsp.ReadVSPFile("wing_model.vsp3")
-        wing_id = vsp.FindGeom("WingGeom", 0)
-        vsp.SetDriverGroup(wing_id, 1, vsp.SPAN_WSECT_DRIVER, vsp.ROOTC_WSECT_DRIVER, vsp.TIPC_WSECT_DRIVER)
-        parm_names = vsp.GetGeomParmIDs(wing_id)
-        for p in parm_names:
-            print("Available parameters for the wing:", vsp.GetParmName(p), ", group:", vsp.GetParmGroupName(p))
-        scale_val = self.ui.txtScale.text()
-        if scale_val.isdigit:
-            vsp.SetParmVal(wing_id, "Scale", "XForm", float(scale_val))
-            print("modified")
-        vsp.WriteVSPFile("wing_model.vsp3")
 
     def on_choose_mission(self):
         clearLayout(self.ui.glMissionParameters)
@@ -153,52 +125,6 @@ class Functions():
         plt.close()
         self.ui.imgPlot.setPixmap(QPixmap("BWB_performance.png"))
 
-    def update_geometry(self):
-        print("Updating...")
-        mainSheet = self.wb.sheets["Main"]
-        weightSheet = self.wb.sheets["Wt"]
-        performanceSheet = self.wb.sheets["Perf"]
-
-        wingSqFt = self.ui.txtWingSqFt.text()
-        wingAspectRatio = self.ui.txtWingAspectRatio.text()
-        wingTaperRatio = self.ui.txtWingTaperRatio.text()
-        wingSweep = self.ui.txtWingSweep.text()
-        vertTailSqFt = self.ui.txtVertTailSqFt.text()
-        vertTailAspectRatio = self.ui.txtVertTailAspectRatio.text()
-        vertTailTaperRatio = self.ui.txtVertTailTaperRatio.text()
-        vertTailSweep = self.ui.txtVertTailSweep.text()
-        payloadDropDistance = float(self.ui.txtDropDistance.text())
-
-        mainSheet["B18"].value = wingSqFt
-        mainSheet["B19"].value = wingAspectRatio
-        mainSheet["B20"].value = wingTaperRatio
-        mainSheet["B21"].value = wingSweep
-        mainSheet["H18"].value = vertTailSqFt
-        mainSheet["H19"].value = vertTailAspectRatio
-        mainSheet["H20"].value = vertTailTaperRatio
-        mainSheet["H21"].value = vertTailSweep
-        set_payload_drop_distance(mainSheet, payloadDropDistance)
-
-        takeOffWeight = mainSheet["O15"].value
-        dryWeight = mainSheet["O23"].value
-        fuelCapacity = mainSheet["O18"].value
-        specificFuelConsumption = mainSheet["C30"].value
-
-        bwb = bwb_class.Bwb(bwb_class.BwbJetIndependentVars(wingSqFt, vertTailSqFt, wingAspectRatio, vertTailAspectRatio, wingTaperRatio, vertTailTaperRatio, wingSweep, vertTailSweep,
-                fuelCapacity, specificFuelConsumption, payloadDropDistance), bwb_class.BwbDependentVars())
-        maxLiftToDragRatio = 0
-        for i in range(26, 47):
-            liftToDragRatio = performanceSheet['Z'+str(i)].value
-            if liftToDragRatio > maxLiftToDragRatio:
-                maxLiftToDragRatio = liftToDragRatio
-        bwb.dependentVars.liftOverDrag = maxLiftToDragRatio
-        bwb.dependentVars.dryWeight = dryWeight
-        get_number_f_35s(bwb, mainSheet)
-        calculate_max_range(bwb, mainSheet)
-        print("Finished")
-        self.wb.app.macro("export_CPACS_file")()
-        self.bwb_configurations_list.append(bwb)
-
     def open_tigl_viewer(self):
         if os.path.exists("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe"):
             if not self.hasBWBView:
@@ -220,14 +146,6 @@ class Functions():
 
 def set_payload_drop_distance(mainSheet, payloadDropDistance):
     mainSheet["N38"].value = payloadDropDistance - mainSheet["M38"].value - mainSheet["P38"].value - mainSheet["L38"].value
-
-def calculate_max_range(bwb, mainSheet):
-    mainSheet["O17"].value = 0
-    for nautical_miles in range(1, 10000):
-        set_payload_drop_distance(mainSheet, nautical_miles*50)
-        if mainSheet["X40"].value > mainSheet["O18"].value:
-            bwb.dependentVars.maxRange = (nautical_miles-1)*100
-            break
 
 def clearLayout(layout):
   while layout.count():

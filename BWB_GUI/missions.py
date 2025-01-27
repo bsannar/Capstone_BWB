@@ -111,14 +111,6 @@ def set_drop_Alt(text, ui):
     ui.txtPatrol3Alt.setText(text)
     ui.txtService3Alt.setText(text)
 
-def get_last_word(text):
-    return re.findall("[A-Z][a-z]*", text)[-1]
-
-def strip_last_word_and_prefix(text):
-    last_word = get_last_word(text)
-    prefix = re.findall("[a-z]*", text)[0]
-    return re.sub(f"{last_word}|{prefix}", '', text)
-
 def generate_mission_ui_dictionary(ui):
     dict = {}
     widgets = [ui.glDenseMissionParameters.itemAt(i).widget() for i in range(ui.glDenseMissionParameters.count())]
@@ -154,26 +146,6 @@ def load_mission_from_csv(file):
                             break
                         else:
                             dict[key][keys[j-1]] = val
-    return dict
-
-def generate_jet_dict(ui):
-    cell_dict = {"Alt": "33", "Mach": "35", "Dist": "38", "Time": "39", "Payload": "41",
-        "TO": "K", "Accel": "L", "Climb1": "M", "Cruise1": "N", "Patrol1": "O", "Service1": "P", "Patrol2": "Q", "Service2": "R", "Patrol3": "S", "Service3": "T", "Climb2": "U", "Cruise2": "V", "Loiter": "W", "Landing": "X"}
-    dict = {}
-    widgets = [ui.glDenseMissionParameters.itemAt(i).widget() for i in range(ui.glDenseMissionParameters.count())]
-    text_widgets = [w for w in widgets if w.objectName().startswith("txt")]
-    for w in text_widgets:
-        key = get_last_word(w.objectName())
-        if key not in dict:
-            dict[key] = {}
-    for i, w in enumerate(text_widgets):
-        name = w.objectName()
-        key1 = get_last_word(name)
-        key2 = strip_last_word_and_prefix(name)
-        dict[key1][key2] = cell_dict[key2]+cell_dict[key1]
-    dict["ExpPayload"] = "O17"
-    dict["PermPayload"] = "O16"
-    print(dict)
     return dict
 
 def populate_jet(ui, main_sheet):
