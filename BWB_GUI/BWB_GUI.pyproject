@@ -12,8 +12,10 @@
         "sensitivities.py",
         "DST_md.csv",
         "missions.py",
-        "datainterface.py",
+        "toolinterface.py",
         "jetinterface.py",
-        "textprocessingutilities.py"
+        "textprocessingutilities.py",
+        "guimanager.py",
+        "internalstorageinterface.py"
     ]
 }

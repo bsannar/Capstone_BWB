@@ -1,32 +1,50 @@
-from datainterface import DataInterface
+from toolinterface import ToolInterface
 import xlwings as xw
 from textprocessingutilities import *
 
-class JetInterface(DataInterface):
-    def __init__(self, ui, ui_mission_dict, ui_geometry_dict):
+def convert_cell_dict_to_cell_value_dict(cell_dict):
+    value_dict = {}
+    for key, v in cell_dict.items():
+        if isinstance(v, dict):
+            value_dict[key] = convert_cell_dict_to_cell_value_dict(v)
+        else:
+            value_dict[key] = cell_dict[key].value
+    return value_dict
+
+class JetInterface(ToolInterface):
+    def __init__(self, mission_keys, geometry_keys):
         self.xl = xw.App(visible=True)
         self.wb = self.xl.books.open("Assets/BWB_tanker.xlsm")
         self.main_sheet = self.wb.sheets["Main"]
-        self.ui = ui
-        self.ui_mission_dict = ui_mission_dict
-        self.ui_geometry_dict = ui_geometry_dict
-        self.generate_cell_dict()
+        self.generate_cell_dicts(mission_keys, geometry_keys)
 
-    def pull_geometry_vars_into_gui(self):
-        for key1, val in self.ui_geometry_dict.items():
-            if isinstance(val, dict):
-                for key2, widget in val.items():
-                    widget.setText(str(self.cell_dict[key1][key2].value))
-            else:
-                val.setText(str(self.cell_dict[key1].value))
+    def pull_geometry_from_tool(self):
+        return convert_cell_dict_to_cell_value_dict(self.geometry_cell_dict)
 
-    def push_geometry_vars_from_gui(self):
-        for key1, val in self.ui_geometry_dict.items():
-            if isinstance(val, dict):
-                for key2, widget in val.items():
-                    self.cell_dict[key1][key2].value = widget.text()
-            else:
-                self.cell_dict[key1].value = val.text()
+    def pull_mission_inputs_from_tool(self):
+        return convert_cell_dict_to_cell_value_dict(self.mission_cell_dict)
+
+    def push_geometry_to_tool(self, geometry_dict: dict):
+        pass
+
+    def push_mission_inputs_to_tool(self, mission_dict: dict):
+        pass
+
+    # def pull_geometry_vars_into_gui(self):
+    #     for key1, val in self.ui_geometry_dict.items():
+    #         if isinstance(val, dict):
+    #             for key2, widget in val.items():
+    #                 widget.setText(str(self.cell_dict[key1][key2].value))
+    #         else:
+    #             val.setText(str(self.cell_dict[key1].value))
+
+    # def push_geometry_vars_from_gui(self):
+    #     for key1, val in self.ui_geometry_dict.items():
+    #         if isinstance(val, dict):
+    #             for key2, widget in val.items():
+    #                 self.cell_dict[key1][key2].value = widget.text()
+    #         else:
+    #             self.cell_dict[key1].value = val.text()
 
         # takeOffWeight = mainSheet["O15"].value
         # dryWeight = mainSheet["O23"].value
@@ -47,12 +65,6 @@ class JetInterface(DataInterface):
         # print("Finished")
         # self.wb.app.macro("export_CPACS_file")()
         # self.bwb_configurations_list.append(bwb)
-
-    def pull_mission_vars_into_gui(self):
-        pass
-
-    def push_mission_vars_from_gui(self):
-        pass
 
     def close_interface(self):
         self.wb.close()
@@ -75,37 +87,34 @@ class JetInterface(DataInterface):
     def calculate_dry_weight(self):
         pass
 
-    def generate_cell_dict(self):
-        cell_dict = {"Alt": "33", "Mach": "35", "Dist": "38", "Time": "39", "Payload": "41",
+    def generate_cell_dicts(self, mission_keys, geometry_keys):
+        row_col_dict = {"Alt": "33", "Mach": "35", "Dist": "38", "Time": "39", "Payload": "41",
             "TO": "K", "Accel": "L", "Climb1": "M", "Cruise1": "N", "Patrol1": "O", "Service1": "P", "Patrol2": "Q", "Service2": "R", "Patrol3": "S", "Service3": "T", "Climb2": "U", "Cruise2": "V", "Loiter": "W", "Landing": "X",
             "SqFt": "18", "AspectRatio": "19", "TaperRatio": "20", "SweepDeg": "21", "XLocation": "23", "YLocation": "24", "ZLocation": "25", "DihedralDeg": "26",
             "Wing": "B", "Pitchsurf": "C", "Strakes": "D", "Ailerons": "E", "Leadingflaps": "F", "Trailingflaps": "G", "Vertsurf": "H"}
-        dict = {}
 
-        # Mission Widgets
-        widgets = [self.ui.glDenseMissionParameters.itemAt(i).widget() for i in range(self.ui.glDenseMissionParameters.count())]
-        text_widgets = [w for w in widgets if w.objectName().startswith("txt")]
-        for i, w in enumerate(text_widgets):
-            name = w.objectName()
-            key1 = split_camel_casing(name)[-1]
-            key2 = ''.join(split_camel_casing(name)[1:-1])
-            if key1 not in dict:
-                dict[key1] = {}
-            dict[key1][key2] = self.main_sheet[cell_dict[key2]+cell_dict[key1]]
-        dict["ExpPayload"] = self.main_sheet["O17"]
-        dict["PermPayload"] = self.main_sheet["O16"]
+        mission_dict = {}
+        for key in mission_keys:
+            if isinstance(key, dict):
+                key1, keys2 = list(key.items())[0]
+                if key1 not in mission_dict:
+                    mission_dict[key1] = {}
+                for key2 in keys2:
+                    mission_dict[key1][key2] = self.main_sheet[row_col_dict[key2]+row_col_dict[key1]]
+        mission_dict["ExpPayload"] = self.main_sheet["O17"]
+        mission_dict["PermPayload"] = self.main_sheet["O16"]
 
-        #Geometry Widgets
-        widgets = [self.ui.glBwbGeometry.itemAt(i).widget() for i in range(self.ui.glBwbGeometry.count())]
-        text_widgets = [w for w in widgets if w.objectName().startswith("txt")]
-        for i, w in enumerate(text_widgets):
-            name = w.objectName()
-            key1 = ''.join(split_camel_casing(name)[2:])
-            key2 = split_camel_casing(name)[1]
-            if key1 not in dict:
-                dict[key1] = {}
-            dict[key1][key2] = self.main_sheet[cell_dict[key2]+cell_dict[key1]]
-        dict["TiltDeg"] = self.main_sheet["H27"]
+        geometry_dict = {}
+        for key in mission_keys:
+            if isinstance(key, dict):
+                key1, keys2 = list(key.items())[0]
+                if key1 not in geometry_dict:
+                    geometry_dict[key1] = {}
+                for key2 in keys2:
+                    geometry_dict[key1][key2] = self.main_sheet[row_col_dict[key2]+row_col_dict[key1]]
+        geometry_dict["TiltDeg"] = self.main_sheet["H27"]
 
         # Save dictionary to member variable
-        self.cell_dict = dict
+        self.mission_cell_dict = mission_dict
+        self.geometry_cell_dict = geometry_dict
+        print(self.pull_geometry_from_tool())

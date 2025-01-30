@@ -22,6 +22,15 @@ if hasattr(sys, '_MEIPASS'):
     if os.name == 'posix':
         os.environ['QT_QPA_PLATFORM'] = 'xcb'
 
+def get_key_structure(dictionary):
+    keys = []
+    for key, d in dictionary.items():
+        if isinstance(d, dict):
+            keys.append({key: get_key_structure(d)})
+        else:
+            keys.append(key)
+    return keys
+
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -31,7 +40,8 @@ class MainWindow(QMainWindow):
         self.generate_ui_geometry_dict()
         self.setWindowIcon(QPixmap("App_Icon.png"))
         self.process = QProcess()
-        self.interface = JetInterface(self.ui, self.ui_mission_dict, self.ui_geometry_dict)
+        print(get_key_structure(self.ui_mission_dict))
+        self.interface = JetInterface(get_key_structure(self.ui_mission_dict), get_key_structure(self.ui_geometry_dict))
         self.functions = Functions(self.ui, self.process, self.interface)
         self.hasPlotted = True
 
