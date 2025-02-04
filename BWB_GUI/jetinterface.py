@@ -13,7 +13,7 @@ def convert_cell_dict_to_cell_value_dict(cell_dict):
 
 class JetInterface(ToolInterface):
     def __init__(self, mission_keys, geometry_keys):
-        self.xl = xw.App(visible=True)
+        self.xl = xw.App(visible=False)
         self.wb = self.xl.books.open("Assets/BWB_tanker.xlsm")
         self.main_sheet = self.wb.sheets["Main"]
         self.generate_cell_dicts(mission_keys, geometry_keys)
@@ -29,22 +29,6 @@ class JetInterface(ToolInterface):
 
     def push_mission_inputs_to_tool(self, mission_dict: dict):
         pass
-
-    # def pull_geometry_vars_into_gui(self):
-    #     for key1, val in self.ui_geometry_dict.items():
-    #         if isinstance(val, dict):
-    #             for key2, widget in val.items():
-    #                 widget.setText(str(self.cell_dict[key1][key2].value))
-    #         else:
-    #             val.setText(str(self.cell_dict[key1].value))
-
-    # def push_geometry_vars_from_gui(self):
-    #     for key1, val in self.ui_geometry_dict.items():
-    #         if isinstance(val, dict):
-    #             for key2, widget in val.items():
-    #                 self.cell_dict[key1][key2].value = widget.text()
-    #         else:
-    #             self.cell_dict[key1].value = val.text()
 
         # takeOffWeight = mainSheet["O15"].value
         # dryWeight = mainSheet["O23"].value
@@ -105,7 +89,7 @@ class JetInterface(ToolInterface):
         mission_dict["PermPayload"] = self.main_sheet["O16"]
 
         geometry_dict = {}
-        for key in mission_keys:
+        for key in geometry_keys:
             if isinstance(key, dict):
                 key1, keys2 = list(key.items())[0]
                 if key1 not in geometry_dict:
@@ -117,4 +101,3 @@ class JetInterface(ToolInterface):
         # Save dictionary to member variable
         self.mission_cell_dict = mission_dict
         self.geometry_cell_dict = geometry_dict
-        print(self.pull_geometry_from_tool())

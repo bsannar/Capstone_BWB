@@ -3,11 +3,10 @@
         ".gitignore",
         "mainwindow.py",
         "form.ui",
-        "functions.py",
         "f_35s_refueled.py",
-        "bwb_class.py",
+        "bwb.py",
         "dropdowns.py",
-        "tw_class.py",
+        "taw.py",
         "config_saver.py",
         "sensitivities.py",
         "DST_md.csv",
@@ -16,6 +15,11 @@
         "jetinterface.py",
         "textprocessingutilities.py",
         "guimanager.py",
-        "internalstorageinterface.py"
+        "internalstorageinterface.py",
+        "generalgeometry.py",
+        "missioninputs.py",
+        "guiutilities.py",
+        "datamanager.py",
+        "externalstorageinterface.py"
     ]
 }
