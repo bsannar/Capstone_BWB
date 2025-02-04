@@ -40,4 +40,4 @@ def split_camel_casing(string):
     return output.split(" ")
 
 def format_number(number_string):
-    return f"{float(number_string):#.4g}"
+    return f"{float(number_string):.4g}"
