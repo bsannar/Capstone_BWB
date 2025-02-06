@@ -15,23 +15,28 @@ from guiutilities import *
 from datamanager import DataManager
 from textprocessingutilities import *
 from jetinterface import JetInterface
+from csvinterface import CsvInterface
 import copy
 
 class GuiManager:
     def __init__(self, ui):
         self.ui = ui
         self.process = QProcess()
-        self.generate_ui_mission_dict()
+        self.generate_ui_mission_inputs_dict()
         self.generate_ui_geometry_dict()
-        self.interface = JetInterface(get_key_structure(self.ui_mission_dict), get_key_structure(self.ui_geometry_dict))
+        self.tool_interface = JetInterface(get_key_structure(self.ui_mission_inputs_dict), get_key_structure(self.ui_geometry_dict))
         self.hasBWBView = False
         self.bwb_list = []
         self.loaded_bwb = Bwb()
-        self.tool_gui_manager = DataManager(self.interface, self)
+        self.tool_gui_manager = DataManager(self.tool_interface, self)
         self.tool_gui_manager.transfer_geometry()
-        self.tool_storage_manager = DataManager(self.interface, self.loaded_bwb)
+        self.tool_storage_manager = DataManager(self.tool_interface, self.loaded_bwb)
         self.gui_storage_manager = DataManager(self, self.loaded_bwb)
         dropdowns.setup_dropdown(self.ui.ddChooseMission, ["Tanker", "Airdrop", "Cargo Carry"], False)
+        self.csv_interface = CsvInterface()
+        self.gui_csv_manager = DataManager(self, self.csv_interface)
+        self.csv_gui_manager = DataManager(self.csv_interface, self)
+        self.csv_tool_manager = DataManager(self.csv_interface, self.tool_interface)
         self.connect_all()
 
     def connect_all(self):
@@ -49,7 +54,7 @@ class GuiManager:
 
     def update(self):
         self.gui_storage_manager.transfer_geometry()
-        self.loaded_bwb.mission_inputs.max_range = 1000
+        self.loaded_bwb.mission_outputs.max_range = 1000
         self.bwb_list.append(copy.deepcopy(self.loaded_bwb))
 
     def pull_geometry_vars_into_gui(self, geometry_dict: dict):
@@ -70,11 +75,13 @@ class GuiManager:
         if name == "":
             name = "Mission " + str(self.ui.lwMissions.count()+1)
         self.ui.lwMissions.addItem(name)
-        missions.create_mission_csv(self.ui, name)
+        self.csv_interface.set_file_path(f"Assets/Missions/{name}.csv")
+        self.gui_csv_manager.transfer_mission_inputs()
 
     def set_mission(self, mission_name):
-        missions.populate_ui_from_csv(self.ui, mission_name)
-        missions.populate_jet(self.ui, self.wb.sheets["Main"])
+        self.csv_interface.set_file_path(f"Assets/Missions/{mission_name}.csv")
+        self.csv_gui_manager.transfer_mission_inputs()
+        self.csv_tool_manager.transfer_mission_inputs()
 
     def open_open_dialog(self):
         file_path, _ = QFileDialog.getOpenFileName(None, "Open Workspace", "", "DST Workspace (*.csv);;All Files (*)")
@@ -90,8 +97,8 @@ class GuiManager:
         tabName = self.ui.tabWidget.currentWidget().objectName()
         if tabName == "tbMain":
             if True:
-                dropdowns.setup_dropdown(self.ui.ddGeometry, self.loaded_bwb.geometry.list_geometry_vars(), True)
-                dropdowns.setup_dropdown(self.ui.ddMissionParameters, self.loaded_bwb.mission_inputs.list_mission_vars(), True)
+                dropdowns.setup_dropdown(self.ui.ddGeometry, self.loaded_bwb.list_geometry_vars(), True)
+                dropdowns.setup_dropdown(self.ui.ddMissionParameters, self.loaded_bwb.list_mission_outputs(), True)
             else:
                 print("No configurations available to set up dropdown.")
 
@@ -99,11 +106,11 @@ class GuiManager:
         clearLayout(self.ui.glMissionParameters)
         match [item.text() for item in self.ui.ddChooseMission.menu().actions() if item.isChecked()][0]:
             case "Tanker":
-                missions.setup_tanker_mission(self.ui)
+                missions.setup_tanker_mission(self)
             case "Airdrop":
-                missions.setup_airdrop_mission(self.ui)
+                missions.setup_airdrop_mission(self)
             case "Cargo Carry":
-                missions.setup_cargo_carry_mission(self.ui)
+                missions.setup_cargo_carry_mission(self)
             case _:
                 print("No mission selected")
 
@@ -119,12 +126,12 @@ class GuiManager:
         plt.figure(figsize=(size.width()*px, size.height()*px))
         fig, ax = plt.subplots(layout='constrained', figsize=(size.width()*px, size.height()*px))
 
-        normalizers = [max([float(vars(bwb.mission_inputs)[plotVar]) for bwb in self.bwb_list]) for plotVar in plotVars]
+        normalizers = [max([float(vars(bwb.mission_outputs)[plotVar]) for bwb in self.bwb_list]) for plotVar in plotVars]
         values = []
         bar_labels = []
         for i, bwb in enumerate(self.bwb_list):
             offset = width * multiplier
-            labelValues = [float(vars(bwb.mission_inputs)[plotVar]) for plotVar in plotVars]
+            labelValues = [float(vars(bwb.mission_outputs)[plotVar]) for plotVar in plotVars]
             legendLabelValues = [str(vars(bwb.geometry)[convert_to_underscores_from_spaces(legendVar)]) for legendVar in legendLabels]
             normalizedValues = [var/norm for var, norm in zip(labelValues, normalizers)]
             rects = ax.bar(x + offset, normalizedValues, width, label="\n".join([name+": "+format_number(value) for name, value in zip(legendLabels, legendLabelValues)]))
@@ -167,7 +174,7 @@ class GuiManager:
         else:
             print('The path "Executables/TIGL 3.4.0/bin/tiglviewer-3.exe" does not exist')
 
-    def generate_ui_mission_dict(self):
+    def generate_ui_mission_inputs_dict(self):
         dict = {}
         widgets = [self.ui.glDenseMissionParameters.itemAt(i).widget() for i in range(self.ui.glDenseMissionParameters.count())]
         text_widgets = [w for w in widgets if w.objectName().startswith("txt")]
@@ -180,7 +187,7 @@ class GuiManager:
             dict[key1][key2] = w
         dict["ExpPayload"] = self.ui.txtExpendablePayload
         dict["PermPayload"] = self.ui.txtPermanentPayload
-        self.ui_mission_dict = dict
+        self.ui_mission_inputs_dict = dict
 
     def generate_ui_geometry_dict(self):
         dict = {}
@@ -207,3 +214,23 @@ class GuiManager:
             else:
                 geometry_dict[key1] = val.text()
         return geometry_dict
+
+    def pull_mission_inputs_from_gui(self):
+        mission_inputs_dict = {}
+        for key1, val in self.ui_mission_inputs_dict.items():
+            if isinstance(val, dict):
+                if key1 not in mission_inputs_dict:
+                    mission_inputs_dict[key1] = {}
+                for key2, widget in val.items():
+                    mission_inputs_dict[key1][key2] = widget.text()
+            else:
+                mission_inputs_dict[key1] = val.text()
+        return mission_inputs_dict
+
+    def pull_mission_inputs_into_gui(self, mission_inputs_dict: dict):
+        for key1, dict in self.ui_mission_inputs_dict.items():
+            if key1 == "ExpPayload" or key1 == "PermPayload":
+                self.ui_mission_inputs_dict[key1].setText(str(mission_inputs_dict[key1]))
+            else:
+                for key2, val in dict.items():
+                    self.ui_mission_inputs_dict[key1][key2].setText(str(mission_inputs_dict[key1][key2]))

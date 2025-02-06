@@ -20,6 +20,9 @@
         "missioninputs.py",
         "guiutilities.py",
         "datamanager.py",
-        "externalstorageinterface.py"
+        "externalstorageinterface.py",
+        "aircraft.py",
+        "missionoutputs.py",
+        "csvinterface.py"
     ]
 }

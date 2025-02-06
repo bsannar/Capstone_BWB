@@ -27,8 +27,13 @@ class JetInterface(ToolInterface):
     def push_geometry_to_tool(self, geometry_dict: dict):
         pass
 
-    def push_mission_inputs_to_tool(self, mission_dict: dict):
-        pass
+    def push_mission_inputs_to_tool(self, mission_inputs_dict: dict):
+        for key1, dict in mission_inputs_dict.items():
+            if key1 == "ExpPayload" or key1 == "PermPayload":
+                self.mission_cell_dict[key1].value = mission_inputs_dict[key1]
+            else:
+                for key2, val in dict.items():
+                    self.mission_cell_dict[key1][key2].value = mission_inputs_dict[key1][key2]
 
         # takeOffWeight = mainSheet["O15"].value
         # dryWeight = mainSheet["O23"].value

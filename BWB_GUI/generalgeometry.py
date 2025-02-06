@@ -33,7 +33,3 @@ class GeneralGeometry(InternalStorageInterface):
     def push_to_dict(self):
         pass
 
-    def list_geometry_vars(self):
-        names = vars(self).keys()
-        return [name.replace("_", " ") for name in names]
-
