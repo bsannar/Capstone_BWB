@@ -37,6 +37,7 @@ class GuiManager:
         self.gui_csv_manager = DataManager(self, self.csv_interface)
         self.csv_gui_manager = DataManager(self.csv_interface, self)
         self.csv_tool_manager = DataManager(self.csv_interface, self.tool_interface)
+        dropdowns.setup_dropdown(self.ui.choose_aircraft, ["KC-135", "C-17", "B-747"], False)
         self.connect_all()
 
     def connect_all(self):
@@ -48,6 +49,7 @@ class GuiManager:
         self.ui.btnSensitivities.clicked.connect(lambda: sens.calculate_sensitivity_from_jet(self.ui, self.bwb_list[-1], self.wb.sheets["Main"], "B18"))
         self.ui.btnViewBWB.clicked.connect(self.open_tigl_viewer)
         self.ui.ddChooseMission.menu().triggered.connect(self.on_choose_mission)
+        self.ui.choose_aircraft.menu().triggered.connect(self.on_choose_aircraft)
         self.ui.btnAddMission.clicked.connect(self.add_mission)
         self.ui.btnSetMission.clicked.connect(lambda: missions.populate_jet(self.ui, self.wb.sheets["Main"]))
         self.ui.lwMissions.itemClicked.connect(lambda item: self.set_mission(item.text()))
@@ -113,6 +115,17 @@ class GuiManager:
                 missions.setup_cargo_carry_mission(self)
             case _:
                 print("No mission selected")
+
+    def on_choose_aircraft(self):
+        match [item.text() for item in self.ui.choose_aircraft.menu().actions() if item.isChecked()][0]:
+            case "KC-135":
+                print("KC-135")
+            case "C-17":
+                print("C-17")
+            case "B-747":
+                print("B-747")
+            case _:
+                print("No aircraft selected")
 
     def add_plot(self):
         plotVars = [convert_to_underscores_from_spaces(item.text()) for item in self.ui.ddMissionParameters.menu().actions() if item.isChecked()]
