@@ -36,8 +36,8 @@ class Ui_MainWindow(object):
         self.actionOpen.setObjectName(u"actionOpen")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.gridLayout = QGridLayout(self.centralwidget)
-        self.gridLayout.setObjectName(u"gridLayout")
+        self.verticalLayout_4 = QVBoxLayout(self.centralwidget)
+        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
         self.tabWidget = QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName(u"tabWidget")
         self.tabWidget.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
@@ -129,7 +129,7 @@ class Ui_MainWindow(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 1318, 540))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 1318, 563))
         self.verticalLayout_3 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.glBwbGeometry = QGridLayout()
@@ -234,18 +234,40 @@ class Ui_MainWindow(object):
         self.tbTW.setEnabled(True)
         self.gridLayout_10 = QGridLayout(self.tbTW)
         self.gridLayout_10.setObjectName(u"gridLayout_10")
-        self.choose_aircraft = QToolButton(self.tbTW)
-        self.choose_aircraft.setObjectName(u"choose_aircraft")
+        self.view_taw = QToolButton(self.tbTW)
+        self.view_taw.setObjectName(u"view_taw")
 
-        self.gridLayout_10.addWidget(self.choose_aircraft, 0, 0, 1, 1)
+        self.gridLayout_10.addWidget(self.view_taw, 1, 1, 1, 1)
 
         self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.gridLayout_10.addItem(self.horizontalSpacer_3, 0, 1, 1, 1)
+        self.gridLayout_10.addItem(self.horizontalSpacer_3, 0, 3, 1, 1)
+
+        self.choose_aircraft = QToolButton(self.tbTW)
+        self.choose_aircraft.setObjectName(u"choose_aircraft")
+
+        self.gridLayout_10.addWidget(self.choose_aircraft, 0, 1, 1, 1)
 
         self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.gridLayout_10.addItem(self.verticalSpacer_2, 1, 0, 1, 1)
+        self.gridLayout_10.addItem(self.verticalSpacer_2, 2, 0, 1, 1)
+
+        self.scrollArea_3 = QScrollArea(self.tbTW)
+        self.scrollArea_3.setObjectName(u"scrollArea_3")
+        self.scrollArea_3.setWidgetResizable(True)
+        self.scrollAreaWidgetContents_4 = QWidget()
+        self.scrollAreaWidgetContents_4.setObjectName(u"scrollAreaWidgetContents_4")
+        self.scrollAreaWidgetContents_4.setGeometry(QRect(0, 0, 1154, 508))
+        self.verticalLayout_6 = QVBoxLayout(self.scrollAreaWidgetContents_4)
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.wid_taw_tigl = QWidget(self.scrollAreaWidgetContents_4)
+        self.wid_taw_tigl.setObjectName(u"wid_taw_tigl")
+
+        self.verticalLayout_6.addWidget(self.wid_taw_tigl)
+
+        self.scrollArea_3.setWidget(self.scrollAreaWidgetContents_4)
+
+        self.gridLayout_10.addWidget(self.scrollArea_3, 1, 2, 2, 2)
 
         self.tabWidget.addTab(self.tbTW, "")
         self.tbMissionParameters = QWidget()
@@ -834,7 +856,7 @@ class Ui_MainWindow(object):
         self.tbAssumptions.setObjectName(u"tbAssumptions")
         self.tabWidget.addTab(self.tbAssumptions, "")
 
-        self.gridLayout.addWidget(self.tabWidget, 0, 0, 1, 1, Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.verticalLayout_4.addWidget(self.tabWidget)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
@@ -851,7 +873,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -877,6 +899,7 @@ class Ui_MainWindow(object):
         self.btnUpdate.setText(QCoreApplication.translate("MainWindow", u"Update", None))
         self.btnViewBWB.setText(QCoreApplication.translate("MainWindow", u"View", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbBWB), QCoreApplication.translate("MainWindow", u"BWB", None))
+        self.view_taw.setText(QCoreApplication.translate("MainWindow", u"View Aircraft", None))
         self.choose_aircraft.setText(QCoreApplication.translate("MainWindow", u"Select Aircraft", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbTW), QCoreApplication.translate("MainWindow", u"Tube And Wing", None))
         self.ddChooseMission.setText(QCoreApplication.translate("MainWindow", u"Choose Mission", None))

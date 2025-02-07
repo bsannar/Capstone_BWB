@@ -12,9 +12,9 @@ def convert_cell_dict_to_cell_value_dict(cell_dict):
     return value_dict
 
 class JetInterface(ToolInterface):
-    def __init__(self, mission_keys, geometry_keys):
+    def __init__(self, file_path, mission_keys, geometry_keys):
         self.xl = xw.App(visible=False)
-        self.wb = self.xl.books.open("Assets/BWB_tanker.xlsm")
+        self.wb = self.xl.books.open(file_path)
         self.main_sheet = self.wb.sheets["Main"]
         self.generate_cell_dicts(mission_keys, geometry_keys)
 

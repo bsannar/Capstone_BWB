@@ -21,11 +21,13 @@ import copy
 class GuiManager:
     def __init__(self, ui):
         self.ui = ui
-        self.process = QProcess()
-        self.generate_ui_mission_inputs_dict()
+        self.bwb_process = QProcess()
+        self.taw_process = QProcess()
         self.generate_ui_geometry_dict()
+        self.generate_ui_mission_inputs_dict()
         self.tool_interface = JetInterface(get_key_structure(self.ui_mission_inputs_dict), get_key_structure(self.ui_geometry_dict))
         self.hasBWBView = False
+        self.has_taw_view = False
         self.bwb_list = []
         self.loaded_bwb = Bwb()
         self.tool_gui_manager = DataManager(self.tool_interface, self)
@@ -48,6 +50,7 @@ class GuiManager:
         self.ui.tabWidget.currentChanged.connect(self.tab_changed)
         self.ui.btnSensitivities.clicked.connect(lambda: sens.calculate_sensitivity_from_jet(self.ui, self.bwb_list[-1], self.wb.sheets["Main"], "B18"))
         self.ui.btnViewBWB.clicked.connect(self.open_tigl_viewer)
+        self.ui.view_taw.clicked.connect(self.open_tigl_viewer_taw)
         self.ui.ddChooseMission.menu().triggered.connect(self.on_choose_mission)
         self.ui.choose_aircraft.menu().triggered.connect(self.on_choose_aircraft)
         self.ui.btnAddMission.clicked.connect(self.add_mission)
@@ -171,7 +174,7 @@ class GuiManager:
     def open_tigl_viewer(self):
         if os.path.exists("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe"):
             if not self.hasBWBView:
-                self.process.start("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe", ["Assets/theAircraft.xml"])
+                self.bwb_process.start("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe", ["Assets/theAircraft.xml"])
                 title = ""
                 while True:
                     hwnd = GetForegroundWindow()
@@ -187,7 +190,30 @@ class GuiManager:
         else:
             print('The path "Executables/TIGL 3.4.0/bin/tiglviewer-3.exe" does not exist')
 
+<<<<<<< HEAD
     def generate_ui_mission_inputs_dict(self):
+=======
+    def open_tigl_viewer_taw(self):
+        if os.path.exists("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe"):
+            if not self.has_taw_view:
+                self.taw_process.start("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe", ["Assets/KC-135.xml"])
+                title = ""
+                while True:
+                    hwnd = GetForegroundWindow()
+                    title = GetWindowText(hwnd)
+                    if title == "TiGL Viewer 3":
+                            break
+                window = QWindow.fromWinId(hwnd)
+                widget = QWidget.createWindowContainer(window)
+                layout = QVBoxLayout(self.ui.wid_taw_tigl)
+                layout.addWidget(widget)
+                self.ui.wid_taw_tigl.setLayout(layout)
+                self.has_taw_view = True
+        else:
+            print('The path "Executables/TIGL 3.4.0/bin/tiglviewer-3.exe" does not exist')
+
+    def generate_ui_mission_dict(self):
+>>>>>>> 1c56f06 (added tigl capability to taw tab)
         dict = {}
         widgets = [self.ui.glDenseMissionParameters.itemAt(i).widget() for i in range(self.ui.glDenseMissionParameters.count())]
         text_widgets = [w for w in widgets if w.objectName().startswith("txt")]
