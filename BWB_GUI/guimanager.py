@@ -25,7 +25,7 @@ class GuiManager:
         self.taw_process = QProcess()
         self.generate_ui_geometry_dict()
         self.generate_ui_mission_inputs_dict()
-        self.tool_interface = JetInterface(get_key_structure(self.ui_mission_inputs_dict), get_key_structure(self.ui_geometry_dict))
+        self.tool_interface = JetInterface("Assets/BWB_tanker.xlsm", get_key_structure(self.ui_mission_inputs_dict), get_key_structure(self.ui_geometry_dict))
         self.hasBWBView = False
         self.has_taw_view = False
         self.bwb_list = []
@@ -39,7 +39,7 @@ class GuiManager:
         self.gui_csv_manager = DataManager(self, self.csv_interface)
         self.csv_gui_manager = DataManager(self.csv_interface, self)
         self.csv_tool_manager = DataManager(self.csv_interface, self.tool_interface)
-        dropdowns.setup_dropdown(self.ui.choose_aircraft, ["KC-135", "C-17", "B-747"], False)
+        dropdowns.setup_dropdown(self.ui.ddChooseAircraft, ["KC-135", "C-17", "B-747"], False)
         self.connect_all()
 
     def connect_all(self):
@@ -50,9 +50,9 @@ class GuiManager:
         self.ui.tabWidget.currentChanged.connect(self.tab_changed)
         self.ui.btnSensitivities.clicked.connect(lambda: sens.calculate_sensitivity_from_jet(self.ui, self.bwb_list[-1], self.wb.sheets["Main"], "B18"))
         self.ui.btnViewBWB.clicked.connect(self.open_tigl_viewer)
-        self.ui.view_taw.clicked.connect(self.open_tigl_viewer_taw)
+        self.ui.btnViewAircraftTaw.clicked.connect(self.open_tigl_viewer_taw)
         self.ui.ddChooseMission.menu().triggered.connect(self.on_choose_mission)
-        self.ui.choose_aircraft.menu().triggered.connect(self.on_choose_aircraft)
+        self.ui.ddChooseAircraft.menu().triggered.connect(self.on_choose_aircraft)
         self.ui.btnAddMission.clicked.connect(self.add_mission)
         self.ui.btnSetMission.clicked.connect(lambda: missions.populate_jet(self.ui, self.wb.sheets["Main"]))
         self.ui.lwMissions.itemClicked.connect(lambda item: self.set_mission(item.text()))
@@ -120,7 +120,7 @@ class GuiManager:
                 print("No mission selected")
 
     def on_choose_aircraft(self):
-        match [item.text() for item in self.ui.choose_aircraft.menu().actions() if item.isChecked()][0]:
+        match [item.text() for item in self.ui.ddChooseAircraft.menu().actions() if item.isChecked()][0]:
             case "KC-135":
                 print("KC-135")
             case "C-17":
@@ -190,9 +190,6 @@ class GuiManager:
         else:
             print('The path "Executables/TIGL 3.4.0/bin/tiglviewer-3.exe" does not exist')
 
-<<<<<<< HEAD
-    def generate_ui_mission_inputs_dict(self):
-=======
     def open_tigl_viewer_taw(self):
         if os.path.exists("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe"):
             if not self.has_taw_view:
@@ -205,15 +202,14 @@ class GuiManager:
                             break
                 window = QWindow.fromWinId(hwnd)
                 widget = QWidget.createWindowContainer(window)
-                layout = QVBoxLayout(self.ui.wid_taw_tigl)
+                layout = QVBoxLayout(self.ui.widTiglTaw)
                 layout.addWidget(widget)
-                self.ui.wid_taw_tigl.setLayout(layout)
+                self.ui.widTiglTaw.setLayout(layout)
                 self.has_taw_view = True
         else:
             print('The path "Executables/TIGL 3.4.0/bin/tiglviewer-3.exe" does not exist')
 
-    def generate_ui_mission_dict(self):
->>>>>>> 1c56f06 (added tigl capability to taw tab)
+    def generate_ui_mission_inputs_dict(self):
         dict = {}
         widgets = [self.ui.glDenseMissionParameters.itemAt(i).widget() for i in range(self.ui.glDenseMissionParameters.count())]
         text_widgets = [w for w in widgets if w.objectName().startswith("txt")]
