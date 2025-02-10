@@ -920,7 +920,7 @@
          <item row="0" column="4">
           <widget class="QLabel" name="label_step">
            <property name="text">
-            <string>Step Size</string>
+            <string>Step Count</string>
            </property>
           </widget>
          </item>
@@ -980,8 +980,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1348</width>
-     <height>25</height>
+     <width>1047</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
