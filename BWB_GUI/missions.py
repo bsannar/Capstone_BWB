@@ -24,7 +24,7 @@ def setup_airdrop_mission(gui_manager):
     # ui.glMissionParameters.addWidget(txtDropAlt, 2, 1)
     # txtDropAlt.textChanged.connect(lambda text: set_drop_altitude(text, ui))
 
-    data_manager.transfer_mission_inputs()
+    data_manager.transfer_mission_inputs_to_output()
 
 def setup_tanker_mission(gui_manager):
     interface = CsvInterface("Assets/Tanker.csv")
@@ -42,7 +42,7 @@ def setup_tanker_mission(gui_manager):
     gui_manager.ui.glMissionParameters.addWidget(txtF35sToRefuel, 1, 1)
     txtF35sToRefuel.textChanged.connect(lambda text: set_f35s_to_refuel(text, gui_manager.ui))
 
-    data_manager.transfer_mission_inputs()
+    data_manager.transfer_mission_inputs_to_output()
 
 def setup_cargo_carry_mission(gui_manager):
     interface = CsvInterface("Assets/Cargo Carry.csv")
@@ -61,7 +61,7 @@ def setup_cargo_carry_mission(gui_manager):
     txtPayloadWeight.textChanged.connect(lambda text: set_carry_weight(text, gui_manager.ui))
     txtPayloadWeight.setText(mission_dict["PermPayload"])
 
-    data_manager.transfer_mission_inputs()
+    data_manager.transfer_mission_inputs_to_output()
 
 def set_drop_distance(text, ui):
     ui.txtCruise1Dist.setText(text)

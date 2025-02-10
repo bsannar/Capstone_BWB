@@ -3,7 +3,18 @@ class DataManager:
         self.input = input
         self.output = output
 
-    def transfer_geometry(self):
+    def switch(self):
+        input = self.input
+        output = self.output
+        self.input = output
+        self.output = input
+
+    def transfer_geometry_to_input(self):
+        self.switch()
+        self.transfer_geometry_to_output()
+        self.switch()
+
+    def transfer_geometry_to_output(self):
         from toolinterface import ToolInterface
         from internalstorageinterface import InternalStorageInterface
         from guimanager import GuiManager
@@ -14,6 +25,8 @@ class DataManager:
                 geometry_dict = self.input.pull_geometry_from_tool()
             case GuiManager():
                 geometry_dict = self.input.pull_geometry_from_gui()
+            case Aircraft():
+                geometry_dict = self.input.geometry.push_to_dict()
             case _:
                 print("default case")
 
@@ -22,10 +35,17 @@ class DataManager:
                 self.output.geometry.pull_from_dict(geometry_dict)
             case GuiManager():
                 self.output.pull_geometry_vars_into_gui(geometry_dict)
+            case ToolInterface():
+                self.output.push_geometry_to_tool(geometry_dict)
             case _:
                 print("default case")
 
-    def transfer_mission_inputs(self):
+    def transfer_mission_inputs_to_input(self):
+        self.switch()
+        self.transfer_mission_inputs_to_output()
+        self.switch()
+
+    def transfer_mission_inputs_to_output(self):
         from toolinterface import ToolInterface
         from internalstorageinterface import InternalStorageInterface
         from guimanager import GuiManager
@@ -33,6 +53,8 @@ class DataManager:
         from externalstorageinterface import ExternalStorageInterface
 
         match self.input:
+            case Aircraft():
+                mission_inputs_dict = self.input.mission_inputs.push_to_dict()
             case ToolInterface():
                 mission_inputs_dict = self.input.pull_mission_inputs_from_tool()
                 print(mission_inputs_dict)

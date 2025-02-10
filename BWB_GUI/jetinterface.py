@@ -66,8 +66,6 @@ class JetInterface(ToolInterface):
         pass
 
     def calculate_max_range(self):
-        self.mission_dict["ExpPayload"] = 0
-        self.mission_dict["PermPayload"] = 0
         for nautical_miles in range(1, 10000):
             set_payload_drop_distance(mainSheet, nautical_miles*50)
             if mainSheet["X40"].value > mainSheet["O18"].value:

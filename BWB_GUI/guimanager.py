@@ -29,15 +29,17 @@ class GuiManager:
         self.hasBWBView = False
         self.has_taw_view = False
         self.bwb_list = []
-        self.loaded_bwb = Bwb()
+        self.loaded_aircraft = Bwb()
         self.tool_gui_manager = DataManager(self.tool_interface, self)
-        self.tool_gui_manager.transfer_geometry()
-        self.tool_storage_manager = DataManager(self.tool_interface, self.loaded_bwb)
-        self.gui_storage_manager = DataManager(self, self.loaded_bwb)
+        self.tool_gui_manager.transfer_geometry_to_output()
+        self.taw_interface = JetInterface("Assets/KC-135.xlsm", get_key_structure(self.ui_mission_inputs_dict), get_key_structure(self.ui_geometry_dict))
+        self.taw_gui_manager = DataManager(self.taw_interface, self)
+        self.taw_storage_manager = DataManager(self.taw_interface, self.loaded_aircraft)
+        self.tool_storage_manager = DataManager(self.tool_interface, self.loaded_aircraft)
+        self.gui_storage_manager = DataManager(self, self.loaded_aircraft)
         dropdowns.setup_dropdown(self.ui.ddChooseMission, ["Tanker", "Airdrop", "Cargo Carry"], False)
         self.csv_interface = CsvInterface()
         self.gui_csv_manager = DataManager(self, self.csv_interface)
-        self.csv_gui_manager = DataManager(self.csv_interface, self)
         self.csv_tool_manager = DataManager(self.csv_interface, self.tool_interface)
         dropdowns.setup_dropdown(self.ui.ddChooseAircraft, ["KC-135", "C-17", "B-747"], False)
         self.connect_all()
@@ -54,13 +56,13 @@ class GuiManager:
         self.ui.ddChooseMission.menu().triggered.connect(self.on_choose_mission)
         self.ui.ddChooseAircraft.menu().triggered.connect(self.on_choose_aircraft)
         self.ui.btnAddMission.clicked.connect(self.add_mission)
-        self.ui.btnSetMission.clicked.connect(lambda: missions.populate_jet(self.ui, self.wb.sheets["Main"]))
+        self.ui.btnSetMission.clicked.connect(self.tool_gui_manager.transfer_mission_inputs_to_input)
         self.ui.lwMissions.itemClicked.connect(lambda item: self.set_mission(item.text()))
 
     def update(self):
-        self.gui_storage_manager.transfer_geometry()
-        self.loaded_bwb.mission_outputs.max_range = 1000
-        self.bwb_list.append(copy.deepcopy(self.loaded_bwb))
+        self.gui_storage_manager.transfer_geometry_to_output()
+        self.loaded_aircraft.mission_outputs.max_range = 1000
+        self.bwb_list.append(copy.deepcopy(self.loaded_aircraft))
 
     def pull_geometry_vars_into_gui(self, geometry_dict: dict):
         for key1, val in self.ui_geometry_dict.items():
@@ -81,12 +83,12 @@ class GuiManager:
             name = "Mission " + str(self.ui.lwMissions.count()+1)
         self.ui.lwMissions.addItem(name)
         self.csv_interface.set_file_path(f"Assets/Missions/{name}.csv")
-        self.gui_csv_manager.transfer_mission_inputs()
+        self.gui_csv_manager.transfer_mission_inputs_to_output()
 
     def set_mission(self, mission_name):
         self.csv_interface.set_file_path(f"Assets/Missions/{mission_name}.csv")
-        self.csv_gui_manager.transfer_mission_inputs()
-        self.csv_tool_manager.transfer_mission_inputs()
+        self.gui_csv_manager.transfer_mission_inputs_to_input()
+        self.csv_tool_manager.transfer_mission_inputs_to_output()
 
     def open_open_dialog(self):
         file_path, _ = QFileDialog.getOpenFileName(None, "Open Workspace", "", "DST Workspace (*.csv);;All Files (*)")
@@ -102,8 +104,8 @@ class GuiManager:
         tabName = self.ui.tabWidget.currentWidget().objectName()
         if tabName == "tbMain":
             if True:
-                dropdowns.setup_dropdown(self.ui.ddGeometry, self.loaded_bwb.list_geometry_vars(), True)
-                dropdowns.setup_dropdown(self.ui.ddMissionParameters, self.loaded_bwb.list_mission_outputs(), True)
+                dropdowns.setup_dropdown(self.ui.ddGeometry, self.loaded_aircraft.list_geometry_vars(), True)
+                dropdowns.setup_dropdown(self.ui.ddMissionParameters, self.loaded_aircraft.list_mission_outputs(), True)
             else:
                 print("No configurations available to set up dropdown.")
 

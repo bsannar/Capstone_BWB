@@ -28,8 +28,7 @@ class GeneralGeometry(InternalStorageInterface):
         for key, value in flattened_dict.items():
             new_key = convert_from_camel_casing_to_underscores(key)
             setattr(self, new_key, value)
-        print(vars(self))
 
     def push_to_dict(self):
-        pass
+        return vars(self)
 
