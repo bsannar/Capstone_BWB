@@ -13,97 +13,69 @@ class ResponseSurfaceGenerator:
         self.x_name = x_name
         self.y_name = y_name
         self.r_name = r_name
-
-        self.x_values = np.linspace(self.x_min, self.x_max, self.x_steps)
-        self.y_values = np.linspace(self.y_min, self.y_max, self.y_steps)
-        self.X, self.Y = np.meshgrid(self.x_values, self.y_values)
-        self.R = np.zeros_like(self.X)
-
+        
+        self.initialize_grid()
+        self.interpolate_response()
+        self.create_plot()
+    
     def compute_response(self):
+        response = np.zeros((self.x_steps, self.y_steps))
         for i in range(self.x_steps):
             for j in range(self.y_steps):
                 update_inputs(self.X[j, i], self.Y[j, i], self.x_name, self.y_name)
-                self.R[j, i] = get_response(self.r_name)
+                self.response[j, i] = get_response(self.r_name)
+            return response
 
-    def normalize_data(self):
-        X_norm = (self.X - self.x_min) / (self.x_max - self.x_min)
-        Y_norm = (self.Y - self.y_min) / (self.y_max - self.y_min)
-        R_min, R_max = np.min(self.R), np.max(self.R)
-        R_norm = (self.R - R_min) / (R_max - R_min) if R_max != R_min else self.R
-        return X_norm, Y_norm, R_norm
-
+    def initialize_grid(self):
+        self.x = np.linspace(self.x_min, self.x_max, self.x_steps)
+        self.y = np.linspace(self.y_min, self.y_max, self.y_steps)
+        self.response = self.compute_response()
+        self.grid_old = (self.x, self.y)
+        
+        self.x_new = np.linspace(self.x_min + 0.1, self.x_max - 0.1, self.x_steps * 10)
+        self.y_new = np.linspace(self.y_min + 0.1, self.y_max - 0.1, self.y_steps * 10)
+        self.X_new, self.Y_new = np.meshgrid(self.x_new, self.y_new, indexing='ij')
+    
     def interpolate_response(self):
-        interpolator = RegularGridInterpolator((self.x_values, self.y_values), self.R, method='cubic')
-        x_new = np.linspace(self.x_min + 0.1, self.x_max - 0.1, self.x_steps * 10)
-        y_new = np.linspace(self.y_min + 0.1, self.y_max - 0.1, self.y_steps * 10)
-        grid_new = np.meshgrid(x_new, y_new)
-        grid_flattened = np.transpose(np.array([k.flatten() for k in grid_new]))
-        R_interpolated = interpolator(grid_flattened)
-        R_new = R_interpolated.reshape(len(x_new), len(y_new))
-        return grid_new, R_new
-
-    def plot_response_surface(self):
-        grid_new, R_new = self.interpolate_response()
-
-        fig = plt.figure(figsize=(10, 6))
-        ax = fig.add_subplot(111, projection='3d')
-        ax.plot_surface(grid_new[0], grid_new[1], R_new.T, cmap='viridis', edgecolor='k')
-
-        ax.set_xlabel(f"Normalized {self.x_name} (0 to 1)")
-        ax.set_ylabel(f"Normalized {self.y_name} (0 to 1)")
-        ax.set_zlabel(f"Normalized {self.r_name} (0 to 1)")
-        ax.set_title(f"Interpolated Response Surface for {self.r_name}")
-
+        points = np.column_stack([self.X_new.ravel(), self.Y_new.ravel()])
+        grid_interpol = RegularGridInterpolator(self.grid_old, self.response, method='cubic')
+        self.response_interpol = grid_interpol(points).reshape(self.X_new.shape)
+        self.dx, self.dy = np.gradient(self.response_interpol, self.x_new, self.y_new)
+    
+    def create_plot(self):
+        self.fig = plt.figure(figsize=(10, 10))
+        self.ax = self.fig.add_subplot(111, projection='3d')
+        self.ax.plot_surface(self.X_new, self.Y_new, self.response_interpol, cmap="RdBu")
+        
+        self.annot = self.ax.text2D(0.05, 0.95, "Right-click a point to see slope", transform=self.ax.transAxes, 
+                                    fontsize=12, bbox=dict(facecolor='white', alpha=0.7))
+        
+        self.fig.canvas.mpl_connect("button_press_event", self.on_mouse_click)
         plt.show()
+    
+    def on_click(self, event):
+        return self.ax.format_coord(event.xdata, event.ydata)
+    
+    def on_mouse_click(self, event):
+        if event.inaxes == self.ax and event.button == 3:  # Right-click (button 3)
+            if event.xdata is None or event.ydata is None:
+                return
+            
+            coords = self.on_click(event)
+            print(f"Clicked coordinates: {coords}")
+            
+            try:
+                x_click, y_click = map(float, [s.split('=')[1] for s in coords.split(', ')[:2]])
+            except ValueError:
+                return
 
-    def generate(self):
-        self.compute_response()
-        self.plot_response_surface()
+            ix = np.abs(self.x_new - x_click).argmin()
+            iy = np.abs(self.y_new - y_click).argmin()
+            
+            slope_x = self.dx[ix, iy]
+            slope_y = self.dy[ix, iy]
+            response_value = self.response_interpol[ix, iy]
 
-    def random_surface()
-        import numpy as np
-        import matplotlib.pyplot as plt
-        from scipy.interpolate import RegularGridInterpolator
-        from mpl_toolkits.mplot3d import Axes3D
-
-        vel = np.random.random((21, 30))
-
-        x = np.arange(0, 21, 1)
-        y = np.arange(0, 30, 1)
-        grid_old = (x, y)
-
-        x_new = np.arange(0.1, 19.9, 0.1)
-        y_new = np.arange(0.1, 28.9, 0.1)
-        X_new, Y_new = np.meshgrid(x_new, y_new, indexing='ij')
-        points = np.column_stack([X_new.ravel(), Y_new.ravel()])
-        grid_interpol = RegularGridInterpolator(grid_old, vel, method='cubic')
-        vel_interpol = grid_interpol(points).reshape(X_new.shape)
-        dx, dy = np.gradient(vel_interpol, x_new, y_new)
-
-        fig = plt.figure(figsize=(10, 10))
-        ax = fig.add_subplot(111, projection='3d')
-        surf = ax.plot_surface(X_new, Y_new, vel_interpol, cmap="RdBu")
-
-        annot = ax.text2D(0.05, 0.95, "Right-click a point to see slope", transform=ax.transAxes,
-                        fontsize=12, bbox=dict(facecolor='white', alpha=0.7))
-
-        def on_mouse_click(event):
-            if event.inaxes == ax and event.button == 3:  # Right-click (button 3)
-                if event.xdata is None or event.ydata is None:
-                    return
-
-                x_click, y_click = event.xdata, event.ydata
-
-                ix = np.abs(x_new - x_click).argmin()
-                iy = np.abs(y_new - y_click).argmin()
-
-                slope_x = dx[ix, iy]
-                slope_y = dy[ix, iy]
-
-                annot.set_text(f"Slope dx: {slope_x:.4f}\nSlope dy: {slope_y:.4f}")
-
-                fig.canvas.draw_idle()
-
-        fig.canvas.mpl_connect("button_press_event", on_mouse_click)
-
-        plt.show()
+            self.annot.set_text(f"Selected Point: ({x_click:.2f}, {y_click:.2f})\nResponse: {response_value:.4f}\nSlope dx: {slope_x:.4f}\nSlope dy: {slope_y:.4f}")
+            self.annot.set_visible(True)
+            self.fig.canvas.draw_idle()
