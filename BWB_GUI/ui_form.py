@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'form.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.4.2
+## Created by: Qt User Interface Compiler version 6.7.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -59,7 +59,7 @@ class Ui_MainWindow(object):
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.imgPlot = QLabel(self.scrollAreaWidgetContents)
         self.imgPlot.setObjectName(u"imgPlot")
-        sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.imgPlot.sizePolicy().hasHeightForWidth())
@@ -70,7 +70,7 @@ class Ui_MainWindow(object):
 
         self.btnPlot = QPushButton(self.scrollAreaWidgetContents)
         self.btnPlot.setObjectName(u"btnPlot")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.btnPlot.sizePolicy().hasHeightForWidth())
@@ -82,7 +82,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.ddGeometry = QToolButton(self.scrollAreaWidgetContents)
         self.ddGeometry.setObjectName(u"ddGeometry")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         sizePolicy2.setHorizontalStretch(0)
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.ddGeometry.sizePolicy().hasHeightForWidth())
@@ -235,11 +235,11 @@ class Ui_MainWindow(object):
         self.tbTW.setEnabled(True)
         self.gridLayout_5 = QGridLayout(self.tbTW)
         self.gridLayout_5.setObjectName(u"gridLayout_5")
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.gridLayout_5.addItem(self.verticalSpacer_2, 2, 0, 1, 1)
 
-        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.gridLayout_5.addItem(self.horizontalSpacer_3, 0, 1, 1, 1)
 
@@ -268,7 +268,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.ddChooseMission = QToolButton(self.tbMissionParameters)
         self.ddChooseMission.setObjectName(u"ddChooseMission")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
         sizePolicy3.setHorizontalStretch(0)
         sizePolicy3.setVerticalStretch(0)
         sizePolicy3.setHeightForWidth(self.ddChooseMission.sizePolicy().hasHeightForWidth())
@@ -387,7 +387,7 @@ class Ui_MainWindow(object):
 
         self.label_21 = QLabel(self.tbMissionParameters)
         self.label_21.setObjectName(u"label_21")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy4.setHorizontalStretch(0)
         sizePolicy4.setVerticalStretch(0)
         sizePolicy4.setHeightForWidth(self.label_21.sizePolicy().hasHeightForWidth())
@@ -782,7 +782,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_5.addWidget(self.txtExpendablePayload)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_5.addItem(self.verticalSpacer)
 
@@ -794,7 +794,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_2.addItem(self.horizontalSpacer)
 
@@ -808,7 +808,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_2.addWidget(self.txtMissionName)
 
-        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_2.addItem(self.horizontalSpacer_2)
 
@@ -862,7 +862,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -888,8 +888,8 @@ class Ui_MainWindow(object):
         self.btnUpdate.setText(QCoreApplication.translate("MainWindow", u"Update", None))
         self.btnViewBWB.setText(QCoreApplication.translate("MainWindow", u"View", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbBWB), QCoreApplication.translate("MainWindow", u"BWB", None))
-        self.btnViewAircraftTaw.setText(QCoreApplication.translate("MainWindow", u"View Aircraft", None))
-        self.ddChooseAircraft.setText(QCoreApplication.translate("MainWindow", u"Choose Aircraft", None))
+        self.btnViewAircraftTaw.setText(QCoreApplication.translate("MainWindow", u"View Aircraft Model", None))
+        self.ddChooseAircraft.setText(QCoreApplication.translate("MainWindow", u"Choose Tube and Wing Aircraft", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbTW), QCoreApplication.translate("MainWindow", u"Tube And Wing", None))
         self.ddChooseMission.setText(QCoreApplication.translate("MainWindow", u"Choose Mission", None))
         self.label_15.setText(QCoreApplication.translate("MainWindow", u"Cruise1", None))

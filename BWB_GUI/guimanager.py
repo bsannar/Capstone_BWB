@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import os
 from win32gui import GetForegroundWindow, GetWindowText
 from bwb import Bwb
+from taw import Taw
 from f_35s_refueled import get_number_f_35s
 import numpy as np
 import dropdowns
@@ -28,8 +29,9 @@ class GuiManager:
         self.tool_interface = JetInterface("Assets/BWB_tanker.xlsm", get_key_structure(self.ui_mission_inputs_dict), get_key_structure(self.ui_geometry_dict))
         self.hasBWBView = False
         self.has_taw_view = False
-        self.bwb_list = []
+        self.aircraft_list = []
         self.loaded_aircraft = Bwb()
+        self.selected_taw_aircraft = None
         self.tool_gui_manager = DataManager(self.tool_interface, self)
         self.tool_gui_manager.transfer_geometry_to_output()
         self.taw_interface = JetInterface("Assets/KC-135.xlsm", get_key_structure(self.ui_mission_inputs_dict), get_key_structure(self.ui_geometry_dict))
@@ -50,7 +52,7 @@ class GuiManager:
         self.ui.actionSave.triggered.connect(self.open_save_dialog)
         self.ui.actionOpen.triggered.connect(self.open_open_dialog)
         self.ui.tabWidget.currentChanged.connect(self.tab_changed)
-        self.ui.btnSensitivities.clicked.connect(lambda: sens.calculate_sensitivity_from_jet(self.ui, self.bwb_list[-1], self.wb.sheets["Main"], "B18"))
+        self.ui.btnSensitivities.clicked.connect(lambda: sens.calculate_sensitivity_from_jet(self.ui, self.aircraft_list[-1], self.wb.sheets["Main"], "B18"))
         self.ui.btnViewBWB.clicked.connect(self.open_tigl_viewer)
         self.ui.btnViewAircraftTaw.clicked.connect(self.open_tigl_viewer_taw)
         self.ui.ddChooseMission.menu().triggered.connect(self.on_choose_mission)
@@ -62,7 +64,8 @@ class GuiManager:
     def update(self):
         self.gui_storage_manager.transfer_geometry_to_output()
         self.loaded_aircraft.mission_outputs.max_range = 1000
-        self.bwb_list.append(copy.deepcopy(self.loaded_aircraft))
+        self.aircraft_list.append(copy.deepcopy(self.loaded_aircraft))
+        self.tool_interface.generate_cpacs()
 
     def pull_geometry_vars_into_gui(self, geometry_dict: dict):
         for key1, val in self.ui_geometry_dict.items():
@@ -75,7 +78,7 @@ class GuiManager:
     def open_save_dialog(self):
         file_path, _ = QFileDialog.getSaveFileName(None, "Save Workspace", "", "DST Workspace (*.csv);;All Files (*)")
         if file_path:
-            save.class_to_csv(self.bwb_list, file_path)
+            save.class_to_csv(self.aircraft_list, file_path)
 
     def add_mission(self):
         name = self.ui.txtMissionName.text()
@@ -95,8 +98,8 @@ class GuiManager:
         if file_path:
             new_configs = save.csv_to_class(file_path)
             if new_configs:
-                self.bwb_list.extend(new_configs)
-                print(f"Configurations list updated: {self.bwb_list}")
+                self.aircraft_list.extend(new_configs)
+                print(f"Configurations list updated: {self.aircraft_list}")
             else:
                 print("No configurations loaded from the CSV.")
 
@@ -122,13 +125,21 @@ class GuiManager:
                 print("No mission selected")
 
     def on_choose_aircraft(self):
-        match [item.text() for item in self.ui.ddChooseAircraft.menu().actions() if item.isChecked()][0]:
+        chosen_aircraft = [item.text() for item in self.ui.ddChooseAircraft.menu().actions() if item.isChecked()][0]
+
+        self.selected_taw_aircraft = chosen_aircraft  # Store the selected aircraft name
+
+        match chosen_aircraft:
             case "KC-135":
-                print("KC-135")
+                print("KC-135 selected")
+                self.loaded_aircraft = Taw()  # Load TAW aircraft class
+                self.taw_interface.generate_cpacs()
             case "C-17":
-                print("C-17")
+                print("C-17 selected")
+                self.loaded_aircraft = Taw()  # Load TAW aircraft class
             case "B-747":
-                print("B-747")
+                print("B-747 selected")
+                self.loaded_aircraft = Taw()  # Load TAW aircraft class
             case _:
                 print("No aircraft selected")
 
@@ -144,10 +155,10 @@ class GuiManager:
         plt.figure(figsize=(size.width()*px, size.height()*px))
         fig, ax = plt.subplots(layout='constrained', figsize=(size.width()*px, size.height()*px))
 
-        normalizers = [max([float(vars(bwb.mission_outputs)[plotVar]) for bwb in self.bwb_list]) for plotVar in plotVars]
+        normalizers = [max([float(vars(bwb.mission_outputs)[plotVar]) for bwb in self.aircraft_list]) for plotVar in plotVars]
         values = []
         bar_labels = []
-        for i, bwb in enumerate(self.bwb_list):
+        for i, bwb in enumerate(self.aircraft_list):
             offset = width * multiplier
             labelValues = [float(vars(bwb.mission_outputs)[plotVar]) for plotVar in plotVars]
             legendLabelValues = [str(vars(bwb.geometry)[convert_to_underscores_from_spaces(legendVar)]) for legendVar in legendLabels]
@@ -158,11 +169,11 @@ class GuiManager:
             bar_labels.extend(labels)
             multiplier += 1
 
-        for label, value in zip(bar_labels, values):
-            label.set_text(format_number(value))
+            for label, value in zip(bar_labels, values):
+                label.set_text(format_number(value))
 
         # Add some text for labels, title and custom x-axis tick labels, etc.
-        numBWBs = len(self.bwb_list)
+        numBWBs = len(self.aircraft_list)
         ax.set_ylabel('Normalized Performance')
         ax.set_title('BWB Performance')
         ax.set_xticks(x + (width * (numBWBs - 1))/2, [convert_to_spaces_from_underscores(var) for var in plotVars], rotation=20)
@@ -176,7 +187,7 @@ class GuiManager:
     def open_tigl_viewer(self):
         if os.path.exists("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe"):
             if not self.hasBWBView:
-                self.bwb_process.start("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe", ["Assets/theAircraft.xml"])
+                self.bwb_process.start("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe", ["Assets/BWB_tanker.xml"])
                 title = ""
                 while True:
                     hwnd = GetForegroundWindow()
@@ -193,15 +204,34 @@ class GuiManager:
             print('The path "Executables/TIGL 3.4.0/bin/tiglviewer-3.exe" does not exist')
 
     def open_tigl_viewer_taw(self):
+        if not hasattr(self, "selected_taw_aircraft") or not self.selected_taw_aircraft:
+                print("No aircraft selected. Please select an aircraft first.")
+                return
+
+        xml_file_map ={
+            "KC-135": "Assets/KC-135.xml",
+            "C-17": "Assets/C-17.xml",
+            "B-747": "Assets/B-747.xml"
+        }
+
+        xml_path = xml_file_map.get(self.selected_taw_aircraft, None)
+
+        if xml_path is None or not os.path.exists(xml_path):
+            print(f"XML file for {self.selected_taw_aircraft} not found.")
+            return
+
         if os.path.exists("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe"):
             if not self.has_taw_view:
-                self.taw_process.start("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe", ["Assets/KC-135.xml"])
+                self.taw_process.start("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe", [xml_path])
+
+                # Wait for the TiGL Viewer window to appear
                 title = ""
                 while True:
                     hwnd = GetForegroundWindow()
                     title = GetWindowText(hwnd)
                     if title == "TiGL Viewer 3":
-                            break
+                        break
+
                 window = QWindow.fromWinId(hwnd)
                 widget = QWidget.createWindowContainer(window)
                 layout = QVBoxLayout(self.ui.widTiglTaw)

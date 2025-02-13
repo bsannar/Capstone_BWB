@@ -33,7 +33,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tbMain">
        <attribute name="title">
@@ -322,14 +322,14 @@
         <item row="1" column="0">
          <widget class="QToolButton" name="btnViewAircraftTaw">
           <property name="text">
-           <string>View Aircraft</string>
+           <string>View Aircraft Model</string>
           </property>
          </widget>
         </item>
         <item row="0" column="0">
          <widget class="QToolButton" name="ddChooseAircraft">
           <property name="text">
-           <string>Choose Aircraft</string>
+           <string>Choose Tube and Wing Aircraft</string>
           </property>
          </widget>
         </item>

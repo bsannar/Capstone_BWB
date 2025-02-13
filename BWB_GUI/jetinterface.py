@@ -1,6 +1,7 @@
 from toolinterface import ToolInterface
 import xlwings as xw
 from textprocessingutilities import *
+import os
 
 def convert_cell_dict_to_cell_value_dict(cell_dict):
     value_dict = {}
@@ -13,10 +14,25 @@ def convert_cell_dict_to_cell_value_dict(cell_dict):
 
 class JetInterface(ToolInterface):
     def __init__(self, file_path, mission_keys, geometry_keys):
+        self.aircraft_file_no_extension = file_path.split(".")[0]
+        self.aircraft_name = self.aircraft_file_no_extension.split("/")[1]
         self.xl = xw.App(visible=False)
         self.wb = self.xl.books.open(file_path)
         self.main_sheet = self.wb.sheets["Main"]
         self.generate_cell_dicts(mission_keys, geometry_keys)
+
+    def generate_cpacs(self):
+
+        file_path = self.aircraft_file_no_extension + ".xml"
+
+        if os.path.exists(file_path):  # Check if file exists
+            os.remove(file_path)       # Delete the file
+            print(f"Deleted old {self.aircraft_name} cpacs file, creating new {self.aircraft_name} cpacs file.")
+        else:
+            print(f"CPACS file does not currently exist, creating {self.aircraft_name} cpacs file")
+        self.wb.app.macro("export_CPACS_file")()
+        old_name = "Assets/theAircraft.xml"
+        os.rename(old_name, self.aircraft_file_no_extension+".xml")
 
     def pull_geometry_from_tool(self):
         return convert_cell_dict_to_cell_value_dict(self.geometry_cell_dict)
