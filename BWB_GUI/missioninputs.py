@@ -1,10 +1,10 @@
-from textprocessingutilities import convert_from_camel_casing_to_spaces
+from textprocessingutilities import *
 from guiutilities import flatten_dict
 from internalstorageinterface import InternalStorageInterface
 
 class MissionInputs(InternalStorageInterface):
     def __init__(self,
-        alt_to = 0,
+        alt_takeoff = 0,
         alt_accel = None,
         alt_climb1 = None,
         alt_cruise1 = None,
@@ -18,7 +18,7 @@ class MissionInputs(InternalStorageInterface):
         alt_cruise2 = None,
         alt_loiter = None,
         alt_landing = 0,
-        mach_to = None,
+        mach_takeoff = None,
         mach_accel = None,
         mach_climb1 = None,
         mach_cruise1 = None,
@@ -31,7 +31,7 @@ class MissionInputs(InternalStorageInterface):
         mach_climb2 = None,
         mach_cruise2 = None,
         mach_loiter = None,
-        dist_to = None,
+        dist_takeoff = None,
         dist_accel = None,
         dist_climb1 = None,
         dist_cruise1 = None,
@@ -44,7 +44,7 @@ class MissionInputs(InternalStorageInterface):
         dist_climb2 = None,
         dist_cruise2 = None,
         dist_loiter = None,
-        time_to = None,
+        time_takeoff = None,
         time_accel = None,
         time_climb1 = None,
         time_cruise1 = None,
@@ -57,7 +57,7 @@ class MissionInputs(InternalStorageInterface):
         time_climb2 = None,
         time_cruise2 = None,
         time_loiter = None,
-        payload_to = None,
+        payload_takeoff = None,
         payload_accel = None,
         payload_climb1 = None,
         payload_cruise1 = None,
@@ -69,8 +69,10 @@ class MissionInputs(InternalStorageInterface):
         payload_service3 = None,
         payload_climb2 = None,
         payload_cruise2 = None,
-        payload_loiter = None):
-            self.alt_to = alt_to,
+        payload_loiter = None,
+        exp_payload = None,
+        perm_payload = None):
+            self.alt_takeoff = alt_takeoff,
             self.alt_accel = alt_accel,
             self.alt_climb1 = alt_climb1,
             self.alt_cruise1 = alt_cruise1,
@@ -84,7 +86,7 @@ class MissionInputs(InternalStorageInterface):
             self.alt_cruise2 = alt_cruise2,
             self.alt_loiter = alt_loiter,
             self.alt_landing = alt_landing,
-            self.mach_to = mach_to,
+            self.mach_takeoff = mach_takeoff,
             self.mach_accel = mach_accel,
             self.mach_climb1 = mach_climb1,
             self.mach_cruise1 = mach_cruise1,
@@ -97,7 +99,7 @@ class MissionInputs(InternalStorageInterface):
             self.mach_climb2 = mach_climb2,
             self.mach_cruise2 = mach_cruise2,
             self.mach_loiter = mach_loiter,
-            self.dist_to = dist_to,
+            self.dist_takeoff = dist_takeoff,
             self.dist_accel = dist_accel,
             self.dist_climb1 = dist_climb1,
             self.dist_cruise1 = dist_cruise1,
@@ -110,7 +112,7 @@ class MissionInputs(InternalStorageInterface):
             self.dist_climb2 = dist_climb2,
             self.dist_cruise2 = dist_cruise2,
             self.dist_loiter = dist_loiter,
-            self.time_to = time_to,
+            self.time_takeoff = time_takeoff,
             self.time_accel = time_accel,
             self.time_climb1 = time_climb1,
             self.time_cruise1 = time_cruise1,
@@ -123,7 +125,7 @@ class MissionInputs(InternalStorageInterface):
             self.time_climb2 = time_climb2,
             self.time_cruise2 = time_cruise2,
             self.time_loiter = time_loiter,
-            self.payload_to = payload_to,
+            self.payload_takeoff = payload_takeoff,
             self.payload_accel = payload_accel,
             self.payload_climb1 = payload_climb1,
             self.payload_cruise1 = payload_cruise1,
@@ -136,13 +138,25 @@ class MissionInputs(InternalStorageInterface):
             self.payload_climb2 = payload_climb2,
             self.payload_cruise2 = payload_cruise2,
             self.payload_loiter = payload_loiter
+            self.exp_payload = exp_payload
+            self.perm_payload = perm_payload
 
     def pull_from_dict(self, dictionary: dict):
         flattened_dict = flatten_dict(dictionary)
         for key, value in flattened_dict.items():
             new_key = convert_from_camel_casing_to_underscores(key)
-            setattr(self, new_key, value)
-        print(vars(self))
+            setattr(self, new_key, to_float(value))
 
     def push_to_dict(self):
-        pass
+        dictionary = {}
+        for key, value in vars(self).items():
+            key1, key2 = [k.capitalize() for k in key.split('_')]
+            if key1 not in dictionary:
+                if key2 == "Payload":
+                    dictionary[key1+key2] = value
+                else:
+                    dictionary[key1] = {}
+                    dictionary[key1][key2] = value
+            else:
+                dictionary[key1][key2] = value
+        return dictionary

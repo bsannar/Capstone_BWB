@@ -11,8 +11,8 @@ def convert_from_camel_casing_to_spaces(string):
 
 def convert_from_camel_casing_to_underscores(string):
     output = ""
-    for s in string:
-        if s.isupper() and s != string[0]:
+    for i, s in enumerate(string):
+        if s.isupper() and i != 0:
             output += "_" + str.lower(s)
         else:
             output += str.lower(s)
@@ -41,3 +41,9 @@ def split_camel_casing(string):
 
 def format_number(number_string):
     return f"{float(number_string):.4g}"
+
+def to_float(number_string):
+    try:
+        return float(number_string)
+    except ValueError:
+        return 0.0

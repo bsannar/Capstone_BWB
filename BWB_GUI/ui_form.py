@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'form.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.2
+## Created by: Qt User Interface Compiler version 6.4.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -52,68 +52,40 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1323, 589))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1342, 582))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.gridLayout_3 = QGridLayout()
         self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.imgPlot = QLabel(self.scrollAreaWidgetContents)
-        self.imgPlot.setObjectName(u"imgPlot")
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.widMainPlot = QWidget(self.scrollAreaWidgetContents)
+        self.widMainPlot.setObjectName(u"widMainPlot")
+        sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.imgPlot.sizePolicy().hasHeightForWidth())
-        self.imgPlot.setSizePolicy(sizePolicy)
-        self.imgPlot.setPixmap(QPixmap(u"plot_placeholder.png"))
+        sizePolicy.setHeightForWidth(self.widMainPlot.sizePolicy().hasHeightForWidth())
+        self.widMainPlot.setSizePolicy(sizePolicy)
 
-        self.gridLayout_3.addWidget(self.imgPlot, 0, 0, 1, 1)
-
-        self.btnPlot = QPushButton(self.scrollAreaWidgetContents)
-        self.btnPlot.setObjectName(u"btnPlot")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.btnPlot.sizePolicy().hasHeightForWidth())
-        self.btnPlot.setSizePolicy(sizePolicy1)
-
-        self.gridLayout_3.addWidget(self.btnPlot, 1, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.widMainPlot, 0, 0, 1, 1)
 
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.ddGeometry = QToolButton(self.scrollAreaWidgetContents)
-        self.ddGeometry.setObjectName(u"ddGeometry")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.ddGeometry.sizePolicy().hasHeightForWidth())
-        self.ddGeometry.setSizePolicy(sizePolicy2)
+        self.ddMissionOutputs = QToolButton(self.scrollAreaWidgetContents)
+        self.ddMissionOutputs.setObjectName(u"ddMissionOutputs")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.ddMissionOutputs.sizePolicy().hasHeightForWidth())
+        self.ddMissionOutputs.setSizePolicy(sizePolicy1)
+        self.ddMissionOutputs.setAcceptDrops(False)
+        self.ddMissionOutputs.setCheckable(False)
 
-        self.verticalLayout.addWidget(self.ddGeometry)
-
-        self.ddMissionParameters = QToolButton(self.scrollAreaWidgetContents)
-        self.ddMissionParameters.setObjectName(u"ddMissionParameters")
-        sizePolicy2.setHeightForWidth(self.ddMissionParameters.sizePolicy().hasHeightForWidth())
-        self.ddMissionParameters.setSizePolicy(sizePolicy2)
-        self.ddMissionParameters.setAcceptDrops(False)
-        self.ddMissionParameters.setCheckable(False)
-
-        self.verticalLayout.addWidget(self.ddMissionParameters)
+        self.verticalLayout.addWidget(self.ddMissionOutputs)
 
 
         self.gridLayout_3.addLayout(self.verticalLayout, 0, 1, 1, 1)
 
 
         self.verticalLayout_2.addLayout(self.gridLayout_3)
-
-        self.gridLayout_9 = QGridLayout()
-        self.gridLayout_9.setObjectName(u"gridLayout_9")
-        self.label = QLabel(self.scrollAreaWidgetContents)
-        self.label.setObjectName(u"label")
-
-        self.gridLayout_9.addWidget(self.label, 0, 0, 1, 1)
-
-
-        self.verticalLayout_2.addLayout(self.gridLayout_9)
 
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
@@ -130,7 +102,7 @@ class Ui_MainWindow(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 1340, 585))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 1342, 582))
         self.verticalLayout_3 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.glBwbGeometry = QGridLayout()
@@ -235,11 +207,11 @@ class Ui_MainWindow(object):
         self.tbTW.setEnabled(True)
         self.gridLayout_5 = QGridLayout(self.tbTW)
         self.gridLayout_5.setObjectName(u"gridLayout_5")
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.gridLayout_5.addItem(self.verticalSpacer_2, 2, 0, 1, 1)
 
-        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.gridLayout_5.addItem(self.horizontalSpacer_3, 0, 1, 1, 1)
 
@@ -268,11 +240,11 @@ class Ui_MainWindow(object):
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.ddChooseMission = QToolButton(self.tbMissionParameters)
         self.ddChooseMission.setObjectName(u"ddChooseMission")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.ddChooseMission.sizePolicy().hasHeightForWidth())
-        self.ddChooseMission.setSizePolicy(sizePolicy3)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.ddChooseMission.sizePolicy().hasHeightForWidth())
+        self.ddChooseMission.setSizePolicy(sizePolicy2)
 
         self.horizontalLayout.addWidget(self.ddChooseMission)
 
@@ -316,10 +288,10 @@ class Ui_MainWindow(object):
 
         self.glDenseMissionParameters.addWidget(self.label_17, 0, 2, 1, 1)
 
-        self.txtTOPayload = QLineEdit(self.tbMissionParameters)
-        self.txtTOPayload.setObjectName(u"txtTOPayload")
+        self.txtTakeoffPayload = QLineEdit(self.tbMissionParameters)
+        self.txtTakeoffPayload.setObjectName(u"txtTakeoffPayload")
 
-        self.glDenseMissionParameters.addWidget(self.txtTOPayload, 5, 1, 1, 1)
+        self.glDenseMissionParameters.addWidget(self.txtTakeoffPayload, 5, 1, 1, 1)
 
         self.txtService1Alt = QLineEdit(self.tbMissionParameters)
         self.txtService1Alt.setObjectName(u"txtService1Alt")
@@ -387,11 +359,11 @@ class Ui_MainWindow(object):
 
         self.label_21 = QLabel(self.tbMissionParameters)
         self.label_21.setObjectName(u"label_21")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.label_21.sizePolicy().hasHeightForWidth())
-        self.label_21.setSizePolicy(sizePolicy4)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.label_21.sizePolicy().hasHeightForWidth())
+        self.label_21.setSizePolicy(sizePolicy3)
 
         self.glDenseMissionParameters.addWidget(self.label_21, 5, 0, 1, 1)
 
@@ -562,10 +534,10 @@ class Ui_MainWindow(object):
 
         self.glDenseMissionParameters.addWidget(self.txtService1Time, 4, 6, 1, 1)
 
-        self.txtTODist = QLineEdit(self.tbMissionParameters)
-        self.txtTODist.setObjectName(u"txtTODist")
+        self.txtTakeoffDist = QLineEdit(self.tbMissionParameters)
+        self.txtTakeoffDist.setObjectName(u"txtTakeoffDist")
 
-        self.glDenseMissionParameters.addWidget(self.txtTODist, 3, 1, 1, 1)
+        self.glDenseMissionParameters.addWidget(self.txtTakeoffDist, 3, 1, 1, 1)
 
         self.txtLoiterTime = QLineEdit(self.tbMissionParameters)
         self.txtLoiterTime.setObjectName(u"txtLoiterTime")
@@ -602,10 +574,10 @@ class Ui_MainWindow(object):
 
         self.glDenseMissionParameters.addWidget(self.txtCruise1Payload, 5, 4, 1, 1)
 
-        self.txtTOMach = QLineEdit(self.tbMissionParameters)
-        self.txtTOMach.setObjectName(u"txtTOMach")
+        self.txtTakeoffMach = QLineEdit(self.tbMissionParameters)
+        self.txtTakeoffMach.setObjectName(u"txtTakeoffMach")
 
-        self.glDenseMissionParameters.addWidget(self.txtTOMach, 2, 1, 1, 1)
+        self.glDenseMissionParameters.addWidget(self.txtTakeoffMach, 2, 1, 1, 1)
 
         self.txtCruise1Alt = QLineEdit(self.tbMissionParameters)
         self.txtCruise1Alt.setObjectName(u"txtCruise1Alt")
@@ -627,10 +599,10 @@ class Ui_MainWindow(object):
 
         self.glDenseMissionParameters.addWidget(self.txtPatrol1Dist, 3, 5, 1, 1)
 
-        self.txtTOAlt = QLineEdit(self.tbMissionParameters)
-        self.txtTOAlt.setObjectName(u"txtTOAlt")
+        self.txtTakeoffAlt = QLineEdit(self.tbMissionParameters)
+        self.txtTakeoffAlt.setObjectName(u"txtTakeoffAlt")
 
-        self.glDenseMissionParameters.addWidget(self.txtTOAlt, 1, 1, 1, 1)
+        self.glDenseMissionParameters.addWidget(self.txtTakeoffAlt, 1, 1, 1, 1)
 
         self.txtService2Dist = QLineEdit(self.tbMissionParameters)
         self.txtService2Dist.setObjectName(u"txtService2Dist")
@@ -710,10 +682,10 @@ class Ui_MainWindow(object):
 
         self.glDenseMissionParameters.addWidget(self.txtCruise1Time, 4, 4, 1, 1)
 
-        self.txtTOTime = QLineEdit(self.tbMissionParameters)
-        self.txtTOTime.setObjectName(u"txtTOTime")
+        self.txtTakeoffTime = QLineEdit(self.tbMissionParameters)
+        self.txtTakeoffTime.setObjectName(u"txtTakeoffTime")
 
-        self.glDenseMissionParameters.addWidget(self.txtTOTime, 4, 1, 1, 1)
+        self.glDenseMissionParameters.addWidget(self.txtTakeoffTime, 4, 1, 1, 1)
 
         self.txtPatrol1Mach = QLineEdit(self.tbMissionParameters)
         self.txtPatrol1Mach.setObjectName(u"txtPatrol1Mach")
@@ -782,7 +754,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_5.addWidget(self.txtExpendablePayload)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.verticalLayout_5.addItem(self.verticalSpacer)
 
@@ -794,7 +766,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_2.addItem(self.horizontalSpacer)
 
@@ -808,7 +780,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_2.addWidget(self.txtMissionName)
 
-        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_2.addItem(self.horizontalSpacer_2)
 
@@ -850,7 +822,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1348, 26))
+        self.menubar.setGeometry(QRect(0, 0, 1348, 25))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         MainWindow.setMenuBar(self.menubar)
@@ -873,11 +845,7 @@ class Ui_MainWindow(object):
         self.actionExit.setText(QCoreApplication.translate("MainWindow", u"Exit", None))
         self.actionSave.setText(QCoreApplication.translate("MainWindow", u"Save", None))
         self.actionOpen.setText(QCoreApplication.translate("MainWindow", u"Open", None))
-        self.imgPlot.setText("")
-        self.btnPlot.setText(QCoreApplication.translate("MainWindow", u"plot", None))
-        self.ddGeometry.setText(QCoreApplication.translate("MainWindow", u"Geometry", None))
-        self.ddMissionParameters.setText(QCoreApplication.translate("MainWindow", u"Mission Parameters", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
+        self.ddMissionOutputs.setText(QCoreApplication.translate("MainWindow", u"Mission Parameters", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbMain), QCoreApplication.translate("MainWindow", u"Main", None))
         self.lbWingspan_2.setText(QCoreApplication.translate("MainWindow", u"Wing", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"Sweep:", None))
@@ -908,7 +876,7 @@ class Ui_MainWindow(object):
         self.label_8.setText(QCoreApplication.translate("MainWindow", u"Loiter", None))
         self.label_11.setText(QCoreApplication.translate("MainWindow", u"Service2", None))
         self.lbService3.setText(QCoreApplication.translate("MainWindow", u"Service3", None))
-        self.label_3.setText(QCoreApplication.translate("MainWindow", u"STTO", None))
+        self.label_3.setText(QCoreApplication.translate("MainWindow", u"Takeoff", None))
         self.label_19.setText(QCoreApplication.translate("MainWindow", u"Distance (nm)", None))
         self.label_16.setText(QCoreApplication.translate("MainWindow", u"Climb1", None))
         self.label_23.setText(QCoreApplication.translate("MainWindow", u"Permanent Payload", None))

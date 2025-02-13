@@ -12,6 +12,16 @@ def convert_cell_dict_to_cell_value_dict(cell_dict):
             value_dict[key] = cell_dict[key].value
     return value_dict
 
+def transfer_dictionary_to_cell_dict(input_dict, cell_dict):
+    for key1, val1 in input_dict.items():
+        if not isinstance(val1, dict):
+            if val1 != None:
+                cell_dict[key1].value = val1
+        else:
+            for key2, val2 in val1.items():
+                if val2 != None:
+                    cell_dict[key1][key2].value = val2
+
 class JetInterface(ToolInterface):
     def __init__(self, file_path, mission_keys, geometry_keys):
         self.file_path = file_path
@@ -42,35 +52,10 @@ class JetInterface(ToolInterface):
         return convert_cell_dict_to_cell_value_dict(self.mission_cell_dict)
 
     def push_geometry_to_tool(self, geometry_dict: dict):
-        pass
+        transfer_dictionary_to_cell_dict(geometry_dict, self.geometry_cell_dict)
 
     def push_mission_inputs_to_tool(self, mission_inputs_dict: dict):
-        for key1, dict in mission_inputs_dict.items():
-            if key1 == "ExpPayload" or key1 == "PermPayload":
-                self.mission_cell_dict[key1].value = mission_inputs_dict[key1]
-            else:
-                for key2, val in dict.items():
-                    self.mission_cell_dict[key1][key2].value = mission_inputs_dict[key1][key2]
-
-        # takeOffWeight = mainSheet["O15"].value
-        # dryWeight = mainSheet["O23"].value
-        # fuelCapacity = mainSheet["O18"].value
-        # specificFuelConsumption = mainSheet["C30"].value
-
-        # bwb = bwb_class.Bwb(bwb_class.BwbJetIndependentVars(wingSqFt, vertTailSqFt, wingAspectRatio, vertTailAspectRatio, wingTaperRatio, vertTailTaperRatio, wingSweep, vertTailSweep,
-        #         fuelCapacity, specificFuelConsumption, payloadDropDistance), bwb_class.BwbDependentVars())
-        # maxLiftToDragRatio = 0
-        # for i in range(26, 47):
-        #     liftToDragRatio = performanceSheet['Z'+str(i)].value
-        #     if liftToDragRatio > maxLiftToDragRatio:
-        #         maxLiftToDragRatio = liftToDragRatio
-        # bwb.dependentVars.liftOverDrag = maxLiftToDragRatio
-        # bwb.dependentVars.dryWeight = dryWeight
-        # get_number_f_35s(bwb, mainSheet)
-        # calculate_max_range(bwb, mainSheet)
-        # print("Finished")
-        # self.wb.app.macro("export_CPACS_file")()
-        # self.bwb_configurations_list.append(bwb)
+        transfer_dictionary_to_cell_dict(mission_inputs_dict, self.mission_cell_dict)
 
     def close_interface(self):
         self.wb.close()
@@ -82,18 +67,23 @@ class JetInterface(ToolInterface):
     def calculate_f35s_refueled(self):
         pass
 
+    def set_cruise_distance(self, nautical_miles):
+        self.mission_cell_dict["Dist"]["Cruise1"].value = nautical_miles - self.mission_cell_dict["Dist"]["Accel"].value - self.mission_cell_dict["Dist"]["Climb1"].value
+        self.mission_cell_dict["Dist"]["Cruise2"].value = nautical_miles - self.mission_cell_dict["Dist"]["Climb2"].value - self.mission_cell_dict["Dist"]["Loiter"].value
+
     def calculate_max_range(self):
-        for nautical_miles in range(1, 10000):
-            set_payload_drop_distance(mainSheet, nautical_miles*50)
-            if mainSheet["X40"].value > mainSheet["O18"].value:
-                return (nautical_miles-1)*100
+        step = 50
+        for nautical_miles in range(step, step*1000, step):
+            self.set_cruise_distance(nautical_miles)
+            if self.main_sheet["X40"].value > self.main_sheet["O18"].value:
+                return (nautical_miles-step)
 
     def calculate_dry_weight(self):
         pass
 
     def generate_cell_dicts(self, mission_keys, geometry_keys):
         row_col_dict = {"Alt": "33", "Mach": "35", "Dist": "38", "Time": "39", "Payload": "41",
-            "TO": "K", "Accel": "L", "Climb1": "M", "Cruise1": "N", "Patrol1": "O", "Service1": "P", "Patrol2": "Q", "Service2": "R", "Patrol3": "S", "Service3": "T", "Climb2": "U", "Cruise2": "V", "Loiter": "W", "Landing": "X",
+            "Takeoff": "K", "Accel": "L", "Climb1": "M", "Cruise1": "N", "Patrol1": "O", "Service1": "P", "Patrol2": "Q", "Service2": "R", "Patrol3": "S", "Service3": "T", "Climb2": "U", "Cruise2": "V", "Loiter": "W", "Landing": "X",
             "SqFt": "18", "AspectRatio": "19", "TaperRatio": "20", "SweepDeg": "21", "XLocation": "23", "YLocation": "24", "ZLocation": "25", "DihedralDeg": "26",
             "Wing": "B", "Pitchsurf": "C", "Strakes": "D", "Ailerons": "E", "Leadingflaps": "F", "Trailingflaps": "G", "Vertsurf": "H"}
 

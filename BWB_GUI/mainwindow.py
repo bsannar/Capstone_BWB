@@ -32,7 +32,8 @@ class MainWindow(QMainWindow):
             os.kill(self.gui_manager.bwb_process.processId(), signal.SIGTERM)
         if self.gui_manager.taw_process.state == "ProcessState.Running":
             os.kill(self.gui_manager.taw_process.processId(), signal.SIGTERM)
-        self.gui_manager.tool_interface.close_interface()
+        self.gui_manager.jet_bwb_interface.close_interface()
+        self.gui_manager.jet_taw_interface.close_interface()
         super().closeEvent(*args, **kwargs)
 
     def resizeEvent(self, event):

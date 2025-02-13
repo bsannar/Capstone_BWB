@@ -4,14 +4,14 @@ from internalstorageinterface import InternalStorageInterface
 
 class MissionOutputs(InternalStorageInterface):
     def __init__(self,
-        fraction_of_remaining_fuel_in_f35s_when_refueled = None,
-        payload_transport_distance = None,
-        f35s_refueled = None,
-        max_range = None):
-            self.fraction_of_remaining_fuel_in_f35s_when_refueled = fraction_of_remaining_fuel_in_f35s_when_refueled
-            self.payload_transport_distance = payload_transport_distance
-            self.f35s_refueled = f35s_refueled
+        dry_weight = None,
+        max_f35s_refueled = None,
+        max_range = None,
+        max_payload_weight = None):
+            self.dry_weight = dry_weight
+            self.max_f35s_refueled = max_f35s_refueled
             self.max_range = max_range
+            self.max_payload_weight = max_payload_weight
 
     def pull_from_dict(self, dictionary: dict):
         flattened_dict = flatten_dict(dictionary)

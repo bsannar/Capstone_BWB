@@ -30,5 +30,18 @@ class GeneralGeometry(InternalStorageInterface):
             setattr(self, new_key, value)
 
     def push_to_dict(self):
-        return vars(self)
+        dictionary = {}
+        for key, value in vars(self).items():
+            split_list = [k.capitalize() for k in key.split('_')]
+            key1 = ''.join(split_list[:2])
+            key2 = split_list[-1]
+            if key1 not in dictionary:
+                if key1 == "TiltDeg":
+                    dictionary[key1] = value
+                else:
+                    dictionary[key1] = {}
+                    dictionary[key1][key2] = value
+            else:
+                dictionary[key1][key2] = value
+        return dictionary
 

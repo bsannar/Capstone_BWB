@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 import os
 from win32gui import GetForegroundWindow, GetWindowText
 from bwb import Bwb
@@ -18,6 +17,8 @@ from textprocessingutilities import *
 from jetinterface import JetInterface
 from csvinterface import CsvInterface
 import copy
+from matplotlibcanvas import MatplotlibCanvas
+import mplcursors
 
 class GuiManager:
     def __init__(self, ui):
@@ -26,29 +27,29 @@ class GuiManager:
         self.taw_process = QProcess()
         self.generate_ui_geometry_dict()
         self.generate_ui_mission_inputs_dict()
-        self.tool_interface = JetInterface("Assets/BWB_tanker.xlsm", get_key_structure(self.ui_mission_inputs_dict), get_key_structure(self.ui_geometry_dict))
+        self.jet_bwb_interface = JetInterface("Assets/BWB_tanker.xlsm", get_key_structure(self.ui_mission_inputs_dict), get_key_structure(self.ui_geometry_dict))
         self.hasBWBView = False
         self.has_taw_view = False
         self.aircraft_list = []
-        self.loaded_aircraft = Bwb()
-        self.selected_taw_aircraft = None
-        self.tool_gui_manager = DataManager(self.tool_interface, self)
+        self.loaded_aircraft = Bwb("BWB 1")
+        self.tool_gui_manager = DataManager(self.jet_bwb_interface, self)
         self.tool_gui_manager.transfer_geometry_to_output()
-        self.taw_interface = JetInterface("Assets/KC-135.xlsm", get_key_structure(self.ui_mission_inputs_dict), get_key_structure(self.ui_geometry_dict))
-        self.taw_gui_manager = DataManager(self.taw_interface, self)
-        self.taw_storage_manager = DataManager(self.taw_interface, self.loaded_aircraft)
-        self.tool_storage_manager = DataManager(self.tool_interface, self.loaded_aircraft)
+        self.jet_taw_interface = JetInterface("Assets/KC-135.xlsm", get_key_structure(self.ui_mission_inputs_dict), get_key_structure(self.ui_geometry_dict))
+        self.taw_gui_manager = DataManager(self.jet_taw_interface, self)
+        self.taw_storage_manager = DataManager(self.jet_taw_interface, self.loaded_aircraft)
+        self.tool_storage_manager = DataManager(self.jet_bwb_interface, self.loaded_aircraft)
         self.gui_storage_manager = DataManager(self, self.loaded_aircraft)
         dropdowns.setup_dropdown(self.ui.ddChooseMission, ["Tanker", "Airdrop", "Cargo Carry"], False)
         self.csv_interface = CsvInterface()
         self.gui_csv_manager = DataManager(self, self.csv_interface)
-        self.csv_tool_manager = DataManager(self.csv_interface, self.tool_interface)
+        self.csv_tool_manager = DataManager(self.csv_interface, self.jet_bwb_interface)
         dropdowns.setup_dropdown(self.ui.ddChooseAircraft, ["KC-135", "C-17", "B-747"], False)
+        dropdowns.setup_dropdown(self.ui.ddMissionOutputs, self.loaded_aircraft.list_mission_outputs(), True)
+        self.main_canvas = MatplotlibCanvas(self.ui.widMainPlot)
         self.connect_all()
 
     def connect_all(self):
-        self.ui.btnPlot.clicked.connect(self.add_plot)
-        self.ui.btnUpdate.clicked.connect(self.update)
+        self.ui.btnUpdate.clicked.connect(self.update_aircraft_geometry)
         self.ui.actionSave.triggered.connect(self.open_save_dialog)
         self.ui.actionOpen.triggered.connect(self.open_open_dialog)
         self.ui.tabWidget.currentChanged.connect(self.tab_changed)
@@ -60,12 +61,30 @@ class GuiManager:
         self.ui.btnAddMission.clicked.connect(self.add_mission)
         self.ui.btnSetMission.clicked.connect(self.tool_gui_manager.transfer_mission_inputs_to_input)
         self.ui.lwMissions.itemClicked.connect(lambda item: self.set_mission(item.text()))
+        self.ui.ddMissionOutputs.menu().triggered.connect(self.mission_outputs_selected)
 
-    def update(self):
+    def mission_outputs_selected(self):
+        checked_mission_outputs = [item.text() for item in self.ui.ddMissionOutputs.menu().actions() if item.isChecked()]
+        for aircraft in self.aircraft_list:
+            self.tool_storage_manager.output = aircraft
+            self.gui_storage_manager.output = aircraft
+            self.gui_storage_manager.transfer_mission_inputs_to_output()
+            for mission_output in checked_mission_outputs:
+                match mission_output:
+                    case "max f35s refueled":
+                        self.tool_storage_manager.calculate_f35s_refueled()
+                    case "dry weight":
+                        pass
+                    case "max range":
+                        self.tool_storage_manager.transfer_max_range()
+                    case "max payload weight":
+                        pass
+        self.update_main_plot()
+
+    def update_aircraft_geometry(self):
         self.gui_storage_manager.transfer_geometry_to_output()
-        self.loaded_aircraft.mission_outputs.max_range = 1000
+        self.loaded_aircraft.name = f"Aircraft {len(self.aircraft_list)+1}"
         self.aircraft_list.append(copy.deepcopy(self.loaded_aircraft))
-        self.tool_interface.generate_cpacs()
 
     def pull_geometry_vars_into_gui(self, geometry_dict: dict):
         for key1, val in self.ui_geometry_dict.items():
@@ -107,8 +126,7 @@ class GuiManager:
         tabName = self.ui.tabWidget.currentWidget().objectName()
         if tabName == "tbMain":
             if True:
-                dropdowns.setup_dropdown(self.ui.ddGeometry, self.loaded_aircraft.list_geometry_vars(), True)
-                dropdowns.setup_dropdown(self.ui.ddMissionParameters, self.loaded_aircraft.list_mission_outputs(), True)
+                pass
             else:
                 print("No configurations available to set up dropdown.")
 
@@ -147,46 +165,63 @@ class GuiManager:
             case _:
                 print("No aircraft selected")
 
-    def add_plot(self):
-        plotVars = [convert_to_underscores_from_spaces(item.text()) for item in self.ui.ddMissionParameters.menu().actions() if item.isChecked()]
-        legendLabels = [item.text() for item in self.ui.ddGeometry.menu().actions() if item.isChecked()]
+    def update_main_plot(self):
+        plotVars = [convert_to_underscores_from_spaces(item.text()) for item in self.ui.ddMissionOutputs.menu().actions() if item.isChecked()]
         x = np.arange(len(plotVars))
         width = 0.2  # the width of the bars
         multiplier = 0
 
-        size = self.ui.imgPlot.size()
-        px = 1/plt.rcParams['figure.dpi']
-        plt.figure(figsize=(size.width()*px, size.height()*px))
-        fig, ax = plt.subplots(layout='constrained', figsize=(size.width()*px, size.height()*px))
-
-        normalizers = [max([float(vars(bwb.mission_outputs)[plotVar]) for bwb in self.aircraft_list]) for plotVar in plotVars]
+        normalizers = [max([float(vars(aircraft.mission_outputs)[plotVar]) for aircraft in self.aircraft_list]) for plotVar in plotVars]
         values = []
         bar_labels = []
-        for i, bwb in enumerate(self.aircraft_list):
+        all_rects = []
+        texts = []
+        for i, aircraft in enumerate(self.aircraft_list):
+            texts.append(self.get_unique_geometry(i))
             offset = width * multiplier
-            labelValues = [float(vars(bwb.mission_outputs)[plotVar]) for plotVar in plotVars]
-            legendLabelValues = [str(vars(bwb.geometry)[convert_to_underscores_from_spaces(legendVar)]) for legendVar in legendLabels]
+            labelValues = [float(vars(aircraft.mission_outputs)[plotVar]) for plotVar in plotVars]
             normalizedValues = [var/norm for var, norm in zip(labelValues, normalizers)]
-            rects = ax.bar(x + offset, normalizedValues, width, label="\n".join([name+": "+format_number(value) for name, value in zip(legendLabels, legendLabelValues)]))
+            rects = self.main_canvas.ax.bar(x + offset, normalizedValues, width, label=aircraft.name)
             values.extend(labelValues)
-            labels = ax.bar_label(rects, rotation=40)
+            labels = self.main_canvas.ax.bar_label(rects, rotation=40)
             bar_labels.extend(labels)
             multiplier += 1
+            all_rects.append(rects)
 
-            for label, value in zip(bar_labels, values):
-                label.set_text(format_number(value))
+        cursor = mplcursors.cursor([rect for rects in all_rects for rect in rects], hover=True).connect("add", lambda sel: self.show_annotation(sel, all_rects, texts))
 
-        # Add some text for labels, title and custom x-axis tick labels, etc.
-        numBWBs = len(self.aircraft_list)
-        ax.set_ylabel('Normalized Performance')
-        ax.set_title('BWB Performance')
-        ax.set_xticks(x + (width * (numBWBs - 1))/2, [convert_to_spaces_from_underscores(var) for var in plotVars], rotation=20)
-        ax.legend(bbox_to_anchor=(1, 1), loc='upper left')
-        ax.set_ylim(0, 1.2)
+        for label, value in zip(bar_labels, values):
+            label.set_text(format_number(value))
 
-        plt.savefig("BWB_performance.png")
-        plt.close()
-        self.ui.imgPlot.setPixmap(QPixmap("BWB_performance.png"))
+        # Add some text for labels, title and custom x-self.main_canvas.axis tick labels, etc.
+        n_aircraft = len(self.aircraft_list)
+        self.main_canvas.ax.set_ylabel('Normalized Performance')
+        self.main_canvas.ax.set_title('Aircraft Performance')
+        self.main_canvas.ax.set_xticks(x + (width * (n_aircraft - 1))/2, [convert_to_spaces_from_underscores(var) for var in plotVars], rotation=20)
+        self.main_canvas.ax.legend(bbox_to_anchor=(1, 1), loc='upper left')
+        self.main_canvas.ax.set_ylim(0, 1.2)
+
+        self.main_canvas.draw()
+
+    def show_annotation(self, sel, plots, texts):
+        bar = sel.artist
+        for i, plot in enumerate(plots):
+            if bar in plot:
+                idx = i
+        sel.annotation.set_text(texts[idx])
+        sel.annotation.get_bbox_patch().set(alpha=0.8, fc="white")
+
+    def get_unique_geometry(self, idx):
+        text_dict = {}
+        text = ''
+        for aircraft in self.aircraft_list:
+            geometry = aircraft.geometry.push_to_dict()
+            for key, value in self.aircraft_list[idx].geometry.push_to_dict().items():
+                if value != geometry[key]:
+                    text_dict[key] = value
+        for key, value in text_dict.items():
+            text += f"{convert_to_spaces_from_underscores(key)}: {value}\n"
+        return text[:-1]
 
     def open_tigl_viewer(self):
         if os.path.exists("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe"):

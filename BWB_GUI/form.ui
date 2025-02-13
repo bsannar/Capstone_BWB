@@ -62,59 +62,27 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1323</width>
-             <height>589</height>
+             <width>1342</width>
+             <height>582</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_2">
             <item>
              <layout class="QGridLayout" name="gridLayout_3">
               <item row="0" column="0">
-               <widget class="QLabel" name="imgPlot">
+               <widget class="QWidget" name="widMainPlot" native="true">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
-                <property name="text">
-                 <string/>
-                </property>
-                <property name="pixmap">
-                 <pixmap>plot_placeholder.png</pixmap>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QPushButton" name="btnPlot">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string>plot</string>
-                </property>
                </widget>
               </item>
               <item row="0" column="1">
                <layout class="QVBoxLayout" name="verticalLayout">
                 <item>
-                 <widget class="QToolButton" name="ddGeometry">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="text">
-                   <string>Geometry</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QToolButton" name="ddMissionParameters">
+                 <widget class="QToolButton" name="ddMissionOutputs">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -133,17 +101,6 @@
                  </widget>
                 </item>
                </layout>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QGridLayout" name="gridLayout_9">
-              <item row="0" column="0">
-               <widget class="QLabel" name="label">
-                <property name="text">
-                 <string>TextLabel</string>
-                </property>
-               </widget>
               </item>
              </layout>
             </item>
@@ -180,8 +137,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1340</width>
-             <height>585</height>
+             <width>1342</width>
+             <height>582</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -416,7 +373,7 @@
              </widget>
             </item>
             <item row="5" column="1">
-             <widget class="QLineEdit" name="txtTOPayload"/>
+             <widget class="QLineEdit" name="txtTakeoffPayload"/>
             </item>
             <item row="1" column="6">
              <widget class="QLineEdit" name="txtService1Alt"/>
@@ -617,7 +574,7 @@
              <widget class="QLineEdit" name="txtService1Time"/>
             </item>
             <item row="3" column="1">
-             <widget class="QLineEdit" name="txtTODist"/>
+             <widget class="QLineEdit" name="txtTakeoffDist"/>
             </item>
             <item row="4" column="13">
              <widget class="QLineEdit" name="txtLoiterTime"/>
@@ -641,7 +598,7 @@
              <widget class="QLineEdit" name="txtCruise1Payload"/>
             </item>
             <item row="2" column="1">
-             <widget class="QLineEdit" name="txtTOMach"/>
+             <widget class="QLineEdit" name="txtTakeoffMach"/>
             </item>
             <item row="1" column="4">
              <widget class="QLineEdit" name="txtCruise1Alt"/>
@@ -660,7 +617,7 @@
              <widget class="QLineEdit" name="txtPatrol1Dist"/>
             </item>
             <item row="1" column="1">
-             <widget class="QLineEdit" name="txtTOAlt"/>
+             <widget class="QLineEdit" name="txtTakeoffAlt"/>
             </item>
             <item row="3" column="8">
              <widget class="QLineEdit" name="txtService2Dist"/>
@@ -729,7 +686,7 @@
              <widget class="QLineEdit" name="txtCruise1Time"/>
             </item>
             <item row="4" column="1">
-             <widget class="QLineEdit" name="txtTOTime"/>
+             <widget class="QLineEdit" name="txtTakeoffTime"/>
             </item>
             <item row="2" column="5">
              <widget class="QLineEdit" name="txtPatrol1Mach"/>
@@ -737,7 +694,7 @@
             <item row="0" column="1">
              <widget class="QLabel" name="label_3">
               <property name="text">
-               <string>STTO</string>
+               <string>Takeoff</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -902,7 +859,7 @@
      <x>0</x>
      <y>0</y>
      <width>1348</width>
-     <height>26</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

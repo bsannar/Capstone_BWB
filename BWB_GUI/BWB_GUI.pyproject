@@ -23,6 +23,8 @@
         "externalstorageinterface.py",
         "aircraft.py",
         "missionoutputs.py",
-        "csvinterface.py"
+        "csvinterface.py",
+        "matplotlibcanvas.py",
+        "responsesurface.py"
     ]
 }

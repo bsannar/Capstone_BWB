@@ -2,7 +2,8 @@ from missioninputs import MissionInputs
 from missionoutputs import MissionOutputs
 
 class Aircraft:
-    def __init__(self):
+    def __init__(self, name):
+        self.name = name
         self.mission_inputs = MissionInputs()
         self.mission_outputs = MissionOutputs()
 

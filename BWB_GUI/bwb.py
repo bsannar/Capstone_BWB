@@ -8,6 +8,6 @@ class BwbGeometry(GeneralGeometry):
         self.example_blendedness_var = example_blendedness_var
 
 class Bwb(Aircraft):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, name):
+        super().__init__(name)
         self.geometry = BwbGeometry()
