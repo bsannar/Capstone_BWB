@@ -132,14 +132,18 @@ class GuiManager:
         match chosen_aircraft:
             case "KC-135":
                 print("KC-135 selected")
-                self.loaded_aircraft = Taw()  # Load TAW aircraft class
+                self.taw_interface.switch_jet_excel("Assets/KC-135.xlsm")
+                self.selected_taw_aircraft = Taw()  # Load TAW aircraft class
                 self.taw_interface.generate_cpacs()
             case "C-17":
                 print("C-17 selected")
-                self.loaded_aircraft = Taw()  # Load TAW aircraft class
+                self.taw_interface.switch_jet_excel("Assets/C-17.xlsm")
+                self.selected_taw_aircraft = Taw()  # Load TAW aircraft class
+                self.taw_interface.generate_cpacs()
+
             case "B-747":
                 print("B-747 selected")
-                self.loaded_aircraft = Taw()  # Load TAW aircraft class
+                self.selected_taw_aircraft = Taw()  # Load TAW aircraft class
             case _:
                 print("No aircraft selected")
 
@@ -204,7 +208,7 @@ class GuiManager:
             print('The path "Executables/TIGL 3.4.0/bin/tiglviewer-3.exe" does not exist')
 
     def open_tigl_viewer_taw(self):
-        if not hasattr(self, "selected_taw_aircraft") or not self.selected_taw_aircraft:
+        if not hasattr(self, "selected_taw_aircraft") or not self.taw_interface.aircraft_name:
                 print("No aircraft selected. Please select an aircraft first.")
                 return
 
@@ -214,7 +218,7 @@ class GuiManager:
             "B-747": "Assets/B-747.xml"
         }
 
-        xml_path = xml_file_map.get(self.selected_taw_aircraft, None)
+        xml_path = xml_file_map.get(self.taw_interface.aircraft_name, None)
 
         if xml_path is None or not os.path.exists(xml_path):
             print(f"XML file for {self.selected_taw_aircraft} not found.")

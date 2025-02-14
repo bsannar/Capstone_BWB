@@ -14,8 +14,9 @@ def convert_cell_dict_to_cell_value_dict(cell_dict):
 
 class JetInterface(ToolInterface):
     def __init__(self, file_path, mission_keys, geometry_keys):
+        self.file_path = file_path
         self.aircraft_file_no_extension = file_path.split(".")[0]
-        self.aircraft_name = self.aircraft_file_no_extension.split("/")[1]
+        self.aircraft_name = self.aircraft_file_no_extension.split("/")[-1]
         self.xl = xw.App(visible=False)
         self.wb = self.xl.books.open(file_path)
         self.main_sheet = self.wb.sheets["Main"]
@@ -120,3 +121,12 @@ class JetInterface(ToolInterface):
         # Save dictionary to member variable
         self.mission_cell_dict = mission_dict
         self.geometry_cell_dict = geometry_dict
+
+    def switch_jet_excel(self, file_path):
+        if self.file_path != file_path:
+            self.file_path = file_path
+            self.wb.close()
+            self.wb = self.xl.books.open(file_path)
+            self.aircraft_file_no_extension = file_path.split(".")[0]
+            self.aircraft_name = self.aircraft_file_no_extension.split("/")[-1]
+
