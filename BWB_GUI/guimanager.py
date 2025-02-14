@@ -166,7 +166,11 @@ class GuiManager:
                 print("No aircraft selected")
 
     def update_main_plot(self):
+        self.main_canvas.ax.cla()
         plotVars = [convert_to_underscores_from_spaces(item.text()) for item in self.ui.ddMissionOutputs.menu().actions() if item.isChecked()]
+        if len(plotVars) == 0:
+            self.main_canvas.draw()
+            return
         x = np.arange(len(plotVars))
         width = 0.2  # the width of the bars
         multiplier = 0
@@ -188,7 +192,8 @@ class GuiManager:
             multiplier += 1
             all_rects.append(rects)
 
-        cursor = mplcursors.cursor([rect for rects in all_rects for rect in rects], hover=True).connect("add", lambda sel: self.show_annotation(sel, all_rects, texts))
+        cursor = mplcursors.cursor([rect for rects in all_rects for rect in rects], hover=mplcursors.HoverMode.Transient)
+        cursor.connect("add", lambda sel: self.show_annotation(sel, all_rects, texts))
 
         for label, value in zip(bar_labels, values):
             label.set_text(format_number(value))
@@ -215,12 +220,12 @@ class GuiManager:
         text_dict = {}
         text = ''
         for aircraft in self.aircraft_list:
-            geometry = aircraft.geometry.push_to_dict()
-            for key, value in self.aircraft_list[idx].geometry.push_to_dict().items():
+            geometry = flatten_dict(aircraft.geometry.push_to_dict())
+            for key, value in flatten_dict(self.aircraft_list[idx].geometry.push_to_dict()).items():
                 if value != geometry[key]:
                     text_dict[key] = value
         for key, value in text_dict.items():
-            text += f"{convert_to_spaces_from_underscores(key)}: {value}\n"
+            text += f"{convert_from_camel_casing_to_spaces(key)}: {value}\n"
         return text[:-1]
 
     def open_tigl_viewer(self):

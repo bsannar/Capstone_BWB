@@ -1,6 +1,3 @@
-def set_payload_drop_distance(mainSheet, payloadDropDistance):
-    mainSheet["N38"].value = payloadDropDistance - mainSheet["M38"].value - mainSheet["P38"].value - mainSheet["L38"].value
-
 def clearLayout(layout):
   while layout.count():
     child = layout.takeAt(0)
