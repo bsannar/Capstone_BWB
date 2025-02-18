@@ -16,12 +16,12 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QHeaderView,
-    QLabel, QLayout, QLineEdit, QListWidget,
-    QListWidgetItem, QMainWindow, QMenu, QMenuBar,
-    QPushButton, QScrollArea, QSizePolicy, QSpacerItem,
-    QTabWidget, QTableWidget, QTableWidgetItem, QToolButton,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QComboBox, QGridLayout, QHBoxLayout,
+    QHeaderView, QLabel, QLayout, QLineEdit,
+    QListWidget, QListWidgetItem, QMainWindow, QMenu,
+    QMenuBar, QPushButton, QScrollArea, QSizePolicy,
+    QSpacerItem, QTabWidget, QTableWidget, QTableWidgetItem,
+    QToolButton, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -84,14 +84,6 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addLayout(self.verticalLayout, 0, 1, 1, 1)
 
-        self.imgPlot = QLabel(self.tbMain)
-        self.imgPlot.setObjectName(u"imgPlot")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.imgPlot.sizePolicy().hasHeightForWidth())
-        self.imgPlot.setSizePolicy(sizePolicy2)
-        self.imgPlot.setPixmap(QPixmap(u"plot_placeholder.png"))
 
         self.verticalLayout_2.addLayout(self.gridLayout_3)
 
@@ -764,7 +756,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_5.addWidget(self.txtExpendablePayload)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_5.addItem(self.verticalSpacer)
 
@@ -776,7 +768,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_2.addItem(self.horizontalSpacer)
 
@@ -790,7 +782,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_2.addWidget(self.txtMissionName)
 
-        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_2.addItem(self.horizontalSpacer_2)
 
@@ -808,6 +800,100 @@ class Ui_MainWindow(object):
         self.gridLayout_7.addWidget(self.btnSetMission, 10, 0, 1, 1)
 
         self.tabWidget.addTab(self.tbMissionParameters, "")
+        self.tab_2 = QWidget()
+        self.tab_2.setObjectName(u"tab_2")
+        self.layoutWidget = QWidget(self.tab_2)
+        self.layoutWidget.setObjectName(u"layoutWidget")
+        self.layoutWidget.setGeometry(QRect(20, 30, 961, 121))
+        self.gridLayout_10 = QGridLayout(self.layoutWidget)
+        self.gridLayout_10.setObjectName(u"gridLayout_10")
+        self.gridLayout_10.setContentsMargins(0, 0, 0, 0)
+        self.min_X = QLineEdit(self.layoutWidget)
+        self.min_X.setObjectName(u"min_X")
+
+        self.gridLayout_10.addWidget(self.min_X, 1, 2, 1, 1)
+
+        self.min_Y = QLineEdit(self.layoutWidget)
+        self.min_Y.setObjectName(u"min_Y")
+
+        self.gridLayout_10.addWidget(self.min_Y, 2, 2, 1, 1)
+
+        self.label_select = QLabel(self.layoutWidget)
+        self.label_select.setObjectName(u"label_select")
+
+        self.gridLayout_10.addWidget(self.label_select, 0, 1, 1, 1)
+
+        self.variable_X = QLabel(self.layoutWidget)
+        self.variable_X.setObjectName(u"variable_X")
+
+        self.gridLayout_10.addWidget(self.variable_X, 1, 0, 1, 1)
+
+        self.variable_Y = QLabel(self.layoutWidget)
+        self.variable_Y.setObjectName(u"variable_Y")
+
+        self.gridLayout_10.addWidget(self.variable_Y, 2, 0, 1, 1)
+
+        self.Response = QLabel(self.layoutWidget)
+        self.Response.setObjectName(u"Response")
+
+        self.gridLayout_10.addWidget(self.Response, 3, 0, 1, 1)
+
+        self.dd_Y = QComboBox(self.layoutWidget)
+        self.dd_Y.setObjectName(u"dd_Y")
+
+        self.gridLayout_10.addWidget(self.dd_Y, 2, 1, 1, 1)
+
+        self.step_X = QLineEdit(self.layoutWidget)
+        self.step_X.setObjectName(u"step_X")
+
+        self.gridLayout_10.addWidget(self.step_X, 1, 4, 1, 1)
+
+        self.max_X = QLineEdit(self.layoutWidget)
+        self.max_X.setObjectName(u"max_X")
+
+        self.gridLayout_10.addWidget(self.max_X, 1, 3, 1, 1)
+
+        self.dd_X = QComboBox(self.layoutWidget)
+        self.dd_X.setObjectName(u"dd_X")
+
+        self.gridLayout_10.addWidget(self.dd_X, 1, 1, 1, 1)
+
+        self.dd_R = QComboBox(self.layoutWidget)
+        self.dd_R.setObjectName(u"dd_R")
+
+        self.gridLayout_10.addWidget(self.dd_R, 3, 1, 1, 1)
+
+        self.step_Y = QLineEdit(self.layoutWidget)
+        self.step_Y.setObjectName(u"step_Y")
+
+        self.gridLayout_10.addWidget(self.step_Y, 2, 4, 1, 1)
+
+        self.max_Y = QLineEdit(self.layoutWidget)
+        self.max_Y.setObjectName(u"max_Y")
+
+        self.gridLayout_10.addWidget(self.max_Y, 2, 3, 1, 1)
+
+        self.label_min = QLabel(self.layoutWidget)
+        self.label_min.setObjectName(u"label_min")
+
+        self.gridLayout_10.addWidget(self.label_min, 0, 2, 1, 1)
+
+        self.label_max = QLabel(self.layoutWidget)
+        self.label_max.setObjectName(u"label_max")
+
+        self.gridLayout_10.addWidget(self.label_max, 0, 3, 1, 1)
+
+        self.label_step = QLabel(self.layoutWidget)
+        self.label_step.setObjectName(u"label_step")
+
+        self.gridLayout_10.addWidget(self.label_step, 0, 4, 1, 1)
+
+        self.button_calc = QPushButton(self.layoutWidget)
+        self.button_calc.setObjectName(u"button_calc")
+
+        self.gridLayout_10.addWidget(self.button_calc, 3, 4, 1, 1)
+
+        self.tabWidget.addTab(self.tab_2, "")
         self.tab = QWidget()
         self.tab.setObjectName(u"tab")
         self.gridLayout_2 = QGridLayout(self.tab)
@@ -832,15 +918,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-<<<<<<< HEAD
         self.menubar.setGeometry(QRect(0, 0, 1348, 25))
-=======
-<<<<<<< HEAD
-        self.menubar.setGeometry(QRect(0, 0, 1047, 25))
-=======
-        self.menubar.setGeometry(QRect(0, 0, 837, 21))
->>>>>>> b28c873 (Adds a configurations table to the GUI)
->>>>>>> 4f60ea9 (Adds a configurations table to the GUI)
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         MainWindow.setMenuBar(self.menubar)
@@ -903,12 +981,18 @@ class Ui_MainWindow(object):
         self.btnAddMission.setText(QCoreApplication.translate("MainWindow", u"Add", None))
         self.btnSetMission.setText(QCoreApplication.translate("MainWindow", u"Set Mission", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbMissionParameters), QCoreApplication.translate("MainWindow", u"Mission Parameters", None))
-<<<<<<< HEAD
+        self.label_select.setText(QCoreApplication.translate("MainWindow", u"Select", None))
+        self.variable_X.setText(QCoreApplication.translate("MainWindow", u"Variable X", None))
+        self.variable_Y.setText(QCoreApplication.translate("MainWindow", u"Variable Y", None))
+        self.Response.setText(QCoreApplication.translate("MainWindow", u"Response", None))
+        self.label_min.setText(QCoreApplication.translate("MainWindow", u"Minimum Value", None))
+        self.label_max.setText(QCoreApplication.translate("MainWindow", u"Maximum Value", None))
+        self.label_step.setText(QCoreApplication.translate("MainWindow", u"Step Count", None))
+        self.button_calc.setText(QCoreApplication.translate("MainWindow", u"Calculate", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"Design Space", None))
         self.btnSensitivities.setText(QCoreApplication.translate("MainWindow", u"Calculate Sensitivities", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Sensitivities", None))
-=======
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Configurations Table", None))
->>>>>>> b28c873 (Adds a configurations table to the GUI)
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab1), QCoreApplication.translate("MainWindow", u"Configurations Table", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbAssumptions), QCoreApplication.translate("MainWindow", u"Assumptions", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
     # retranslateUi
