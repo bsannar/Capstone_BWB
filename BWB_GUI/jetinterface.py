@@ -33,7 +33,6 @@ class JetInterface(ToolInterface):
         self.generate_cell_dicts(mission_keys, geometry_keys)
 
     def generate_cpacs(self):
-
         file_path = self.aircraft_file_no_extension + ".xml"
 
         if os.path.exists(file_path):  # Check if file exists
@@ -112,7 +111,7 @@ class JetInterface(ToolInterface):
         self.mission_cell_dict = mission_dict
         self.geometry_cell_dict = geometry_dict
 
-    def switch_jet_excel(self, file_path):
+    def switch_excel(self, file_path):
         if self.file_path != file_path:
             self.file_path = file_path
             self.wb.close()

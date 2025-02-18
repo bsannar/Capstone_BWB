@@ -150,14 +150,14 @@ class GuiManager:
         match chosen_aircraft:
             case "KC-135":
                 print("KC-135 selected")
-                self.taw_interface.switch_jet_excel("Assets/KC-135.xlsm")
+                self.jet_taw_interface.switch_excel("Assets/KC-135.xlsm")
                 self.selected_taw_aircraft = Taw()  # Load TAW aircraft class
-                self.taw_interface.generate_cpacs()
+                self.jet_taw_interface.generate_cpacs()
             case "C-17":
                 print("C-17 selected")
-                self.taw_interface.switch_jet_excel("Assets/C-17.xlsm")
+                self.jet_taw_interface.switch_excel("Assets/C-17.xlsm")
                 self.selected_taw_aircraft = Taw()  # Load TAW aircraft class
-                self.taw_interface.generate_cpacs()
+                self.jet_taw_interface.generate_cpacs()
 
             case "B-747":
                 print("B-747 selected")
@@ -229,6 +229,7 @@ class GuiManager:
         return text[:-1]
 
     def open_tigl_viewer(self):
+        self.jet_bwb_interface.generate_cpacs()
         if os.path.exists("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe"):
             if not self.hasBWBView:
                 self.bwb_process.start("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe", ["Assets/BWB_tanker.xml"])
@@ -248,17 +249,17 @@ class GuiManager:
             print('The path "Executables/TIGL 3.4.0/bin/tiglviewer-3.exe" does not exist')
 
     def open_tigl_viewer_taw(self):
-        if not hasattr(self, "selected_taw_aircraft") or not self.taw_interface.aircraft_name:
-                print("No aircraft selected. Please select an aircraft first.")
-                return
+        if not hasattr(self, "selected_taw_aircraft") or not self.jet_taw_interface.aircraft_name:
+            print("No aircraft selected. Please select an aircraft first.")
+            return
 
-        xml_file_map ={
+        xml_file_map = {
             "KC-135": "Assets/KC-135.xml",
             "C-17": "Assets/C-17.xml",
             "B-747": "Assets/B-747.xml"
         }
 
-        xml_path = xml_file_map.get(self.taw_interface.aircraft_name, None)
+        xml_path = xml_file_map.get(self.jet_taw_interface.aircraft_name, None)
 
         if xml_path is None or not os.path.exists(xml_path):
             print(f"XML file for {self.selected_taw_aircraft} not found.")

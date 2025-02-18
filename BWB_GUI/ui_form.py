@@ -52,7 +52,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1342, 582))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 176, 53))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.gridLayout_3 = QGridLayout()
@@ -227,6 +227,8 @@ class Ui_MainWindow(object):
 
         self.widTiglTaw = QWidget(self.tbTW)
         self.widTiglTaw.setObjectName(u"widTiglTaw")
+        sizePolicy.setHeightForWidth(self.widTiglTaw.sizePolicy().hasHeightForWidth())
+        self.widTiglTaw.setSizePolicy(sizePolicy)
 
         self.gridLayout_5.addWidget(self.widTiglTaw, 2, 1, 1, 1)
 
@@ -834,7 +836,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
