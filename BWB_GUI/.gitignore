@@ -74,4 +74,4 @@ CMakeLists.txt.user*
 *.dll
 
 Executables/*
-
+ui_form.py
