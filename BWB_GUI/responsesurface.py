@@ -2,14 +2,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import RegularGridInterpolator
 
-class ResponseSurfaceGenerator:
-    def __init__(self, x_min, x_max, x_steps, y_min, y_max, y_steps, x_name, y_name, r_name):
-        self.x_min = x_min
-        self.x_max = x_max
-        self.x_steps = x_steps
-        self.y_min = y_min
-        self.y_max = y_max
-        self.y_steps = y_steps
+class ResponseSurface:
+    def __init__(self, canvas, x_min, x_max, x_steps, y_min, y_max, y_steps, x_name, y_name, r_name):
+        self.canvas = canvas
+        self.x_min = float(x_min)
+        self.x_max = float(x_max)
+        self.x_steps = int(x_steps)
+        self.y_min = float(y_min)
+        self.y_max = float(y_max)
+        self.y_steps = int(y_steps)
         self.x_name = x_name
         self.y_name = y_name
         self.r_name = r_name
@@ -20,11 +21,7 @@ class ResponseSurfaceGenerator:
     
     def compute_response(self):
         response = np.zeros((self.x_steps, self.y_steps))
-        for i in range(self.x_steps):
-            for j in range(self.y_steps):
-                update_inputs(self.X[j, i], self.Y[j, i], self.x_name, self.y_name)
-                self.response[j, i] = get_response(self.r_name)
-            return response
+        return response
 
     def initialize_grid(self):
         self.x = np.linspace(self.x_min, self.x_max, self.x_steps)
@@ -43,21 +40,20 @@ class ResponseSurfaceGenerator:
         self.dx, self.dy = np.gradient(self.response_interpol, self.x_new, self.y_new)
     
     def create_plot(self):
-        self.fig = plt.figure(figsize=(10, 10))
-        self.ax = self.fig.add_subplot(111, projection='3d')
-        self.ax.plot_surface(self.X_new, self.Y_new, self.response_interpol, cmap="RdBu")
-        
-        self.annot = self.ax.text2D(0.05, 0.95, "Right-click a point to see slope", transform=self.ax.transAxes, 
+        self.canvas.ax.cla()
+        self.canvas.ax.plot_surface(self.X_new, self.Y_new, self.response_interpol, cmap="RdBu")
+
+        self.annot = self.canvas.ax.text2D(0.05, 0.95, "Right-click a point to see slope", transform=self.canvas.ax.transAxes,
                                     fontsize=12, bbox=dict(facecolor='white', alpha=0.7))
-        
-        self.fig.canvas.mpl_connect("button_press_event", self.on_mouse_click)
-        plt.show()
+
+        self.canvas.fig.canvas.mpl_connect("button_press_event", self.on_mouse_click)
+        self.canvas.draw()
     
     def on_click(self, event):
-        return self.ax.format_coord(event.xdata, event.ydata)
+        return self.canvas.ax.format_coord(event.xdata, event.ydata)
     
     def on_mouse_click(self, event):
-        if event.inaxes == self.ax and event.button == 3:  # Right-click (button 3)
+        if event.inaxes == self.cavnas.ax and event.button == 3:  # Right-click (button 3)
             if event.xdata is None or event.ydata is None:
                 return
             

@@ -19,6 +19,7 @@ from csvinterface import CsvInterface
 import copy
 from matplotlibcanvas import MatplotlibCanvas
 import mplcursors
+from responsesurface import ResponseSurface
 
 class GuiManager:
     def __init__(self, ui):
@@ -39,14 +40,21 @@ class GuiManager:
         self.taw_storage_manager = DataManager(self.jet_taw_interface, self.loaded_aircraft)
         self.tool_storage_manager = DataManager(self.jet_bwb_interface, self.loaded_aircraft)
         self.gui_storage_manager = DataManager(self, self.loaded_aircraft)
-        dropdowns.setup_dropdown(self.ui.ddChooseMission, ["Tanker", "Airdrop", "Cargo Carry"], False)
         self.csv_interface = CsvInterface()
         self.gui_csv_manager = DataManager(self, self.csv_interface)
         self.csv_tool_manager = DataManager(self.csv_interface, self.jet_bwb_interface)
-        dropdowns.setup_dropdown(self.ui.ddChooseAircraft, ["KC-135", "C-17", "B-747"], False)
-        dropdowns.setup_dropdown(self.ui.ddMissionOutputs, self.loaded_aircraft.list_mission_outputs(), True)
         self.main_canvas = MatplotlibCanvas(self.ui.widMainPlot)
+        self.response_surface_canvas = MatplotlibCanvas(self.ui.widResponseSurface, projection='3d')
+        self.setup_all_dropdowns()
         self.connect_all()
+
+    def setup_all_dropdowns(self):
+        dropdowns.setup_dropdown(self.ui.ddChooseAircraft, ["KC-135", "C-17", "B-747"])
+        dropdowns.setup_dropdown(self.ui.ddMissionOutputs, self.loaded_aircraft.list_mission_outputs(), multi_select=True)
+        dropdowns.setup_dropdown(self.ui.ddChooseMission, ["Tanker", "Airdrop", "Cargo Carry"])
+        dropdowns.setup_dropdown(self.ui.ddX, self.loaded_aircraft.list_geometry())
+        dropdowns.setup_dropdown(self.ui.ddY, self.loaded_aircraft.list_geometry())
+        dropdowns.setup_dropdown(self.ui.ddZ, self.loaded_aircraft.list_mission_outputs())
 
     def connect_all(self):
         self.ui.btnUpdate.clicked.connect(self.update_aircraft_geometry)
@@ -62,6 +70,18 @@ class GuiManager:
         self.ui.btnSetMission.clicked.connect(self.tool_gui_manager.transfer_mission_inputs_to_input)
         self.ui.lwMissions.itemClicked.connect(lambda item: self.set_mission(item.text()))
         self.ui.ddMissionOutputs.menu().triggered.connect(self.mission_outputs_selected)
+        self.ui.btnCalculateResponseSurface.clicked.connect(lambda: ResponseSurface(
+                                                            self.response_surface_canvas,
+                                                            self.ui.txtMinX.text(),
+                                                            self.ui.txtMaxX.text(),
+                                                            self.ui.txtStepX.text(),
+                                                            self.ui.txtMinY.text(),
+                                                            self.ui.txtMaxY.text(),
+                                                            self.ui.txtStepY.text(),
+                                                            "X",
+                                                            "Y",
+                                                            "Z"
+                                                            ))
 
     def mission_outputs_selected(self):
         checked_mission_outputs = [item.text() for item in self.ui.ddMissionOutputs.menu().actions() if item.isChecked()]

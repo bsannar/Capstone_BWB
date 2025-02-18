@@ -33,7 +33,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="tbMain">
        <attribute name="title">
@@ -62,8 +62,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1041</width>
-             <height>593</height>
+             <width>1342</width>
+             <height>582</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -137,8 +137,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1041</width>
-             <height>593</height>
+             <width>1342</width>
+             <height>582</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -834,105 +834,130 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_2">
+      <widget class="QWidget" name="tbDesignSpace">
        <attribute name="title">
         <string>Design Space</string>
        </attribute>
-       <widget class="QWidget" name="layoutWidget">
-        <property name="geometry">
-         <rect>
-          <x>20</x>
-          <y>30</y>
-          <width>961</width>
-          <height>121</height>
-         </rect>
-        </property>
-        <layout class="QGridLayout" name="gridLayout_10" columnstretch="0,0,0,0,0">
-         <item row="1" column="2">
-          <widget class="QLineEdit" name="min_X"/>
-         </item>
-         <item row="2" column="2">
-          <widget class="QLineEdit" name="min_Y"/>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLabel" name="label_select">
-           <property name="text">
-            <string>Select</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="variable_X">
-           <property name="text">
-            <string>Variable X</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="variable_Y">
-           <property name="text">
-            <string>Variable Y</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="Response">
-           <property name="text">
-            <string>Response</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QComboBox" name="dd_Y"/>
-         </item>
-         <item row="1" column="4">
-          <widget class="QLineEdit" name="step_X"/>
-         </item>
-         <item row="1" column="3">
-          <widget class="QLineEdit" name="max_X"/>
-         </item>
-         <item row="1" column="1">
-          <widget class="QComboBox" name="dd_X"/>
-         </item>
-         <item row="3" column="1">
-          <widget class="QComboBox" name="dd_R"/>
-         </item>
-         <item row="2" column="4">
-          <widget class="QLineEdit" name="step_Y"/>
-         </item>
-         <item row="2" column="3">
-          <widget class="QLineEdit" name="max_Y"/>
-         </item>
-         <item row="0" column="2">
-          <widget class="QLabel" name="label_min">
-           <property name="text">
-            <string>Minimum Value</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="3">
-          <widget class="QLabel" name="label_max">
-           <property name="text">
-            <string>Maximum Value</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="4">
-          <widget class="QLabel" name="label_step">
-           <property name="text">
-            <string>Step Count</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="4">
-          <widget class="QPushButton" name="button_calc">
-           <property name="text">
-            <string>Calculate</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <layout class="QGridLayout" name="gridLayout_10" columnstretch="0,0,0,0">
+          <item row="1" column="0">
+           <widget class="QToolButton" name="ddX">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>X</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QLineEdit" name="txtMaxY"/>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLineEdit" name="txtMaxX"/>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="txtMinY"/>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="label_max">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Maximum Value</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="label_min">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Minimum Value</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QLabel" name="label_step">
+            <property name="text">
+             <string>Step Count</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QToolButton" name="ddZ">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Z</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QToolButton" name="ddY">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Y</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="txtMinX"/>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_select">
+            <property name="text">
+             <string>Select</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QLineEdit" name="txtStepX"/>
+          </item>
+          <item row="2" column="3">
+           <widget class="QLineEdit" name="txtStepY"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnCalculateResponseSurface">
+          <property name="text">
+           <string>Calculate</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="widResponseSurface" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -980,8 +1005,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1047</width>
-     <height>21</height>
+     <width>1348</width>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

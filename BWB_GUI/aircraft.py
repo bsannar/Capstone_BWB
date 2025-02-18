@@ -19,6 +19,6 @@ class Aircraft:
         names = vars(self.mission_inputs).keys()
         return [name.replace("_", " ") for name in names]
 
-    def list_geometry_vars(self):
+    def list_geometry(self):
         names = vars(self.geometry).keys()
         return [name.replace("_", " ") for name in names]
