@@ -26,7 +26,6 @@ class ResponseSurface:
         self.canvas.ax.cla()
         vx, vy = np.meshgrid(self.x, self.y, indexing='ij')
         response = np.zeros((self.x_steps, self.y_steps))
-        points = []
         for i in range(self.x_steps):
             for j in range(self.y_steps):
                 print(i, j)
@@ -36,8 +35,7 @@ class ResponseSurface:
                 self.loaded_aircraft.geometry.pull_from_dict(geometry_dict)
                 self.data_manager.transfer_max_range()
                 response[i, j] = self.loaded_aircraft.mission_outputs.max_range
-                points.append((vx[i, j], vy[i, j], response[i, j]))
-        self.canvas.ax.scatter(points[0], points[1], points[2])
+        self.canvas.ax.scatter(vx.squeeze(), vy.squeeze(), response.squeeze())
         return response
 
     def initialize_grid(self):
@@ -52,7 +50,11 @@ class ResponseSurface:
     
     def interpolate_response(self):
         points = np.column_stack([self.X_new.ravel(), self.Y_new.ravel()])
-        grid_interpol = RegularGridInterpolator(self.grid_old, self.response, method='cubic')
+        if self.response.shape[0] > 3 and self.response.shape[1] > 3:
+            method = 'cubic'
+        else:
+            method = 'slinear'
+        grid_interpol = RegularGridInterpolator(self.grid_old, self.response, method=method)
         self.response_interpol = grid_interpol(points).reshape(self.X_new.shape)
         self.dx, self.dy = np.gradient(self.response_interpol, self.x_new, self.y_new)
     
