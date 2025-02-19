@@ -1,5 +1,4 @@
 import os
-from win32gui import GetForegroundWindow, GetWindowText
 from bwb import Bwb
 from taw import Taw
 from f_35s_refueled import get_number_f_35s
@@ -20,6 +19,17 @@ import copy
 from matplotlibcanvas import MatplotlibCanvas
 import mplcursors
 from responsesurface import ResponseSurface
+import platform
+if platform.system() == "Windows":
+    from win32gui import GetForegroundWindow, GetWindowText
+elif platform.system() == "Darwin":
+    from Quartz import CGWindowListCopyWindowInfo, kCGWindowListOptionOnScreenOnly, kCGNullWindowID
+
+    def GetForegroundWindow():
+        return CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly, kCGNullWindowID)
+
+    def GetWindowText(window):
+        return window[0]['kCGWindowName'] if window else "Unknown"
 
 class GuiManager:
     def __init__(self, ui):
