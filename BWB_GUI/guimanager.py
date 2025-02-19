@@ -70,18 +70,24 @@ class GuiManager:
         self.ui.btnSetMission.clicked.connect(self.tool_gui_manager.transfer_mission_inputs_to_input)
         self.ui.lwMissions.itemClicked.connect(lambda item: self.set_mission(item.text()))
         self.ui.ddMissionOutputs.menu().triggered.connect(self.mission_outputs_selected)
-        self.ui.btnCalculateResponseSurface.clicked.connect(lambda: ResponseSurface(
-                                                            self.response_surface_canvas,
-                                                            self.ui.txtMinX.text(),
-                                                            self.ui.txtMaxX.text(),
-                                                            self.ui.txtStepX.text(),
-                                                            self.ui.txtMinY.text(),
-                                                            self.ui.txtMaxY.text(),
-                                                            self.ui.txtStepY.text(),
-                                                            "X",
-                                                            "Y",
-                                                            "Z"
-                                                            ))
+        self.ui.btnCalculateResponseSurface.clicked.connect(self.generate_response_surface)
+
+    def generate_response_surface(self):
+        x_name = [item.text() for item in self.ui.ddX.menu().actions() if item.isChecked()][0]
+        y_name = [item.text() for item in self.ui.ddY.menu().actions() if item.isChecked()][0]
+        self.gui_storage_manager.transfer_mission_inputs_to_output()
+        ResponseSurface(self.response_surface_canvas,
+                        self.ui.txtMinX.text(),
+                        self.ui.txtMaxX.text(),
+                        self.ui.txtStepX.text(),
+                        self.ui.txtMinY.text(),
+                        self.ui.txtMaxY.text(),
+                        self.ui.txtStepY.text(),
+                        x_name,
+                        y_name,
+                        "Z",
+                        self.loaded_aircraft,
+                        self.jet_bwb_interface)
 
     def mission_outputs_selected(self):
         checked_mission_outputs = [item.text() for item in self.ui.ddMissionOutputs.menu().actions() if item.isChecked()]
@@ -100,6 +106,8 @@ class GuiManager:
                     case "max payload weight":
                         pass
         self.update_main_plot()
+        self.tool_storage_manager.output = self.loaded_aircraft
+        self.gui_storage_manager.output = self.loaded_aircraft
 
     def update_aircraft_geometry(self):
         self.gui_storage_manager.transfer_geometry_to_output()

@@ -1,9 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import RegularGridInterpolator
+from datamanager import DataManager
 
 class ResponseSurface:
-    def __init__(self, canvas, x_min, x_max, x_steps, y_min, y_max, y_steps, x_name, y_name, r_name):
+    def __init__(self, canvas, x_min, x_max, x_steps, y_min, y_max, y_steps, x_name, y_name, r_name, loaded_aircraft, tool_interface):
         self.canvas = canvas
         self.x_min = float(x_min)
         self.x_max = float(x_max)
@@ -14,13 +15,29 @@ class ResponseSurface:
         self.x_name = x_name
         self.y_name = y_name
         self.r_name = r_name
+        self.loaded_aircraft = loaded_aircraft
+        self.data_manager = DataManager(tool_interface, self.loaded_aircraft)
         
         self.initialize_grid()
         self.interpolate_response()
         self.create_plot()
     
     def compute_response(self):
+        self.canvas.ax.cla()
+        vx, vy = np.meshgrid(self.x, self.y, indexing='ij')
         response = np.zeros((self.x_steps, self.y_steps))
+        points = []
+        for i in range(self.x_steps):
+            for j in range(self.y_steps):
+                print(i, j)
+                x_name = self.x_name.replace(" ", "_")
+                y_name = self.y_name.replace(" ", "_")
+                geometry_dict = {x_name: vx[i, j], y_name: vy[i, j]}
+                self.loaded_aircraft.geometry.pull_from_dict(geometry_dict)
+                self.data_manager.transfer_max_range()
+                response[i, j] = self.loaded_aircraft.mission_outputs.max_range
+                points.append((vx[i, j], vy[i, j], response[i, j]))
+        self.canvas.ax.scatter(points[0], points[1], points[2])
         return response
 
     def initialize_grid(self):
@@ -40,8 +57,9 @@ class ResponseSurface:
         self.dx, self.dy = np.gradient(self.response_interpol, self.x_new, self.y_new)
     
     def create_plot(self):
-        self.canvas.ax.cla()
         self.canvas.ax.plot_surface(self.X_new, self.Y_new, self.response_interpol, cmap="RdBu")
+        self.canvas.ax.set_ylabel(self.y_name)
+        self.canvas.ax.set_xlabel(self.x_name)
 
         self.annot = self.canvas.ax.text2D(0.05, 0.95, "Right-click a point to see slope", transform=self.canvas.ax.transAxes,
                                     fontsize=12, bbox=dict(facecolor='white', alpha=0.7))
