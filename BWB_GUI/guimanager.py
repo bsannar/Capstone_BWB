@@ -224,7 +224,7 @@ class GuiManager:
         cursor.connect("add", lambda sel: self.show_annotation(sel, all_rects, texts))
 
         for label, value in zip(bar_labels, values):
-            label.set_text(format_number(value))
+            label.set_text(format_number(value)+" nm")
 
         # Add some text for labels, title and custom x-self.main_canvas.axis tick labels, etc.
         n_aircraft = len(self.aircraft_list)

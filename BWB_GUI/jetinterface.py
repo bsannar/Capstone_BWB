@@ -71,7 +71,7 @@ class JetInterface(ToolInterface):
         self.mission_cell_dict["Dist"]["Cruise2"].value = nautical_miles - self.mission_cell_dict["Dist"]["Climb2"].value - self.mission_cell_dict["Dist"]["Loiter"].value
 
     def calculate_max_range(self):
-        step = 50
+        step = 100
         for nautical_miles in range(step, step*1000, step):
             self.set_cruise_distance(nautical_miles)
             if self.main_sheet["X40"].value > self.main_sheet["O18"].value:

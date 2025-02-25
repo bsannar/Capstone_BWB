@@ -35,7 +35,7 @@ class ResponseSurface:
                 self.loaded_aircraft.geometry.pull_from_dict(geometry_dict)
                 self.data_manager.transfer_max_range()
                 response[i, j] = self.loaded_aircraft.mission_outputs.max_range
-        self.canvas.ax.scatter(vx.squeeze(), vy.squeeze(), response.squeeze())
+        self.canvas.ax.scatter(vx.squeeze(), vy.squeeze(), response.squeeze(), zorder=10, alpha=1)
         return response
 
     def initialize_grid(self):
@@ -44,8 +44,8 @@ class ResponseSurface:
         self.response = self.compute_response()
         self.grid_old = (self.x, self.y)
         
-        self.x_new = np.linspace(self.x_min + 0.1, self.x_max - 0.1, self.x_steps * 10)
-        self.y_new = np.linspace(self.y_min + 0.1, self.y_max - 0.1, self.y_steps * 10)
+        self.x_new = np.linspace(self.x_min, self.x_max, self.x_steps * 10)
+        self.y_new = np.linspace(self.y_min, self.y_max, self.y_steps * 10)
         self.X_new, self.Y_new = np.meshgrid(self.x_new, self.y_new, indexing='ij')
     
     def interpolate_response(self):
