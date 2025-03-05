@@ -2,6 +2,7 @@ from toolinterface import ToolInterface
 import xlwings as xw
 from textprocessingutilities import *
 import os
+from loadingbar import LoadingBar
 
 def convert_cell_dict_to_cell_value_dict(cell_dict):
     value_dict = {}
@@ -63,8 +64,13 @@ class JetInterface(ToolInterface):
     def calculate_lift_over_drag(self):
         pass
 
-    def calculate_f35s_refueled(self):
-        pass
+    def calculate_max_f35s_refueled(self):
+        f35_max_fuel = 18000
+        f35_refuel_threshold = .2
+        for i in LoadingBar.Range(1, 50, message='Calculating F35s Refueled...'):
+            self.mission_cell_dict["ExpPayload"].value = f35_max_fuel*(1-f35_refuel_threshold)*i
+            if self.main_sheet["X40"].value > self.main_sheet["O18"].value:
+                return i-1
 
     def set_cruise_distance(self, nautical_miles):
         self.mission_cell_dict["Dist"]["Cruise1"].value = nautical_miles - self.mission_cell_dict["Dist"]["Accel"].value - self.mission_cell_dict["Dist"]["Climb1"].value
@@ -72,12 +78,15 @@ class JetInterface(ToolInterface):
 
     def calculate_max_range(self):
         step = 100
-        for nautical_miles in range(step, step*1000, step):
+        for nautical_miles in LoadingBar.Range(step, step*200, step, message='Calculating Range...'):
             self.set_cruise_distance(nautical_miles)
             if self.main_sheet["X40"].value > self.main_sheet["O18"].value:
                 return (nautical_miles-step)
 
     def calculate_dry_weight(self):
+        return self.main_sheet["O23"].value
+
+    def calculate_max_payload_weight(self):
         pass
 
     def generate_cell_dicts(self, mission_keys, geometry_keys):

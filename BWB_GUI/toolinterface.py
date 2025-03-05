@@ -30,7 +30,11 @@ class ToolInterface(ABC):
         pass
 
     @abstractmethod
-    def calculate_f35s_refueled(self):
+    def calculate_max_payload_weight(self):
+        pass
+
+    @abstractmethod
+    def calculate_max_f35s_refueled(self):
         pass
 
     @abstractmethod

@@ -13,12 +13,17 @@ class MissionOutputs(InternalStorageInterface):
             self.max_range = max_range
             self.max_payload_weight = max_payload_weight
 
+    def get_units(self):
+        return {"dry_weight": "lbs",
+                "max_f35s_refueled": "",
+                "max_range": "nm",
+                "max_payload_weight": "lbs"}
+
     def pull_from_dict(self, dictionary: dict):
         flattened_dict = flatten_dict(dictionary)
         for key, value in flattened_dict.items():
             new_key = convert_from_camel_casing_to_underscores(key)
             setattr(self, new_key, value)
-        print(vars(self))
 
     def push_to_dict(self):
         pass

@@ -103,3 +103,57 @@ class DataManager:
             case _:
                 print("default case")
 
+    def transfer_dry_weight(self):
+        from toolinterface import ToolInterface
+        from internalstorageinterface import InternalStorageInterface
+        from guimanager import GuiManager
+        from aircraft import Aircraft
+
+        match self.input:
+            case Aircraft():
+                mission_outputs_dict = self.input.mission_outputs.push_to_dict()
+                dry_weight = mission_outputs_dict["dry_weight"]
+            case ToolInterface():
+                self.transfer_geometry_to_input()
+                self.transfer_mission_inputs_to_input()
+                dry_weight = self.input.calculate_dry_weight()
+            case GuiManager():
+                pass
+            case ExternalStorageInterface():
+                pass
+            case _:
+                print("default case")
+
+        match self.output:
+            case Aircraft():
+                self.output.mission_outputs.dry_weight = dry_weight
+            case _:
+                print("default case")
+
+    def transfer_max_f35s_refueled(self):
+        from toolinterface import ToolInterface
+        from internalstorageinterface import InternalStorageInterface
+        from guimanager import GuiManager
+        from aircraft import Aircraft
+
+        match self.input:
+            case Aircraft():
+                mission_outputs_dict = self.input.mission_outputs.push_to_dict()
+                max_f35s_refueled = mission_outputs_dict["max_f35s_refueled"]
+            case ToolInterface():
+                self.transfer_geometry_to_input()
+                self.transfer_mission_inputs_to_input()
+                max_f35s_refueled = self.input.calculate_max_f35s_refueled()
+            case GuiManager():
+                pass
+            case ExternalStorageInterface():
+                pass
+            case _:
+                print("default case")
+
+        match self.output:
+            case Aircraft():
+                self.output.mission_outputs.max_f35s_refueled = max_f35s_refueled
+            case _:
+                print("default case")
+

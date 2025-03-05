@@ -3,7 +3,6 @@
         ".gitignore",
         "mainwindow.py",
         "form.ui",
-        "f_35s_refueled.py",
         "bwb.py",
         "dropdowns.py",
         "taw.py",
@@ -25,6 +24,7 @@
         "missionoutputs.py",
         "csvinterface.py",
         "matplotlibcanvas.py",
-        "responsesurface.py"
+        "responsesurface.py",
+        "loadingbar.py"
     ]
 }

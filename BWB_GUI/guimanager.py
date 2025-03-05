@@ -2,7 +2,6 @@ import os
 from win32gui import GetForegroundWindow, GetWindowText
 from bwb import Bwb
 from taw import Taw
-from f_35s_refueled import get_number_f_35s
 import numpy as np
 import dropdowns
 import config_saver as save
@@ -20,6 +19,7 @@ import copy
 from matplotlibcanvas import MatplotlibCanvas
 import mplcursors
 from responsesurface import ResponseSurface
+from loadingbar import LoadingBar
 
 class GuiManager:
     def __init__(self, ui):
@@ -75,6 +75,7 @@ class GuiManager:
     def generate_response_surface(self):
         x_name = [item.text() for item in self.ui.ddX.menu().actions() if item.isChecked()][0]
         y_name = [item.text() for item in self.ui.ddY.menu().actions() if item.isChecked()][0]
+        z_name = [item.text() for item in self.ui.ddZ.menu().actions() if item.isChecked()][0]
         self.gui_storage_manager.transfer_mission_inputs_to_output()
         ResponseSurface(self.response_surface_canvas,
                         self.ui.txtMinX.text(),
@@ -85,22 +86,22 @@ class GuiManager:
                         self.ui.txtStepY.text(),
                         x_name,
                         y_name,
-                        "Z",
+                        z_name,
                         self.loaded_aircraft,
                         self.jet_bwb_interface)
 
     def mission_outputs_selected(self):
         checked_mission_outputs = [item.text() for item in self.ui.ddMissionOutputs.menu().actions() if item.isChecked()]
-        for aircraft in self.aircraft_list:
+        for aircraft in LoadingBar.List(self.aircraft_list, message="Calculating Performance..."):
             self.tool_storage_manager.output = aircraft
             self.gui_storage_manager.output = aircraft
             self.gui_storage_manager.transfer_mission_inputs_to_output()
             for mission_output in checked_mission_outputs:
                 match mission_output:
                     case "max f35s refueled":
-                        self.tool_storage_manager.calculate_f35s_refueled()
+                        self.tool_storage_manager.transfer_max_f35s_refueled()
                     case "dry weight":
-                        pass
+                        self.tool_storage_manager.transfer_dry_weight()
                     case "max range":
                         self.tool_storage_manager.transfer_max_range()
                     case "max payload weight":
@@ -111,7 +112,10 @@ class GuiManager:
 
     def update_aircraft_geometry(self):
         self.gui_storage_manager.transfer_geometry_to_output()
-        self.loaded_aircraft.name = f"Aircraft {len(self.aircraft_list)+1}"
+        name = self.ui.txtBwbName.text()
+        if name == '':
+            name = f"BWB {len(self.aircraft_list)+1}"
+        self.loaded_aircraft.name = name
         self.aircraft_list.append(copy.deepcopy(self.loaded_aircraft))
 
     def pull_geometry_vars_into_gui(self, geometry_dict: dict):
@@ -205,6 +209,7 @@ class GuiManager:
 
         normalizers = [max([float(vars(aircraft.mission_outputs)[plotVar]) for aircraft in self.aircraft_list]) for plotVar in plotVars]
         values = []
+        units = []
         bar_labels = []
         all_rects = []
         texts = []
@@ -212,8 +217,10 @@ class GuiManager:
             texts.append(self.get_unique_geometry(i))
             offset = width * multiplier
             labelValues = [float(vars(aircraft.mission_outputs)[plotVar]) for plotVar in plotVars]
+            label_units = [aircraft.mission_outputs.get_units()[plotVar] for plotVar in plotVars]
             normalizedValues = [var/norm for var, norm in zip(labelValues, normalizers)]
             rects = self.main_canvas.ax.bar(x + offset, normalizedValues, width, label=aircraft.name)
+            units.extend(label_units)
             values.extend(labelValues)
             labels = self.main_canvas.ax.bar_label(rects, rotation=40)
             bar_labels.extend(labels)
@@ -223,8 +230,8 @@ class GuiManager:
         cursor = mplcursors.cursor([rect for rects in all_rects for rect in rects], hover=mplcursors.HoverMode.Transient)
         cursor.connect("add", lambda sel: self.show_annotation(sel, all_rects, texts))
 
-        for label, value in zip(bar_labels, values):
-            label.set_text(format_number(value)+" nm")
+        for label, value, unit in zip(bar_labels, values, units):
+            label.set_text(format_number(value)+" "+unit)
 
         # Add some text for labels, title and custom x-self.main_canvas.axis tick labels, etc.
         n_aircraft = len(self.aircraft_list)

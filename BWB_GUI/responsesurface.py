@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import RegularGridInterpolator
 from datamanager import DataManager
+from loadingbar import LoadingBar
 
 class ResponseSurface:
     def __init__(self, canvas, x_min, x_max, x_steps, y_min, y_max, y_steps, x_name, y_name, r_name, loaded_aircraft, tool_interface):
@@ -26,15 +27,13 @@ class ResponseSurface:
         self.canvas.ax.cla()
         vx, vy = np.meshgrid(self.x, self.y, indexing='ij')
         response = np.zeros((self.x_steps, self.y_steps))
-        for i in range(self.x_steps):
-            for j in range(self.y_steps):
-                print(i, j)
-                x_name = self.x_name.replace(" ", "_")
-                y_name = self.y_name.replace(" ", "_")
-                geometry_dict = {x_name: vx[i, j], y_name: vy[i, j]}
-                self.loaded_aircraft.geometry.pull_from_dict(geometry_dict)
-                self.data_manager.transfer_max_range()
-                response[i, j] = self.loaded_aircraft.mission_outputs.max_range
+        for i, j in LoadingBar.Range((self.x_steps, self.y_steps), message='Calculating Response...'):
+            x_name = self.x_name.replace(" ", "_")
+            y_name = self.y_name.replace(" ", "_")
+            geometry_dict = {x_name: vx[i, j], y_name: vy[i, j]}
+            self.loaded_aircraft.geometry.pull_from_dict(geometry_dict)
+            self.data_manager.transfer_max_range()
+            response[i, j] = self.loaded_aircraft.mission_outputs.max_range
         self.canvas.ax.scatter(vx.squeeze(), vy.squeeze(), response.squeeze(), zorder=10, alpha=1)
         return response
 
