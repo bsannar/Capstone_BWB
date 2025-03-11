@@ -3,9 +3,10 @@ import matplotlib.pyplot as plt
 from scipy.interpolate import RegularGridInterpolator
 from datamanager import DataManager
 from loadingbar import LoadingBar
+from textprocessingutilities import convert_to_underscores_from_spaces
 
 class ResponseSurface:
-    def __init__(self, canvas, x_min, x_max, x_steps, y_min, y_max, y_steps, x_name, y_name, r_name, loaded_aircraft, tool_interface):
+    def __init__(self, canvas, x_min, x_max, x_steps, y_min, y_max, y_steps, x_name, y_name, z_name, loaded_aircraft, tool_interface):
         self.canvas = canvas
         self.x_min = float(x_min)
         self.x_max = float(x_max)
@@ -15,7 +16,7 @@ class ResponseSurface:
         self.y_steps = int(y_steps)
         self.x_name = x_name
         self.y_name = y_name
-        self.r_name = r_name
+        self.z_name = z_name
         self.loaded_aircraft = loaded_aircraft
         self.data_manager = DataManager(tool_interface, self.loaded_aircraft)
         
@@ -32,8 +33,11 @@ class ResponseSurface:
             y_name = self.y_name.replace(" ", "_")
             geometry_dict = {x_name: vx[i, j], y_name: vy[i, j]}
             self.loaded_aircraft.geometry.pull_from_dict(geometry_dict)
-            self.data_manager.transfer_max_range()
-            response[i, j] = self.loaded_aircraft.mission_outputs.max_range
+            transfer_func_dict = self.data_manager.get_output_to_transfer_function_dict()
+            z_var = convert_to_underscores_from_spaces(self.z_name)
+            transfer_func_dict[z_var]()
+            outputs_dict = self.loaded_aircraft.mission_outputs.push_to_dict()
+            response[i, j] = outputs_dict[z_var]
         self.canvas.ax.scatter(vx.squeeze(), vy.squeeze(), response.squeeze(), zorder=10, alpha=1)
         return response
 
@@ -61,6 +65,7 @@ class ResponseSurface:
         self.canvas.ax.plot_surface(self.X_new, self.Y_new, self.response_interpol, cmap="RdBu")
         self.canvas.ax.set_ylabel(self.y_name)
         self.canvas.ax.set_xlabel(self.x_name)
+        self.canvas.ax.set_zlabel(self.z_name)
 
         self.annot = self.canvas.ax.text2D(0.05, 0.95, "Right-click a point to see slope", transform=self.canvas.ax.transAxes,
                                     fontsize=12, bbox=dict(facecolor='white', alpha=0.7))

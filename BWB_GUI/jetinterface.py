@@ -67,21 +67,39 @@ class JetInterface(ToolInterface):
     def calculate_max_f35s_refueled(self):
         f35_max_fuel = 18000
         f35_refuel_threshold = .2
-        for i in LoadingBar.Range(1, 50, message='Calculating F35s Refueled...'):
-            self.mission_cell_dict["ExpPayload"].value = f35_max_fuel*(1-f35_refuel_threshold)*i
-            if self.main_sheet["X40"].value > self.main_sheet["O18"].value:
-                return i-1
+        f35_refuel_weight = f35_max_fuel*(1-f35_refuel_threshold)
+        x = [0, 100*f35_refuel_weight]
+        def f(x):
+            self.mission_cell_dict["ExpPayload"].value = x
+            return self.main_sheet["X40"].value - self.main_sheet["O18"].value
+        for i in LoadingBar.Range(10, message='Calculating F35s Refueled...'):
+            y = [f(x[0]), f(x[1])]
+            x_new = x[0] - y[0]*((x[1]-x[0])/(y[1]-y[0]))
+            y_new = f(x_new)
+            if x_new < 0:
+                return 0
+            if abs(y_new) < 1:
+                return x_new // f35_refuel_weight
+            x[1] = x[0]
+            x[0] = x_new
 
     def set_cruise_distance(self, nautical_miles):
         self.mission_cell_dict["Dist"]["Cruise1"].value = nautical_miles - self.mission_cell_dict["Dist"]["Accel"].value - self.mission_cell_dict["Dist"]["Climb1"].value
         self.mission_cell_dict["Dist"]["Cruise2"].value = nautical_miles - self.mission_cell_dict["Dist"]["Climb2"].value - self.mission_cell_dict["Dist"]["Loiter"].value
 
     def calculate_max_range(self):
-        step = 100
-        for nautical_miles in LoadingBar.Range(step, step*200, step, message='Calculating Range...'):
-            self.set_cruise_distance(nautical_miles)
-            if self.main_sheet["X40"].value > self.main_sheet["O18"].value:
-                return (nautical_miles-step)
+        x = [0, 50000]
+        def f(x):
+            self.set_cruise_distance(x)
+            return self.main_sheet["X40"].value - self.main_sheet["O18"].value
+        for i in LoadingBar.Range(50, message='Calculating Range...'):
+            y = [f(x[0]), f(x[1])]
+            x_new = x[0] - y[0]*((x[1]-x[0])/(y[1]-y[0]))
+            y_new = f(x_new)
+            if abs(y_new) < 1:
+                return int(x_new)
+            x[1] = x[0]
+            x[0] = x_new
 
     def calculate_dry_weight(self):
         return self.main_sheet["O23"].value

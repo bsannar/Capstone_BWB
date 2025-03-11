@@ -157,3 +157,8 @@ class DataManager:
             case _:
                 print("default case")
 
+    def get_output_to_transfer_function_dict(self):
+        return {"max_f35s_refueled": self.transfer_max_f35s_refueled,
+                "dry_weight": self.transfer_dry_weight,
+                "max_range": self.transfer_max_range}
+

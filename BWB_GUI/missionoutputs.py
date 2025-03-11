@@ -26,4 +26,4 @@ class MissionOutputs(InternalStorageInterface):
             setattr(self, new_key, value)
 
     def push_to_dict(self):
-        pass
+        return vars(self)
