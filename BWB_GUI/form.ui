@@ -33,7 +33,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tbMissionParameters">
        <attribute name="title">
@@ -594,8 +594,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1342</width>
-             <height>582</height>
+             <width>1340</width>
+             <height>585</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -747,6 +747,26 @@
         <string>Tube And Wing</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_5">
+        <item row="0" column="2">
+         <spacer name="horizontalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="0">
+         <widget class="QToolButton" name="ddChooseAircraft">
+          <property name="text">
+           <string>Choose Tube and Wing Aircraft</string>
+          </property>
+         </widget>
+        </item>
         <item row="2" column="0">
          <spacer name="verticalSpacer_2">
           <property name="orientation">
@@ -760,18 +780,15 @@
           </property>
          </spacer>
         </item>
-        <item row="0" column="1">
-         <spacer name="horizontalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Orientation::Horizontal</enum>
+        <item row="2" column="2">
+         <widget class="QWidget" name="widTiglTaw" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
+         </widget>
         </item>
         <item row="1" column="0">
          <widget class="QToolButton" name="btnViewAircraftTaw">
@@ -780,20 +797,10 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="0">
-         <widget class="QToolButton" name="ddChooseAircraft">
+        <item row="0" column="1">
+         <widget class="QLabel" name="text_output_taw">
           <property name="text">
-           <string>Choose Tube and Wing Aircraft</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QWidget" name="widTiglTaw" native="true">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+           <string>No Aircraft Selected</string>
           </property>
          </widget>
         </item>
@@ -826,8 +833,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1342</width>
-             <height>582</height>
+             <width>1340</width>
+             <height>585</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -1046,7 +1053,7 @@
      <x>0</x>
      <y>0</y>
      <width>1348</width>
-     <height>25</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

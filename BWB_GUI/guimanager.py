@@ -46,6 +46,7 @@ class GuiManager:
         self.main_canvas = MatplotlibCanvas(self.ui.widMainPlot)
         self.response_surface_canvas = MatplotlibCanvas(self.ui.widResponseSurface, projection='3d')
         self.setup_all_dropdowns()
+        self.log_message("No Aircraft Selected")
         self.connect_all()
 
     def setup_all_dropdowns(self):
@@ -89,6 +90,10 @@ class GuiManager:
                         z_name,
                         self.loaded_aircraft,
                         self.jet_bwb_interface)
+
+    def log_message(self, message):
+        """Append messages to the GUI output window instead of the console."""
+        self.ui.text_output_taw.setText(message)  # display text value in qlabel
 
     def mission_outputs_selected(self):
         checked_mission_outputs = [item.text() for item in self.ui.ddMissionOutputs.menu().actions() if item.isChecked()]
@@ -175,27 +180,29 @@ class GuiManager:
                 print("No mission selected")
 
     def on_choose_aircraft(self):
+
         chosen_aircraft = [item.text() for item in self.ui.ddChooseAircraft.menu().actions() if item.isChecked()][0]
 
         self.selected_taw_aircraft = chosen_aircraft  # Store the selected aircraft name
 
         match chosen_aircraft:
             case "KC-135":
-                print("KC-135 selected")
+                self.log_message("KC-135 selected")
                 self.jet_taw_interface.switch_excel("Assets/KC-135.xlsm")
-                self.selected_taw_aircraft = Taw()  # Load TAW aircraft class
+                self.selected_taw_aircraft = Taw('KC-135')  # Load TAW aircraft class
                 self.jet_taw_interface.generate_cpacs()
+                self.aircraft_list.append(copy.deepcopy(self.selected_taw_aircraft))
             case "C-17":
-                print("C-17 selected")
+                self.log_message("C-17 selected")
                 self.jet_taw_interface.switch_excel("Assets/C-17.xlsm")
-                self.selected_taw_aircraft = Taw()  # Load TAW aircraft class
+                self.selected_taw_aircraft = Taw('C-17')  # Load TAW aircraft class
                 self.jet_taw_interface.generate_cpacs()
-
+                self.aircraft_list.append(copy.deepcopy(self.selected_taw_aircraft))
             case "B-747":
-                print("B-747 selected")
+                self.log_message("No B-747 exists in files")
                 self.selected_taw_aircraft = Taw()  # Load TAW aircraft class
             case _:
-                print("No aircraft selected")
+                self.log_message("No aircraft selected")
 
     def update_main_plot(self):
         self.main_canvas.ax.cla()
@@ -285,7 +292,7 @@ class GuiManager:
 
     def open_tigl_viewer_taw(self):
         if not hasattr(self, "selected_taw_aircraft") or not self.jet_taw_interface.aircraft_name:
-            print("No aircraft selected. Please select an aircraft first.")
+            self.log_message("No aircraft selected. Please select an aircraft first.")
             return
 
         xml_file_map = {
@@ -297,7 +304,7 @@ class GuiManager:
         xml_path = xml_file_map.get(self.jet_taw_interface.aircraft_name, None)
 
         if xml_path is None or not os.path.exists(xml_path):
-            print(f"XML file for {self.selected_taw_aircraft} not found.")
+            self.log_message(f"XML file for {self.selected_taw_aircraft} not found.")
             return
 
         if os.path.exists("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe"):
