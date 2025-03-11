@@ -36,7 +36,6 @@ class GuiManager:
         self.tool_gui_manager = DataManager(self.jet_bwb_interface, self)
         self.tool_gui_manager.transfer_geometry_to_output()
         self.jet_taw_interface = JetInterface("Assets/KC-135.xlsm", get_key_structure(self.ui_mission_inputs_dict), get_key_structure(self.ui_geometry_dict))
-        self.taw_gui_manager = DataManager(self.jet_taw_interface, self)
         self.taw_storage_manager = DataManager(self.jet_taw_interface, self.loaded_aircraft)
         self.tool_storage_manager = DataManager(self.jet_bwb_interface, self.loaded_aircraft)
         self.gui_storage_manager = DataManager(self, self.loaded_aircraft)
@@ -189,18 +188,18 @@ class GuiManager:
             case "KC-135":
                 self.log_message("KC-135 selected")
                 self.jet_taw_interface.switch_excel("Assets/KC-135.xlsm")
-                self.selected_taw_aircraft = Taw('KC-135')  # Load TAW aircraft class
+                self.selected_taw_aircraft = Taw('KC-135', self.taw_storage_manager)  # Load TAW aircraft class
                 self.jet_taw_interface.generate_cpacs()
                 self.aircraft_list.append(copy.deepcopy(self.selected_taw_aircraft))
             case "C-17":
                 self.log_message("C-17 selected")
                 self.jet_taw_interface.switch_excel("Assets/C-17.xlsm")
-                self.selected_taw_aircraft = Taw('C-17')  # Load TAW aircraft class
+                self.selected_taw_aircraft = Taw('C-17', self.taw_storage_manager)  # Load TAW aircraft class
                 self.jet_taw_interface.generate_cpacs()
                 self.aircraft_list.append(copy.deepcopy(self.selected_taw_aircraft))
             case "B-747":
                 self.log_message("No B-747 exists in files")
-                self.selected_taw_aircraft = Taw()  # Load TAW aircraft class
+                self.selected_taw_aircraft = Taw('B-747', self.taw_storage_manager)  # Load TAW aircraft class
             case _:
                 self.log_message("No aircraft selected")
 
@@ -264,12 +263,12 @@ class GuiManager:
         for aircraft in self.aircraft_list:
             geometry = flatten_dict(aircraft.geometry.push_to_dict())
             for key, value in flatten_dict(self.aircraft_list[idx].geometry.push_to_dict()).items():
-                if value != geometry[key]:
-                    text_dict[key] = value
+                if key in geometry:
+                    if try_to_float(value) != try_to_float(geometry[key]):
+                        text_dict[key] = value
         for key, value in text_dict.items():
             text += f"{convert_from_camel_casing_to_spaces(key)}: {value}\n"
         return text[:-1]
-
     def open_tigl_viewer(self):
         self.jet_bwb_interface.generate_cpacs()
         if os.path.exists("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe"):

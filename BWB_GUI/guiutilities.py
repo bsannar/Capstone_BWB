@@ -24,3 +24,13 @@ def flatten_dict(dictionary):
         else:
             flattened_dict[key] = dictionary[key]
     return flattened_dict
+
+def float_eq(float_1, float_2):
+    return round(float_1, 6) == round(float_2, 6)
+
+def try_to_float(str):
+    try:
+        return float(str)
+    except:
+        return 0
+
