@@ -62,10 +62,12 @@ class ResponseSurface:
         self.dx, self.dy = np.gradient(self.response_interpol, self.x_new, self.y_new)
     
     def create_plot(self):
+        z_var = convert_to_underscores_from_spaces(self.z_name)
         self.canvas.ax.plot_surface(self.X_new, self.Y_new, self.response_interpol, cmap="RdBu")
         self.canvas.ax.set_ylabel(self.y_name)
         self.canvas.ax.set_xlabel(self.x_name)
-        self.canvas.ax.set_zlabel(self.z_name)
+        z_units = self.loaded_aircraft.mission_outputs.get_units()[z_var]
+        self.canvas.ax.set_zlabel(f'{self.z_name} ({z_units})')
 
         self.annot = self.canvas.ax.text2D(0.05, 0.95, "Right-click a point to see slope", transform=self.canvas.ax.transAxes,
                                     fontsize=12, bbox=dict(facecolor='white', alpha=0.7))

@@ -1,9 +1,10 @@
 from aircraft import Aircraft
 from generalgeometry import GeneralGeometry
 from missioninputs import MissionInputs
+from units import U
 
 class TawGeometry(GeneralGeometry):
-    def __init__(self, example_tube_and_wing_var = None):
+    def __init__(self, example_tube_and_wing_var = U(None, '')):
         super().__init__()
         self.example_tube_and_wing_var = example_tube_and_wing_var
 

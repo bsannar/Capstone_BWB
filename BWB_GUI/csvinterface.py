@@ -43,16 +43,14 @@ class CsvInterface(ExternalStorageInterface):
             os.makedirs(folder)
         with open(self.file_path, "w", newline="") as file:
             writer = csv.writer(file)
-            header = ['']
-            header2 = [[key2 for key2, val in dict.items()] for key1, dict in data.items() if key1 != "ExpPayload" and key1 != "PermPayload"][0]
-            header.extend(header2)
+            header = ['', 'Takeoff', 'Accel', 'Climb1', 'Cruise1', 'Patrol1', 'Service1', 'Patrol2', 'Service2', 'Patrol3', 'Service3', 'Climb2', 'Cruise2', 'Loiter', 'Landing']
             row_dict = {key: i for i, key in enumerate(header)}
             writer.writerow(header)
             for key1, dict in data.items():
                 if key1 == "ExpPayload" or key1 == "PermPayload":
                     writer.writerow([key1, data[key1]])
                 else:
-                    row = header
+                    row = [0 for h in header]
                     row[0] = key1
                     for key2, val in dict.items():
                         row[row_dict[key2]] = (data[key1][key2])

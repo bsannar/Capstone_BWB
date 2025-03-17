@@ -4,13 +4,16 @@ from textprocessingutilities import *
 import os
 from loadingbar import LoadingBar
 
+def pull_value_from_cell(cell):
+    return cell.value if cell.value != None else 0
+
 def convert_cell_dict_to_cell_value_dict(cell_dict):
     value_dict = {}
     for key, v in cell_dict.items():
         if isinstance(v, dict):
             value_dict[key] = convert_cell_dict_to_cell_value_dict(v)
         else:
-            value_dict[key] = cell_dict[key].value
+            value_dict[key] = pull_value_from_cell(cell_dict[key])
     return value_dict
 
 def transfer_dictionary_to_cell_dict(input_dict, cell_dict):
@@ -84,8 +87,8 @@ class JetInterface(ToolInterface):
             x[0] = x_new
 
     def set_cruise_distance(self, nautical_miles):
-        self.mission_cell_dict["Dist"]["Cruise1"].value = nautical_miles - self.mission_cell_dict["Dist"]["Accel"].value - self.mission_cell_dict["Dist"]["Climb1"].value
-        self.mission_cell_dict["Dist"]["Cruise2"].value = nautical_miles - self.mission_cell_dict["Dist"]["Climb2"].value - self.mission_cell_dict["Dist"]["Loiter"].value
+        self.mission_cell_dict["Dist"]["Cruise1"].value = nautical_miles - pull_value_from_cell(self.mission_cell_dict["Dist"]["Accel"]) - pull_value_from_cell(self.mission_cell_dict["Dist"]["Climb1"])
+        self.mission_cell_dict["Dist"]["Cruise2"].value = nautical_miles - pull_value_from_cell(self.mission_cell_dict["Dist"]["Climb2"]) - pull_value_from_cell(self.mission_cell_dict["Dist"]["Loiter"])
 
     def calculate_max_range(self):
         x = [0, 50000]

@@ -99,7 +99,7 @@ class DataManager:
 
         match self.output:
             case Aircraft():
-                self.output.mission_outputs.max_range = max_range
+                self.output.mission_outputs.max_range.value = max_range
             case _:
                 print("default case")
 
@@ -126,7 +126,7 @@ class DataManager:
 
         match self.output:
             case Aircraft():
-                self.output.mission_outputs.dry_weight = dry_weight
+                self.output.mission_outputs.dry_weight.value = dry_weight
             case _:
                 print("default case")
 
@@ -153,7 +153,7 @@ class DataManager:
 
         match self.output:
             case Aircraft():
-                self.output.mission_outputs.max_f35s_refueled = max_f35s_refueled
+                self.output.mission_outputs.max_f35s_refueled.value = max_f35s_refueled
             case _:
                 print("default case")
 

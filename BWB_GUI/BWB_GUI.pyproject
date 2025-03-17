@@ -25,6 +25,7 @@
         "csvinterface.py",
         "matplotlibcanvas.py",
         "responsesurface.py",
-        "loadingbar.py"
+        "loadingbar.py",
+        "units.py"
     ]
 }
