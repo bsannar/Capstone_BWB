@@ -1,1 +1,0 @@
-pyinstaller --name="BWB_GUI" --windowed -F ..\widget.py

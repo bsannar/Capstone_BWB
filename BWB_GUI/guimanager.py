@@ -213,7 +213,7 @@ class GuiManager:
         width = 0.2  # the width of the bars
         multiplier = 0
 
-        normalizers = [max([float(vars(aircraft.mission_outputs)[plotVar]) for aircraft in self.aircraft_list]) for plotVar in plotVars]
+        normalizers = [max([float(vars(aircraft.mission_outputs)[plotVar].value) for aircraft in self.aircraft_list]) for plotVar in plotVars]
         values = []
         units = []
         bar_labels = []
@@ -222,8 +222,8 @@ class GuiManager:
         for i, aircraft in enumerate(self.aircraft_list):
             texts.append(self.get_unique_geometry(i))
             offset = width * multiplier
-            labelValues = [float(vars(aircraft.mission_outputs)[plotVar]) for plotVar in plotVars]
-            label_units = [aircraft.mission_outputs.get_units()[plotVar] for plotVar in plotVars]
+            labelValues = [float(vars(aircraft.mission_outputs)[plotVar].value) for plotVar in plotVars]
+            label_units = [vars(aircraft.mission_outputs)[plotVar].unit for plotVar in plotVars]
             normalizedValues = [var/norm for var, norm in zip(labelValues, normalizers)]
             rects = self.main_canvas.ax.bar(x + offset, normalizedValues, width, label=aircraft.name)
             units.extend(label_units)

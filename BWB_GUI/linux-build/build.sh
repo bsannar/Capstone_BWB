@@ -1,1 +1,0 @@
-pyinstaller --name="BWB_GUI" --windowed -F --add-data="/home/linuxbrew/.linuxbrew/Cellar/qt/6.7.0_2/share/qt/plugins/platforms/libqxcb.so:." ../widget.py
