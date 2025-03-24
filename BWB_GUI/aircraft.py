@@ -6,6 +6,7 @@ class Aircraft:
         self.name = name
         self.mission_inputs = MissionInputs()
         self.mission_outputs = MissionOutputs()
+        self.has_mission = False
 
     def list_all_vars(self):
         names = {**vars(self.self.mission_inputs), **vars(self.geometry)}.keys()

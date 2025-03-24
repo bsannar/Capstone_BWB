@@ -23,7 +23,7 @@ def transfer_dictionary_to_cell_dict(input_dict, cell_dict):
                 cell_dict[key1].value = val1
         else:
             for key2, val2 in val1.items():
-                if val2 != None:
+                if val2 != None and key1 in cell_dict:
                     cell_dict[key1][key2].value = val2
 
 class JetInterface(ToolInterface):
@@ -113,8 +113,8 @@ class JetInterface(ToolInterface):
     def generate_cell_dicts(self, mission_keys, geometry_keys):
         row_col_dict = {"Alt": "33", "Mach": "35", "Dist": "38", "Time": "39", "Payload": "41",
             "Takeoff": "K", "Accel": "L", "Climb1": "M", "Cruise1": "N", "Patrol1": "O", "Service1": "P", "Patrol2": "Q", "Service2": "R", "Patrol3": "S", "Service3": "T", "Climb2": "U", "Cruise2": "V", "Loiter": "W", "Landing": "X",
-            "SqFt": "18", "AspectRatio": "19", "TaperRatio": "20", "SweepDeg": "21", "XLocation": "23", "YLocation": "24", "ZLocation": "25", "DihedralDeg": "26",
-            "Wing": "B", "Pitchsurf": "C", "Strakes": "D", "Ailerons": "E", "Leadingflaps": "F", "Trailingflaps": "G", "Vertsurf": "H"}
+            "SqFt": "18", "AspectRatio": "19", "TaperRatio": "20", "SweepDeg": "21", "XLocation": "23", "YLocation": "24", "ZLocation": "25", "DihedralDeg": "26", "TiltDeg": "27",
+            "Wing": "B", "Pitchctrl": "C", "Strakes": "D", "Ailerons": "E", "Leadingflaps": "F", "Trailingflaps": "G", "Vertsurf": "H"}
 
         mission_dict = {}
         for key in mission_keys:
@@ -135,7 +135,6 @@ class JetInterface(ToolInterface):
                     geometry_dict[key1] = {}
                 for key2 in keys2:
                     geometry_dict[key1][key2] = self.main_sheet[row_col_dict[key2]+row_col_dict[key1]]
-        geometry_dict["TiltDeg"] = self.main_sheet["H27"]
 
         # Save dictionary to member variable
         self.mission_cell_dict = mission_dict

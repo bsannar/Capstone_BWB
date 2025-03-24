@@ -1,5 +1,5 @@
 from textprocessingutilities import *
-from guiutilities import flatten_dict
+from guiutilities import flatten_dict, try_to_float
 from internalstorageinterface import InternalStorageInterface
 from units import U
 
@@ -58,7 +58,6 @@ class MissionInputs(InternalStorageInterface):
         time_climb2 = U(None, 'min'),
         time_cruise2 = U(None, 'min'),
         time_loiter = U(None, 'min'),
-        payload_takeoff = U(None, 'lbs'),
         payload_accel = U(None, 'lbs'),
         payload_climb1 = U(None, 'lbs'),
         payload_cruise1 = U(None, 'lbs'),
@@ -126,7 +125,6 @@ class MissionInputs(InternalStorageInterface):
             self.time_climb2 = time_climb2
             self.time_cruise2 = time_cruise2
             self.time_loiter = time_loiter
-            self.payload_takeoff = payload_takeoff
             self.payload_accel = payload_accel
             self.payload_climb1 = payload_climb1
             self.payload_cruise1 = payload_cruise1
@@ -146,18 +144,32 @@ class MissionInputs(InternalStorageInterface):
         flattened_dict = flatten_dict(dictionary)
         for key, value in flattened_dict.items():
             new_key = convert_from_camel_casing_to_underscores(key)
-            setattr(self, new_key, U(value, vars(self)[new_key].unit))
+            setattr(self, new_key, U(try_to_float(value), vars(self)[new_key].unit))
 
-    def push_to_dict(self):
+    def push_values_to_dict(self):
         dictionary = {}
         for key, value in vars(self).items():
             key1, key2 = [k.capitalize() for k in key.split('_')]
             if key1 not in dictionary:
                 if key2 == "Payload":
-                    dictionary[key1+key2] = value.value
+                    dictionary[key1+key2] = try_to_float(value.value)
                 else:
                     dictionary[key1] = {}
-                    dictionary[key1][key2] = value.value
+                    dictionary[key1][key2] = try_to_float(value.value)
             else:
-                dictionary[key1][key2] = value.value
+                dictionary[key1][key2] = try_to_float(value.value)
+        return dictionary
+
+    def push_units_to_dict(self):
+        dictionary = {}
+        for key, value in vars(self).items():
+            key1, key2 = [k.capitalize() for k in key.split('_')]
+            if key1 not in dictionary:
+                if key2 == "Payload":
+                    dictionary[key1+key2] = value.unit
+                else:
+                    dictionary[key1] = {}
+                    dictionary[key1][key2] = value.unit
+            else:
+                dictionary[key1][key2] = value.unit
         return dictionary

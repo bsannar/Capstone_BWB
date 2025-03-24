@@ -26,7 +26,6 @@ class CsvInterface(ExternalStorageInterface):
                             if key != "ExpPayload" and key != "PermPayload":
                                 dict[key] = {}
                         else:
-
                             if key == "ExpPayload" or key == "PermPayload":
                                 dict[key] = val
                                 break

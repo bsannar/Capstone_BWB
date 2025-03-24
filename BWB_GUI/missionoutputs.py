@@ -1,5 +1,5 @@
 from textprocessingutilities import convert_from_camel_casing_to_spaces
-from guiutilities import flatten_dict
+from guiutilities import flatten_dict, try_to_float
 from internalstorageinterface import InternalStorageInterface
 from units import U
 
@@ -18,7 +18,14 @@ class MissionOutputs(InternalStorageInterface):
         flattened_dict = flatten_dict(dictionary)
         for key, value in flattened_dict.items():
             new_key = convert_from_camel_casing_to_underscores(key)
-            setattr(self, new_key, U(value, vars(self)[new_key].unit))
+            setattr(self, new_key, U(try_to_float(value), vars(self)[new_key].unit))
 
-    def push_to_dict(self):
-        return {key: var.value for key, var in vars(self).items()}
+    def push_values_to_dict(self):
+        return {key: try_to_float(var.value) for key, var in vars(self).items()}
+
+    def push_units_to_dict(self):
+        return {key: var.unit for key, var in vars(self).items()}
+
+    def set_all_calculated_bools_to_false(self):
+        for key, var in vars(self).items():
+            var.is_calculated = False

@@ -6,5 +6,9 @@ class InternalStorageInterface(ABC):
         pass
 
     @abstractmethod
-    def push_to_dict(self) -> dict:
+    def push_values_to_dict(self) -> dict:
+        pass
+
+    @abstractmethod
+    def push_units_to_dict(self) -> dict:
         pass

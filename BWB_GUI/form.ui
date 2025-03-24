@@ -579,8 +579,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1342</width>
-             <height>582</height>
+             <width>1325</width>
+             <height>1044</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -625,79 +625,289 @@
              </layout>
             </item>
             <item>
-             <layout class="QGridLayout" name="glBwbGeometry">
-              <item row="0" column="1">
-               <widget class="QLabel" name="lbWingspan_2">
-                <property name="text">
-                 <string>Wing</string>
-                </property>
-               </widget>
+             <layout class="QHBoxLayout" name="horizontalLayout_5">
+              <item>
+               <layout class="QGridLayout" name="glBwbGeometry">
+                <item row="1" column="7">
+                 <widget class="QLineEdit" name="txtVertsurfSqFt"/>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QLineEdit" name="txtPitchctrlSqFt"/>
+                </item>
+                <item row="5" column="5">
+                 <widget class="QLineEdit" name="txtLeadingflapsSweepDeg"/>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QLineEdit" name="txtWingAspectRatio"/>
+                </item>
+                <item row="3" column="7">
+                 <widget class="QLineEdit" name="txtVertsurfTaperRatio"/>
+                </item>
+                <item row="3" column="5">
+                 <widget class="QLineEdit" name="txtLeadingflapsTaperRatio"/>
+                </item>
+                <item row="5" column="3">
+                 <widget class="QLineEdit" name="txtStrakesSweepDeg"/>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QLabel" name="lbWingspan_2">
+                  <property name="text">
+                   <string>Wing</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="2">
+                 <widget class="QLineEdit" name="txtPitchctrlAspectRatio"/>
+                </item>
+                <item row="0" column="7">
+                 <widget class="QLabel" name="lbWingspan_3">
+                  <property name="text">
+                   <string>Vertical Surface</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="7">
+                 <widget class="QLineEdit" name="txtVertsurfAspectRatio"/>
+                </item>
+                <item row="0" column="3">
+                 <widget class="QLabel" name="label_27">
+                  <property name="text">
+                   <string>Strakes/Chines</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="4">
+                 <widget class="QLineEdit" name="txtAileronsSweepDeg"/>
+                </item>
+                <item row="0" column="6">
+                 <widget class="QLabel" name="label_30">
+                  <property name="text">
+                   <string>Trailing Edge Flaps</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="4">
+                 <widget class="QLineEdit" name="txtAileronsAspectRatio"/>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="lbTailspan">
+                  <property name="text">
+                   <string>Aspect Ratio:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QLineEdit" name="txtWingSqFt"/>
+                </item>
+                <item row="5" column="6">
+                 <widget class="QLineEdit" name="txtTrailingflapsSweepDeg"/>
+                </item>
+                <item row="5" column="0">
+                 <widget class="QLabel" name="label_6">
+                  <property name="text">
+                   <string>Sweep:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="5">
+                 <widget class="QLineEdit" name="txtLeadingflapsSqFt"/>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="lbWingspan">
+                  <property name="text">
+                   <string>Square Footage (sq ft):</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="3">
+                 <widget class="QLineEdit" name="txtStrakesAspectRatio"/>
+                </item>
+                <item row="1" column="3">
+                 <widget class="QLineEdit" name="txtStrakesSqFt"/>
+                </item>
+                <item row="0" column="4">
+                 <widget class="QLabel" name="label_28">
+                  <property name="text">
+                   <string>Ailerons/Elevons</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="3">
+                 <widget class="QLineEdit" name="txtStrakesTaperRatio"/>
+                </item>
+                <item row="5" column="2">
+                 <widget class="QLineEdit" name="txtPitchctrlSweepDeg"/>
+                </item>
+                <item row="0" column="2">
+                 <widget class="QLabel" name="label_26">
+                  <property name="text">
+                   <string>Pitch Control Surface</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="7">
+                 <widget class="QLineEdit" name="txtVertsurfSweepDeg"/>
+                </item>
+                <item row="3" column="6">
+                 <widget class="QLineEdit" name="txtTrailingflapsTaperRatio"/>
+                </item>
+                <item row="1" column="6">
+                 <widget class="QLineEdit" name="txtTrailingflapsSqFt"/>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QLineEdit" name="txtWingTaperRatio"/>
+                </item>
+                <item row="2" column="5">
+                 <widget class="QLineEdit" name="txtLeadingflapsAspectRatio"/>
+                </item>
+                <item row="1" column="4">
+                 <widget class="QLineEdit" name="txtAileronsSqFt"/>
+                </item>
+                <item row="3" column="2">
+                 <widget class="QLineEdit" name="txtPitchctrlTaperRatio"/>
+                </item>
+                <item row="3" column="4">
+                 <widget class="QLineEdit" name="txtAileronsTaperRatio"/>
+                </item>
+                <item row="3" column="0">
+                 <widget class="QLabel" name="label_5">
+                  <property name="text">
+                   <string>Taper Ratio:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="5">
+                 <widget class="QLabel" name="label_29">
+                  <property name="text">
+                   <string>Leading Edge Flaps</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="1">
+                 <widget class="QLineEdit" name="txtWingSweepDeg"/>
+                </item>
+                <item row="2" column="6">
+                 <widget class="QLineEdit" name="txtTrailingflapsAspectRatio"/>
+                </item>
+                <item row="6" column="0">
+                 <widget class="QLabel" name="lbTiltDeg">
+                  <property name="text">
+                   <string>Tilt Degrees:</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="7">
+                 <widget class="QLineEdit" name="txtVertsurfTiltDeg"/>
+                </item>
+               </layout>
               </item>
-              <item row="4" column="2">
-               <widget class="QLineEdit" name="txtVertsurfSweepDeg"/>
-              </item>
-              <item row="4" column="0">
-               <widget class="QLabel" name="label_6">
-                <property name="text">
-                 <string>Sweep:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="1">
-               <widget class="QLineEdit" name="txtWingTaperRatio"/>
-              </item>
-              <item row="2" column="1">
-               <widget class="QLineEdit" name="txtWingAspectRatio"/>
-              </item>
-              <item row="0" column="2">
-               <widget class="QLabel" name="lbWingspan_3">
-                <property name="text">
-                 <string>Vertical Surface</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2">
-               <widget class="QLineEdit" name="txtVertsurfSqFt"/>
-              </item>
-              <item row="2" column="2">
-               <widget class="QLineEdit" name="txtVertsurfAspectRatio"/>
-              </item>
-              <item row="4" column="1">
-               <widget class="QLineEdit" name="txtWingSweepDeg"/>
-              </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="lbWingspan">
-                <property name="text">
-                 <string>Square Footage (sq ft):</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="2">
-               <widget class="QLineEdit" name="txtVertsurfTaperRatio"/>
-              </item>
-              <item row="1" column="1">
-               <widget class="QLineEdit" name="txtWingSqFt"/>
-              </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="lbTailspan">
-                <property name="text">
-                 <string>Aspect Ratio:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="0">
-               <widget class="QLabel" name="label_5">
-                <property name="text">
-                 <string>Taper Ratio:</string>
-                </property>
-               </widget>
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_7">
+                <item>
+                 <widget class="QLabel" name="label_31">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="text">
+                   <string>Fuselage</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <layout class="QGridLayout" name="gridLayout_8">
+                  <item row="0" column="1">
+                   <widget class="QLineEdit" name="txtFuselageLength"/>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QLineEdit" name="txtFuselageHeight"/>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_33">
+                    <property name="text">
+                     <string>Max Width:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QLineEdit" name="txtFuselageWidth"/>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="label_34">
+                    <property name="text">
+                     <string>Max Height:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_32">
+                    <property name="text">
+                     <string>Length:</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <spacer name="verticalSpacer_3">
+                  <property name="orientation">
+                   <enum>Qt::Orientation::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
               </item>
              </layout>
             </item>
             <item>
-             <widget class="QPushButton" name="btnUpdate">
+             <widget class="QPushButton" name="btnAddBwbGeometry">
               <property name="text">
-               <string>Update</string>
+               <string>Add/Update</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QListWidget" name="lwBwbGeometry">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>300</height>
+               </size>
               </property>
              </widget>
             </item>
@@ -716,6 +926,12 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>400</height>
+               </size>
+              </property>
              </widget>
             </item>
            </layout>
@@ -732,40 +948,14 @@
         <string>Tube And Wing</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_5">
-        <item row="0" column="2">
-         <spacer name="horizontalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Orientation::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="0" column="0">
-         <widget class="QToolButton" name="ddChooseAircraft">
+        <item row="0" column="1">
+         <widget class="QLabel" name="text_output_taw">
           <property name="text">
-           <string>Choose Tube and Wing Aircraft</string>
+           <string>No Aircraft Selected</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="0">
-         <spacer name="verticalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Orientation::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="2" column="2">
+        <item row="2" column="1">
          <widget class="QWidget" name="widTiglTaw" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -775,17 +965,23 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QToolButton" name="btnViewAircraftTaw">
+        <item row="0" column="0">
+         <widget class="QToolButton" name="ddChooseAircraft">
           <property name="text">
-           <string>View Aircraft Model</string>
+           <string>Choose Tube and Wing Aircraft</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="text_output_taw">
+        <item row="1" column="0" colspan="2">
+         <widget class="QToolButton" name="btnViewAircraftTaw">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
-           <string>No Aircraft Selected</string>
+           <string>View Aircraft Model</string>
           </property>
          </widget>
         </item>
@@ -859,6 +1055,13 @@
                </layout>
               </item>
              </layout>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnPlot">
+              <property name="text">
+               <string>Plot</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>

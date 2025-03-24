@@ -26,13 +26,14 @@ class DataManager:
             case GuiManager():
                 geometry_dict = self.input.pull_geometry_from_gui()
             case Aircraft():
-                geometry_dict = self.input.geometry.push_to_dict()
+                geometry_dict = self.input.geometry.push_values_to_dict()
             case _:
                 print("default case")
 
         match self.output:
             case Aircraft():
                 self.output.geometry.pull_from_dict(geometry_dict)
+                self.output.mission_outputs.set_all_calculated_bools_to_false()
             case GuiManager():
                 self.output.pull_geometry_vars_into_gui(geometry_dict)
             case ToolInterface():
@@ -54,7 +55,7 @@ class DataManager:
 
         match self.input:
             case Aircraft():
-                mission_inputs_dict = self.input.mission_inputs.push_to_dict()
+                mission_inputs_dict = self.input.mission_inputs.push_values_to_dict()
             case ToolInterface():
                 mission_inputs_dict = self.input.pull_mission_inputs_from_tool()
             case GuiManager():
@@ -67,6 +68,8 @@ class DataManager:
         match self.output:
             case Aircraft():
                 self.output.mission_inputs.pull_from_dict(mission_inputs_dict)
+                self.output.mission_outputs.set_all_calculated_bools_to_false()
+                self.output.has_mission = True
             case GuiManager():
                 self.output.pull_mission_inputs_into_gui(mission_inputs_dict)
             case ToolInterface():
@@ -84,7 +87,7 @@ class DataManager:
 
         match self.input:
             case Aircraft():
-                mission_outputs_dict = self.input.mission_outputs.push_to_dict()
+                mission_outputs_dict = self.input.mission_outputs.push_values_to_dict()
                 max_range = mission_outputs_dict["max_range"]
             case ToolInterface():
                 self.transfer_geometry_to_input()
@@ -100,6 +103,7 @@ class DataManager:
         match self.output:
             case Aircraft():
                 self.output.mission_outputs.max_range.value = max_range
+                self.output.mission_outputs.max_range.is_calculated = True
             case _:
                 print("default case")
 
@@ -111,7 +115,7 @@ class DataManager:
 
         match self.input:
             case Aircraft():
-                mission_outputs_dict = self.input.mission_outputs.push_to_dict()
+                mission_outputs_dict = self.input.mission_outputs.push_values_to_dict()
                 dry_weight = mission_outputs_dict["dry_weight"]
             case ToolInterface():
                 self.transfer_geometry_to_input()
@@ -127,6 +131,7 @@ class DataManager:
         match self.output:
             case Aircraft():
                 self.output.mission_outputs.dry_weight.value = dry_weight
+                self.output.mission_outputs.dry_weight.is_calculated = True
             case _:
                 print("default case")
 
@@ -138,7 +143,7 @@ class DataManager:
 
         match self.input:
             case Aircraft():
-                mission_outputs_dict = self.input.mission_outputs.push_to_dict()
+                mission_outputs_dict = self.input.mission_outputs.push_values_to_dict()
                 max_f35s_refueled = mission_outputs_dict["max_f35s_refueled"]
             case ToolInterface():
                 self.transfer_geometry_to_input()
@@ -154,6 +159,7 @@ class DataManager:
         match self.output:
             case Aircraft():
                 self.output.mission_outputs.max_f35s_refueled.value = max_f35s_refueled
+                self.output.mission_outputs.max_f35s_refueled.is_calculated = True
             case _:
                 print("default case")
 

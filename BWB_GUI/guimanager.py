@@ -31,14 +31,14 @@ class GuiManager:
         self.jet_bwb_interface = JetInterface("Assets/BWB_tanker.xlsm", get_key_structure(self.ui_mission_inputs_dict), get_key_structure(self.ui_geometry_dict))
         self.hasBWBView = False
         self.has_taw_view = False
-        self.aircraft_list = []
-        self.loaded_aircraft = Bwb("BWB 1")
+        self.aircraft_dict = {}
+        self.selected_aircraft = Bwb("BWB 1")
         self.tool_gui_manager = DataManager(self.jet_bwb_interface, self)
         self.tool_gui_manager.transfer_geometry_to_output()
         self.jet_taw_interface = JetInterface("Assets/KC-135.xlsm", get_key_structure(self.ui_mission_inputs_dict), get_key_structure(self.ui_geometry_dict))
-        self.taw_storage_manager = DataManager(self.jet_taw_interface, self.loaded_aircraft)
-        self.tool_storage_manager = DataManager(self.jet_bwb_interface, self.loaded_aircraft)
-        self.gui_storage_manager = DataManager(self, self.loaded_aircraft)
+        self.taw_storage_manager = DataManager(self.jet_taw_interface, self.selected_aircraft)
+        self.tool_storage_manager = DataManager(self.jet_bwb_interface, self.selected_aircraft)
+        self.gui_storage_manager = DataManager(self, self.selected_aircraft)
         self.csv_interface = CsvInterface()
         self.gui_csv_manager = DataManager(self, self.csv_interface)
         self.csv_tool_manager = DataManager(self.csv_interface, self.jet_bwb_interface)
@@ -50,27 +50,33 @@ class GuiManager:
 
     def setup_all_dropdowns(self):
         dropdowns.setup_dropdown(self.ui.ddChooseAircraft, ["KC-135", "C-17", "B-747"])
-        dropdowns.setup_dropdown(self.ui.ddMissionOutputs, self.loaded_aircraft.list_mission_outputs(), multi_select=True)
+        dropdowns.setup_dropdown(self.ui.ddMissionOutputs, self.selected_aircraft.list_mission_outputs(), multi_select=True)
         dropdowns.setup_dropdown(self.ui.ddChooseMission, ["Tanker", "Airdrop", "Cargo Carry"])
-        dropdowns.setup_dropdown(self.ui.ddX, self.loaded_aircraft.list_geometry())
-        dropdowns.setup_dropdown(self.ui.ddY, self.loaded_aircraft.list_geometry())
-        dropdowns.setup_dropdown(self.ui.ddZ, self.loaded_aircraft.list_mission_outputs())
+        dropdowns.setup_dropdown(self.ui.ddX, self.selected_aircraft.list_geometry())
+        dropdowns.setup_dropdown(self.ui.ddY, self.selected_aircraft.list_geometry())
+        dropdowns.setup_dropdown(self.ui.ddZ, self.selected_aircraft.list_mission_outputs())
 
     def connect_all(self):
-        self.ui.btnUpdate.clicked.connect(self.update_aircraft_geometry)
+        self.ui.btnAddBwbGeometry.clicked.connect(self.add_bwb_geometry)
         self.ui.actionSave.triggered.connect(self.open_save_dialog)
         self.ui.actionOpen.triggered.connect(self.open_open_dialog)
         self.ui.tabWidget.currentChanged.connect(self.tab_changed)
-        self.ui.btnSensitivities.clicked.connect(lambda: sens.calculate_sensitivity_from_jet(self.ui, self.aircraft_list[-1], self.wb.sheets["Main"], "B18"))
+        self.ui.btnSensitivities.clicked.connect(lambda: sens.calculate_sensitivity_from_jet(self.ui, self.aircraft_dict[-1], self.wb.sheets["Main"], "B18"))
         self.ui.btnViewBWB.clicked.connect(self.open_tigl_viewer)
         self.ui.btnViewAircraftTaw.clicked.connect(self.open_tigl_viewer_taw)
         self.ui.ddChooseMission.menu().triggered.connect(self.on_choose_mission)
         self.ui.ddChooseAircraft.menu().triggered.connect(self.on_choose_aircraft)
         self.ui.btnAddMission.clicked.connect(self.add_mission)
-        self.ui.btnSetMission.clicked.connect(self.tool_gui_manager.transfer_mission_inputs_to_input)
+        self.ui.btnSetMission.clicked.connect(self.on_set_mission_clicked)
         self.ui.lwMissions.itemClicked.connect(lambda item: self.set_mission(item.text()))
-        self.ui.ddMissionOutputs.menu().triggered.connect(self.mission_outputs_selected)
+        self.ui.lwBwbGeometry.itemClicked.connect(lambda item: self.set_selected_bwb(item.text()))
+        self.ui.btnPlot.clicked.connect(self.on_btn_plot_clicked)
         self.ui.btnCalculateResponseSurface.clicked.connect(self.generate_response_surface)
+
+    def on_set_mission_clicked(self):
+        for aircraft in LoadingBar.List(list(self.aircraft_dict.values()), message="Assigning Mission..."):
+            self.gui_storage_manager.output = aircraft
+            self.gui_storage_manager.transfer_mission_inputs_to_output()
 
     def generate_response_surface(self):
         x_name = [item.text() for item in self.ui.ddX.menu().actions() if item.isChecked()][0]
@@ -87,40 +93,45 @@ class GuiManager:
                         x_name,
                         y_name,
                         z_name,
-                        self.loaded_aircraft,
+                        self.selected_aircraft,
                         self.jet_bwb_interface)
 
     def log_message(self, message):
         """Append messages to the GUI output window instead of the console."""
         self.ui.text_output_taw.setText(message)  # display text value in qlabel
 
-    def mission_outputs_selected(self):
+    def on_btn_plot_clicked(self):
         checked_mission_outputs = [item.text() for item in self.ui.ddMissionOutputs.menu().actions() if item.isChecked()]
-        for aircraft in LoadingBar.List(self.aircraft_list, message="Calculating Performance..."):
+        for aircraft in LoadingBar.List(list(self.aircraft_dict.values()), message="Calculating Performance..."):
             self.tool_storage_manager.output = aircraft
-            self.gui_storage_manager.output = aircraft
-            self.gui_storage_manager.transfer_mission_inputs_to_output()
             for mission_output in checked_mission_outputs:
                 match mission_output:
                     case "max f35s refueled":
-                        self.tool_storage_manager.transfer_max_f35s_refueled()
+                        if not aircraft.mission_outputs.max_f35s_refueled.is_calculated:
+                            self.tool_storage_manager.transfer_max_f35s_refueled()
                     case "dry weight":
-                        self.tool_storage_manager.transfer_dry_weight()
+                        if not aircraft.mission_outputs.dry_weight.is_calculated:
+                            self.tool_storage_manager.transfer_dry_weight()
                     case "max range":
-                        self.tool_storage_manager.transfer_max_range()
+                        if not aircraft.mission_outputs.max_range.is_calculated:
+                            self.tool_storage_manager.transfer_max_range()
                     case "max payload weight":
-                        pass
+                        if not aircraft.mission_outputs.max_f35s_refueled.is_calculated:
+                            pass
         self.update_main_plot()
-        self.tool_storage_manager.output = self.loaded_aircraft
-        self.gui_storage_manager.output = self.loaded_aircraft
+        self.tool_storage_manager.output = self.selected_aircraft
+        self.gui_storage_manager.output = self.selected_aircraft
 
-    def update_aircraft_geometry(self):
+    def add_bwb_geometry(self):
         self.gui_storage_manager.transfer_geometry_to_output()
+        self.gui_storage_manager.transfer_mission_inputs_to_output()
         name = self.ui.txtBwbName.text()
         if name == '':
-            name = f"BWB {len(self.aircraft_list)+1}"
-        self.loaded_aircraft.name = name
-        self.aircraft_list.append(copy.deepcopy(self.loaded_aircraft))
+            name = f"BWB {len(self.aircraft_dict)+1}"
+        self.selected_aircraft.name = name
+        if name not in self.aircraft_dict:
+            self.ui.lwBwbGeometry.addItem(name)
+        self.aircraft_dict[name] = copy.deepcopy(self.selected_aircraft)
 
     def pull_geometry_vars_into_gui(self, geometry_dict: dict):
         for key1, val in self.ui_geometry_dict.items():
@@ -133,7 +144,7 @@ class GuiManager:
     def open_save_dialog(self):
         file_path, _ = QFileDialog.getSaveFileName(None, "Save Workspace", "", "DST Workspace (*.csv);;All Files (*)")
         if file_path:
-            save.class_to_csv(self.aircraft_list, file_path)
+            save.class_to_csv(self.aircraft_dict, file_path)
 
     def add_mission(self):
         name = self.ui.txtMissionName.text()
@@ -148,13 +159,19 @@ class GuiManager:
         self.gui_csv_manager.transfer_mission_inputs_to_input()
         self.csv_tool_manager.transfer_mission_inputs_to_output()
 
+    def set_selected_bwb(self, bwb_name):
+        self.selected_aircraft = self.aircraft_dict[bwb_name]
+        self.ui.txtBwbName.setText(bwb_name)
+        self.gui_storage_manager.output = self.selected_aircraft
+        self.gui_storage_manager.transfer_geometry_to_input()
+
     def open_open_dialog(self):
         file_path, _ = QFileDialog.getOpenFileName(None, "Open Workspace", "", "DST Workspace (*.csv);;All Files (*)")
         if file_path:
             new_configs = save.csv_to_class(file_path)
             if new_configs:
-                self.aircraft_list.extend(new_configs)
-                print(f"Configurations list updated: {self.aircraft_list}")
+                self.aircraft_dict.extend(new_configs)
+                print(f"Configurations list updated: {self.aircraft_dict}")
             else:
                 print("No configurations loaded from the CSV.")
 
@@ -190,13 +207,13 @@ class GuiManager:
                 self.jet_taw_interface.switch_excel("Assets/KC-135.xlsm")
                 self.selected_taw_aircraft = Taw('KC-135', self.taw_storage_manager)  # Load TAW aircraft class
                 self.jet_taw_interface.generate_cpacs()
-                self.aircraft_list.append(copy.deepcopy(self.selected_taw_aircraft))
+                self.aircraft_dict['KC-135'] = copy.deepcopy(self.selected_taw_aircraft)
             case "C-17":
                 self.log_message("C-17 selected")
                 self.jet_taw_interface.switch_excel("Assets/C-17.xlsm")
                 self.selected_taw_aircraft = Taw('C-17', self.taw_storage_manager)  # Load TAW aircraft class
                 self.jet_taw_interface.generate_cpacs()
-                self.aircraft_list.append(copy.deepcopy(self.selected_taw_aircraft))
+                self.aircraft_dict['C-17'] = copy.deepcopy(self.selected_taw_aircraft)
             case "B-747":
                 self.log_message("No B-747 exists in files")
                 self.selected_taw_aircraft = Taw('B-747', self.taw_storage_manager)  # Load TAW aircraft class
@@ -213,17 +230,19 @@ class GuiManager:
         width = 0.2  # the width of the bars
         multiplier = 0
 
-        normalizers = [max([float(vars(aircraft.mission_outputs)[plotVar].value) for aircraft in self.aircraft_list]) for plotVar in plotVars]
+        normalizers = [max([aircraft.mission_outputs.push_values_to_dict()[plotVar] for aircraft in self.aircraft_dict.values()]) for plotVar in plotVars]
         values = []
         units = []
         bar_labels = []
         all_rects = []
         texts = []
-        for i, aircraft in enumerate(self.aircraft_list):
-            texts.append(self.get_unique_geometry(i))
+        for name, aircraft in self.aircraft_dict.items():
+            value_dict = aircraft.mission_outputs.push_values_to_dict()
+            unit_dict = aircraft.mission_outputs.push_units_to_dict()
+            texts.append(self.get_unique_geometry(name))
             offset = width * multiplier
-            labelValues = [float(vars(aircraft.mission_outputs)[plotVar].value) for plotVar in plotVars]
-            label_units = [vars(aircraft.mission_outputs)[plotVar].unit for plotVar in plotVars]
+            labelValues = [value_dict[plotVar] for plotVar in plotVars]
+            label_units = [unit_dict[plotVar] for plotVar in plotVars]
             normalizedValues = [var/norm for var, norm in zip(labelValues, normalizers)]
             rects = self.main_canvas.ax.bar(x + offset, normalizedValues, width, label=aircraft.name)
             units.extend(label_units)
@@ -240,7 +259,7 @@ class GuiManager:
             label.set_text(format_number(value)+" "+unit)
 
         # Add some text for labels, title and custom x-self.main_canvas.axis tick labels, etc.
-        n_aircraft = len(self.aircraft_list)
+        n_aircraft = len(self.aircraft_dict)
         self.main_canvas.ax.set_ylabel('Normalized Performance')
         self.main_canvas.ax.set_title('Aircraft Performance')
         self.main_canvas.ax.set_xticks(x + (width * (n_aircraft - 1))/2, [convert_to_spaces_from_underscores(var) for var in plotVars], rotation=20)
@@ -257,18 +276,21 @@ class GuiManager:
         sel.annotation.set_text(texts[idx])
         sel.annotation.get_bbox_patch().set(alpha=0.8, fc="white")
 
-    def get_unique_geometry(self, idx):
+    def get_unique_geometry(self, name):
         text_dict = {}
         text = ''
-        for aircraft in self.aircraft_list:
-            geometry = flatten_dict(aircraft.geometry.push_to_dict())
-            for key, value in flatten_dict(self.aircraft_list[idx].geometry.push_to_dict()).items():
+        for _, aircraft in self.aircraft_dict.items():
+            geometry = flatten_dict(aircraft.geometry.push_values_to_dict())
+            units = flatten_dict(aircraft.geometry.push_units_to_dict())
+            for key, value in flatten_dict(self.aircraft_dict[name].geometry.push_values_to_dict()).items():
                 if key in geometry:
                     if try_to_float(value) != try_to_float(geometry[key]):
-                        text_dict[key] = value
+                        new_key = convert_from_camel_casing_to_spaces(key)
+                        text_dict[new_key] = f'{value} {units[key]}'
         for key, value in text_dict.items():
-            text += f"{convert_from_camel_casing_to_spaces(key)}: {value}\n"
+            text += f"{key}: {value}\n"
         return text[:-1]
+
     def open_tigl_viewer(self):
         self.jet_bwb_interface.generate_cpacs()
         if os.path.exists("Executables/TIGL 3.4.0/bin/tiglviewer-3.exe"):
@@ -353,7 +375,6 @@ class GuiManager:
             if key1 not in dict:
                 dict[key1] = {}
             dict[key1][key2] = w
-        #dict["TiltDeg"] = self.ui.txtVertsurfTiltDeg
         self.ui_geometry_dict = dict
 
     def pull_geometry_from_gui(self):
