@@ -107,6 +107,62 @@ class DataManager:
             case _:
                 print("default case")
 
+    def transfer_max_payload_weight(self):
+        from toolinterface import ToolInterface
+        from internalstorageinterface import InternalStorageInterface
+        from guimanager import GuiManager
+        from aircraft import Aircraft
+
+        match self.input:
+            case Aircraft():
+                mission_outputs_dict = self.input.mission_outputs.push_values_to_dict()
+                max_payload_weight = mission_outputs_dict["max_payload_weight"]
+            case ToolInterface():
+                self.transfer_geometry_to_input()
+                self.transfer_mission_inputs_to_input()
+                max_payload_weight = self.input.calculate_max_payload_weight()
+            case GuiManager():
+                pass
+            case ExternalStorageInterface():
+                pass
+            case _:
+                print("default case")
+
+        match self.output:
+            case Aircraft():
+                self.output.mission_outputs.max_payload_weight.value = max_payload_weight
+                self.output.mission_outputs.max_payload_weight.is_calculated = True
+            case _:
+                print("default case")
+
+    def transfer_lift_over_drag(self):
+        from toolinterface import ToolInterface
+        from internalstorageinterface import InternalStorageInterface
+        from guimanager import GuiManager
+        from aircraft import Aircraft
+
+        match self.input:
+            case Aircraft():
+                mission_outputs_dict = self.input.mission_outputs.push_values_to_dict()
+                cruise_lift_over_drag = mission_outputs_dict["cruise_lift_over_drag"]
+            case ToolInterface():
+                self.transfer_geometry_to_input()
+                self.transfer_mission_inputs_to_input()
+                cruise_lift_over_drag = self.input.calculate_lift_over_drag()
+            case GuiManager():
+                pass
+            case ExternalStorageInterface():
+                pass
+            case _:
+                print("default case")
+
+        match self.output:
+            case Aircraft():
+                self.output.mission_outputs.cruise_lift_over_drag.value = cruise_lift_over_drag
+                self.output.mission_outputs.cruise_lift_over_drag.is_calculated = True
+            case _:
+                print("default case")
+
     def transfer_dry_weight(self):
         from toolinterface import ToolInterface
         from internalstorageinterface import InternalStorageInterface

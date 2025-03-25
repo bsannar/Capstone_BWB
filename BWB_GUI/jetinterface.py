@@ -26,6 +26,16 @@ def transfer_dictionary_to_cell_dict(input_dict, cell_dict):
                 if val2 != None and key1 in cell_dict:
                     cell_dict[key1][key2].value = val2
 
+def secant_solve(x0, func, message):
+    for i in LoadingBar.Range(50, message=message):
+        y = [func(x0[0]), func(x0[1])]
+        x_new = x0[0] - y[0]*((x0[1]-x0[0])/(y[1]-y[0]))
+        y_new = func(x_new)
+        if abs(y_new) < 1:
+            return int(x_new)
+        x0[1] = x0[0]
+        x0[0] = x_new
+
 class JetInterface(ToolInterface):
     def __init__(self, file_path, mission_keys, geometry_keys):
         self.file_path = file_path
@@ -34,6 +44,7 @@ class JetInterface(ToolInterface):
         self.xl = xw.App(visible=False)
         self.wb = self.xl.books.open(file_path)
         self.main_sheet = self.wb.sheets["Main"]
+        self.mission_sheet = self.wb.sheets["Miss"]
         self.generate_cell_dicts(mission_keys, geometry_keys)
 
     def generate_cpacs(self):
@@ -65,7 +76,7 @@ class JetInterface(ToolInterface):
         self.xl.quit()
 
     def calculate_lift_over_drag(self):
-        pass
+        return pull_value_from_cell(self.cruise1_lift_over_drag_cell)
 
     def calculate_max_f35s_refueled(self):
         f35_max_fuel = 18000
@@ -74,7 +85,7 @@ class JetInterface(ToolInterface):
         x = [0, 100*f35_refuel_weight]
         def f(x):
             self.mission_cell_dict["ExpPayload"].value = x
-            return self.main_sheet["X40"].value - self.main_sheet["O18"].value
+            return pull_value_from_cell(self.fuel_burned_on_mission_cell) - pull_value_from_cell(self.fuel_available_cell)
         for i in LoadingBar.Range(10, message='Calculating F35s Refueled...'):
             y = [f(x[0]), f(x[1])]
             x_new = x[0] - y[0]*((x[1]-x[0])/(y[1]-y[0]))
@@ -94,21 +105,19 @@ class JetInterface(ToolInterface):
         x = [0, 50000]
         def f(x):
             self.set_cruise_distance(x)
-            return self.main_sheet["X40"].value - self.main_sheet["O18"].value
-        for i in LoadingBar.Range(50, message='Calculating Range...'):
-            y = [f(x[0]), f(x[1])]
-            x_new = x[0] - y[0]*((x[1]-x[0])/(y[1]-y[0]))
-            y_new = f(x_new)
-            if abs(y_new) < 1:
-                return int(x_new)
-            x[1] = x[0]
-            x[0] = x_new
+            return pull_value_from_cell(self.fuel_burned_on_mission_cell) - pull_value_from_cell(self.fuel_available_cell)
+        return secant_solve(x, f, 'Calculating Range...')
 
     def calculate_dry_weight(self):
-        return self.main_sheet["O23"].value
+        return pull_value_from_cell(self.dry_weight_cell)
 
     def calculate_max_payload_weight(self):
-        pass
+        x = [0, 1e7]
+        def f(x):
+            self.mission_cell_dict["ExpPayload"].value = x
+            self.mission_cell_dict["Payload"]["Service2"].value = x
+            return pull_value_from_cell(self.fuel_burned_on_mission_cell) - pull_value_from_cell(self.fuel_available_cell)
+        return secant_solve(x, f, 'Calculating Max Payload...')
 
     def generate_cell_dicts(self, mission_keys, geometry_keys):
         row_col_dict = {"Alt": "33", "Mach": "35", "Dist": "38", "Time": "39", "Payload": "41",
@@ -139,6 +148,10 @@ class JetInterface(ToolInterface):
         # Save dictionary to member variable
         self.mission_cell_dict = mission_dict
         self.geometry_cell_dict = geometry_dict
+        self.fuel_available_cell = self.main_sheet["O18"]
+        self.fuel_burned_on_mission_cell = self.main_sheet["X40"]
+        self.dry_weight_cell = self.main_sheet["O23"]
+        self.cruise1_lift_over_drag_cell = self.mission_sheet["E30"]
 
     def switch_excel(self, file_path):
         if self.file_path != file_path:

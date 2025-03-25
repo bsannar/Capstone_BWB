@@ -8,11 +8,13 @@ class MissionOutputs(InternalStorageInterface):
         dry_weight = U(None, 'lbs'),
         max_f35s_refueled = U(None, ''),
         max_range = U(None, 'nm'),
-        max_payload_weight = U(None, 'lbs')):
+        max_payload_weight = U(None, 'lbs'),
+        cruise_lift_over_drag = U(None, '')):
             self.dry_weight = dry_weight
             self.max_f35s_refueled = max_f35s_refueled
             self.max_range = max_range
             self.max_payload_weight = max_payload_weight
+            self.cruise_lift_over_drag = cruise_lift_over_drag
 
     def pull_from_dict(self, dictionary: dict):
         flattened_dict = flatten_dict(dictionary)

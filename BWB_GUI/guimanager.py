@@ -72,6 +72,7 @@ class GuiManager:
         self.ui.lwBwbGeometry.itemClicked.connect(lambda item: self.set_selected_bwb(item.text()))
         self.ui.btnPlot.clicked.connect(self.on_btn_plot_clicked)
         self.ui.btnCalculateResponseSurface.clicked.connect(self.generate_response_surface)
+        self.ui.btnDeleteBwb.clicked.connect(self.on_btn_delete_bwb_clicked)
 
     def on_set_mission_clicked(self):
         for aircraft in LoadingBar.List(list(self.aircraft_dict.values()), message="Assigning Mission..."):
@@ -116,8 +117,11 @@ class GuiManager:
                         if not aircraft.mission_outputs.max_range.is_calculated:
                             self.tool_storage_manager.transfer_max_range()
                     case "max payload weight":
-                        if not aircraft.mission_outputs.max_f35s_refueled.is_calculated:
-                            pass
+                        if not aircraft.mission_outputs.max_payload_weight.is_calculated:
+                            self.tool_storage_manager.transfer_max_payload_weight()
+                    case "cruise lift over drag":
+                        if not aircraft.mission_outputs.cruise_lift_over_drag.is_calculated:
+                            self.tool_storage_manager.transfer_lift_over_drag()
         self.update_main_plot()
         self.tool_storage_manager.output = self.selected_aircraft
         self.gui_storage_manager.output = self.selected_aircraft
@@ -165,6 +169,12 @@ class GuiManager:
         self.gui_storage_manager.output = self.selected_aircraft
         self.gui_storage_manager.transfer_geometry_to_input()
 
+    def on_btn_delete_bwb_clicked(self):
+        selected_items = self.ui.lwBwbGeometry.selectedItems()
+        for item in selected_items:
+            self.ui.lwBwbGeometry.takeItem(self.ui.lwBwbGeometry.row(item))
+            del self.aircraft_dict[item.text()]
+
     def open_open_dialog(self):
         file_path, _ = QFileDialog.getOpenFileName(None, "Open Workspace", "", "DST Workspace (*.csv);;All Files (*)")
         if file_path:
@@ -196,11 +206,8 @@ class GuiManager:
                 print("No mission selected")
 
     def on_choose_aircraft(self):
-
         chosen_aircraft = [item.text() for item in self.ui.ddChooseAircraft.menu().actions() if item.isChecked()][0]
-
         self.selected_taw_aircraft = chosen_aircraft  # Store the selected aircraft name
-
         match chosen_aircraft:
             case "KC-135":
                 self.log_message("KC-135 selected")
