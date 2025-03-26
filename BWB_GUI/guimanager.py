@@ -28,14 +28,14 @@ class GuiManager:
         self.taw_process = QProcess()
         self.generate_ui_geometry_dict()
         self.generate_ui_mission_inputs_dict()
-        self.jet_bwb_interface = JetInterface("Assets/BWB_tanker.xlsm", get_key_structure(self.ui_mission_inputs_dict), get_key_structure(self.ui_geometry_dict))
+        self.jet_bwb_interface = JetInterface("Assets/BWB_benchmarked.xlsm", get_key_structure(self.ui_mission_inputs_dict), get_key_structure(self.ui_geometry_dict))
         self.hasBWBView = False
         self.has_taw_view = False
         self.aircraft_dict = {}
         self.selected_aircraft = Bwb("BWB 1")
         self.tool_gui_manager = DataManager(self.jet_bwb_interface, self)
         self.tool_gui_manager.transfer_geometry_to_output()
-        self.jet_taw_interface = JetInterface("Assets/KC-135.xlsm", get_key_structure(self.ui_mission_inputs_dict), get_key_structure(self.ui_geometry_dict))
+        self.jet_taw_interface = JetInterface("Assets/KC-135_benchmarked.xlsm", get_key_structure(self.ui_mission_inputs_dict), get_key_structure(self.ui_geometry_dict))
         self.taw_storage_manager = DataManager(self.jet_taw_interface, self.selected_aircraft)
         self.tool_storage_manager = DataManager(self.jet_bwb_interface, self.selected_aircraft)
         self.gui_storage_manager = DataManager(self, self.selected_aircraft)
@@ -211,7 +211,7 @@ class GuiManager:
         match chosen_aircraft:
             case "KC-135":
                 self.log_message("KC-135 selected")
-                self.jet_taw_interface.switch_excel("Assets/KC-135.xlsm")
+                self.jet_taw_interface.switch_excel("Assets/KC-135_benchmarked.xlsm")
                 self.selected_taw_aircraft = Taw('KC-135', self.taw_storage_manager)  # Load TAW aircraft class
                 self.jet_taw_interface.generate_cpacs()
                 self.aircraft_dict['KC-135'] = copy.deepcopy(self.selected_taw_aircraft)
