@@ -105,6 +105,11 @@ class GuiManager:
         checked_mission_outputs = [item.text() for item in self.ui.ddMissionOutputs.menu().actions() if item.isChecked()]
         for aircraft in LoadingBar.List(list(self.aircraft_dict.values()), message="Calculating Performance..."):
             self.tool_storage_manager.output = aircraft
+            match aircraft:
+                case Taw():
+                    self.tool_storage_manager.input = self.jet_taw_interface
+                case Bwb():
+                    self.tool_storage_manager.input = self.jet_bwb_interface
             for mission_output in checked_mission_outputs:
                 match mission_output:
                     case "max f35s refueled":
@@ -214,12 +219,18 @@ class GuiManager:
                 self.jet_taw_interface.switch_excel("Assets/KC-135_benchmarked.xlsm")
                 self.selected_taw_aircraft = Taw('KC-135', self.taw_storage_manager)  # Load TAW aircraft class
                 self.jet_taw_interface.generate_cpacs()
+                self.tool_storage_manager.input = self.jet_taw_interface
+                self.taw_storage_manager.transfer_geometry_to_output()
+                self.taw_storage_manager.transfer_mission_inputs_to_output()
                 self.aircraft_dict['KC-135'] = copy.deepcopy(self.selected_taw_aircraft)
             case "C-17":
                 self.log_message("C-17 selected")
                 self.jet_taw_interface.switch_excel("Assets/C-17.xlsm")
                 self.selected_taw_aircraft = Taw('C-17', self.taw_storage_manager)  # Load TAW aircraft class
                 self.jet_taw_interface.generate_cpacs()
+                self.tool_storage_manager.input = self.jet_taw_interface
+                self.taw_storage_manager.transfer_geometry_to_output()
+                self.taw_storage_manager.transfer_mission_inputs_to_output()
                 self.aircraft_dict['C-17'] = copy.deepcopy(self.selected_taw_aircraft)
             case "B-747":
                 self.log_message("No B-747 exists in files")
