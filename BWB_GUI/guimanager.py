@@ -376,14 +376,17 @@ class GuiManager:
             self.log_message("No aircraft selected. Please select an aircraft first.")
             return
 
+        self.jet_taw_interface.generate_cpacs()
+
         xml_file_map = {
-            "KC-135": "Assets/KC-135.xml",
+            "KC-135": "Assets/KC-135_benchmarked.xml",
             "C-17": "Assets/C-17.xml",
             "B-747": "Assets/B-747.xml"
         }
-
+        print(self.jet_taw_interface.aircraft_name)
+        print(self.selected_taw_aircraft)
         xml_path = xml_file_map.get(self.jet_taw_interface.aircraft_name, None)
-
+        print(xml_path)
         if xml_path is None or not os.path.exists(xml_path):
             self.log_message(f"XML file for {self.selected_taw_aircraft} not found.")
             return
