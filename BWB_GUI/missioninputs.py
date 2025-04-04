@@ -1,6 +1,7 @@
 from textprocessingutilities import *
 from guiutilities import flatten_dict, try_to_float
 from internalstorageinterface import InternalStorageInterface
+from missions import MissionType
 from units import U
 
 class MissionInputs(InternalStorageInterface):
@@ -71,7 +72,8 @@ class MissionInputs(InternalStorageInterface):
         payload_cruise2 = U(None, 'lbs'),
         payload_loiter = U(None, 'lbs'),
         exp_payload = U(None, 'lbs'),
-        perm_payload = U(None, 'lbs')):
+        perm_payload = U(None, 'lbs'),
+        mission_type: MissionType = None):
             self.alt_takeoff = alt_takeoff
             self.alt_accel = alt_accel
             self.alt_climb1 = alt_climb1
@@ -139,16 +141,22 @@ class MissionInputs(InternalStorageInterface):
             self.payload_loiter = payload_loiter
             self.exp_payload = exp_payload
             self.perm_payload = perm_payload
+            self.mission_type = mission_type
 
     def pull_from_dict(self, dictionary: dict):
         flattened_dict = flatten_dict(dictionary)
         for key, value in flattened_dict.items():
             new_key = convert_from_camel_casing_to_underscores(key)
-            setattr(self, new_key, U(try_to_float(value), vars(self)[new_key].unit))
+            if new_key == "mission_type":
+                setattr(self, new_key, value)
+            else:
+                setattr(self, new_key, U(try_to_float(value), vars(self)[new_key].unit))
 
     def push_values_to_dict(self):
         dictionary = {}
         for key, value in vars(self).items():
+            if key == "mission_type":
+                continue
             key1, key2 = [k.capitalize() for k in key.split('_')]
             if key1 not in dictionary:
                 if key2 == "Payload":
@@ -163,6 +171,8 @@ class MissionInputs(InternalStorageInterface):
     def push_units_to_dict(self):
         dictionary = {}
         for key, value in vars(self).items():
+            if key == "mission_type":
+                continue
             key1, key2 = [k.capitalize() for k in key.split('_')]
             if key1 not in dictionary:
                 if key2 == "Payload":

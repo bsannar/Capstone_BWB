@@ -222,5 +222,7 @@ class DataManager:
     def get_output_to_transfer_function_dict(self):
         return {"max_f35s_refueled": self.transfer_max_f35s_refueled,
                 "dry_weight": self.transfer_dry_weight,
-                "max_range": self.transfer_max_range}
+                "max_range": self.transfer_max_range,
+                "max_payload_weight": self.transfer_max_payload_weight,
+                "cruise_lift_over_drag": self.transfer_lift_over_drag}
 

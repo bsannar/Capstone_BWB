@@ -32,6 +32,7 @@ class GuiManager:
         self.hasBWBView = False
         self.has_taw_view = False
         self.aircraft_dict = {}
+        self.missions_dict = {}
         self.selected_aircraft = Bwb("BWB 1")
         self.tool_gui_manager = DataManager(self.jet_bwb_interface, self)
         self.tool_gui_manager.transfer_geometry_to_output()
@@ -132,6 +133,7 @@ class GuiManager:
         self.gui_storage_manager.output = self.selected_aircraft
 
     def add_bwb_geometry(self):
+        self.gui_storage_manager.output = self.selected_aircraft
         self.gui_storage_manager.transfer_geometry_to_output()
         self.gui_storage_manager.transfer_mission_inputs_to_output()
         name = self.ui.txtBwbName.text()
@@ -160,13 +162,28 @@ class GuiManager:
         if name == "":
             name = "Mission " + str(self.ui.lwMissions.count()+1)
         self.ui.lwMissions.addItem(name)
+        self.gui_storage_manager.transfer_mission_inputs_to_output()
+        self.missions_dict[name] = copy.deepcopy(self.selected_aircraft.mission_inputs)
+
+    def save_mission(self):
         self.csv_interface.set_file_path(f"Assets/Missions/{name}.csv")
         self.gui_csv_manager.transfer_mission_inputs_to_output()
+        # self.csv_interface.set_file_path(f"Assets/Missions/{mission_name}.csv")
+        # self.gui_csv_manager.transfer_mission_inputs_to_input()
+        # self.csv_tool_manager.transfer_mission_inputs_to_output()
 
     def set_mission(self, mission_name):
-        self.csv_interface.set_file_path(f"Assets/Missions/{mission_name}.csv")
-        self.gui_csv_manager.transfer_mission_inputs_to_input()
-        self.csv_tool_manager.transfer_mission_inputs_to_output()
+        clearLayout(self.ui.glMissionParameters)
+        self.selected_aircraft.mission_inputs = self.missions_dict[mission_name]
+        match self.missions_dict[mission_name].mission_type:
+            case missions.Airdrop():
+                missions.setup_airdrop_mission(self, self.gui_storage_manager)
+            case missions.Tanker():
+                missions.setup_tanker_mission(self, self.gui_storage_manager)
+            case missions.Cargo():
+                missions.setup_cargo_carry_mission(self, self.gui_storage_manager)
+            case _:
+                print("Default")
 
     def set_selected_bwb(self, bwb_name):
         self.selected_aircraft = self.aircraft_dict[bwb_name]
@@ -220,8 +237,9 @@ class GuiManager:
                 self.selected_taw_aircraft = Taw('KC-135', self.taw_storage_manager)  # Load TAW aircraft class
                 self.jet_taw_interface.generate_cpacs()
                 self.tool_storage_manager.input = self.jet_taw_interface
-                self.taw_storage_manager.transfer_geometry_to_output()
-                self.taw_storage_manager.transfer_mission_inputs_to_output()
+                self.tool_storage_manager.transfer_geometry_to_output()
+                self.gui_storage_manager.output = self.selected_taw_aircraft
+                self.gui_storage_manager.transfer_mission_inputs_to_output()
                 self.aircraft_dict['KC-135'] = copy.deepcopy(self.selected_taw_aircraft)
             case "C-17":
                 self.log_message("C-17 selected")
@@ -417,6 +435,14 @@ class GuiManager:
                     mission_inputs_dict[key1][key2] = widget.text()
             else:
                 mission_inputs_dict[key1] = val.text()
+        mission_type = [item.text() for item in self.ui.ddChooseMission.menu().actions() if item.isChecked()][0]
+        match mission_type:
+            case "Airdrop":
+                mission_inputs_dict["mission_type"] = missions.Airdrop()
+            case "Tanker":
+                mission_inputs_dict["mission_type"] = missions.Tanker()
+            case "Cargo Carry":
+                mission_inputs_dict["mission_type"] = missions.Cargo()
         return mission_inputs_dict
 
     def pull_mission_inputs_into_gui(self, mission_inputs_dict: dict):

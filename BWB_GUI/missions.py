@@ -2,10 +2,27 @@ from PySide6.QtWidgets import QLabel, QLineEdit
 from datamanager import DataManager
 from csvinterface import CsvInterface
 
-def setup_airdrop_mission(gui_manager):
-    interface = CsvInterface("Assets/Airdrop.csv")
-    data_manager = DataManager(interface, gui_manager)
-    mission_dict = interface.pull_from_storage()
+class MissionType:
+    pass
+
+class Airdrop(MissionType):
+    pass
+
+class Tanker(MissionType):
+    pass
+
+class Cargo(MissionType):
+    pass
+
+def setup_airdrop_mission(gui_manager, data_manager=None):
+    if data_manager == None:
+        interface = CsvInterface("Assets/Airdrop.csv")
+        data_manager = DataManager(interface, gui_manager)
+        mission_dict = interface.pull_from_storage()
+        data_manager.transfer_mission_inputs_to_output()
+    else:
+        mission_dict = gui_manager.selected_aircraft.mission_inputs.push_values_to_dict()
+        data_manager.transfer_mission_inputs_to_input()
 
     gui_manager.ui.glMissionParameters.addWidget(QLabel("Distance to drop site (nm):"), 0, 0)
     txtDistanceToDropSite = QLineEdit()
@@ -19,17 +36,21 @@ def setup_airdrop_mission(gui_manager):
     txtPayloadWeight.textChanged.connect(lambda text: set_payload_weight(text, gui_manager.ui))
     txtPayloadWeight.setText(str(mission_dict["Payload"]["Service2"]))
 
-    # ui.glMissionParameters.addWidget(QLabel("Drop altitude:"), 2, 0)
-    # txtDropAlt = QLineEdit()
-    # ui.glMissionParameters.addWidget(txtDropAlt, 2, 1)
-    # txtDropAlt.textChanged.connect(lambda text: set_drop_altitude(text, ui))
+    gui_manager.ui.glMissionParameters.addWidget(QLabel("Drop altitude:"), 2, 0)
+    txtDropAlt = QLineEdit()
+    gui_manager.ui.glMissionParameters.addWidget(txtDropAlt, 2, 1)
+    txtDropAlt.textChanged.connect(lambda text: set_drop_altitude(text, gui_manager.ui))
+    txtDropAlt.setText(str(mission_dict["Alt"]["Service2"]))
 
-    data_manager.transfer_mission_inputs_to_output()
-
-def setup_tanker_mission(gui_manager):
-    interface = CsvInterface("Assets/Tanker.csv")
-    data_manager = DataManager(interface, gui_manager)
-    mission_dict = interface.pull_from_storage()
+def setup_tanker_mission(gui_manager, data_manager=None):
+    if data_manager == None:
+        interface = CsvInterface("Assets/Tanker.csv")
+        data_manager = DataManager(interface, gui_manager)
+        mission_dict = interface.pull_from_storage()
+        data_manager.transfer_mission_inputs_to_output()
+    else:
+        mission_dict = gui_manager.selected_aircraft.mission_inputs.push_values_to_dict()
+        data_manager.transfer_mission_inputs_to_input()
 
     gui_manager.ui.glMissionParameters.addWidget(QLabel("Distance to F35s:"), 0, 0)
     txtDistanceToF35s = QLineEdit()
@@ -42,12 +63,15 @@ def setup_tanker_mission(gui_manager):
     gui_manager.ui.glMissionParameters.addWidget(txtF35sToRefuel, 1, 1)
     txtF35sToRefuel.textChanged.connect(lambda text: set_f35s_to_refuel(text, gui_manager.ui))
 
-    data_manager.transfer_mission_inputs_to_output()
-
-def setup_cargo_carry_mission(gui_manager):
-    interface = CsvInterface("Assets/Cargo Carry.csv")
-    data_manager = DataManager(interface, gui_manager)
-    mission_dict = interface.pull_from_storage()
+def setup_cargo_carry_mission(gui_manager, data_manager=None):
+    if data_manager == None:
+        interface = CsvInterface("Assets/Cargo Carry.csv")
+        data_manager = DataManager(interface, gui_manager)
+        mission_dict = interface.pull_from_storage()
+        data_manager.transfer_mission_inputs_to_output()
+    else:
+        mission_dict = gui_manager.selected_aircraft.mission_inputs.push_values_to_dict()
+        data_manager.transfer_mission_inputs_to_input()
 
     gui_manager.ui.glMissionParameters.addWidget(QLabel("Distance to drop site (nm):"), 0, 0)
     txtDistanceToDropSite = QLineEdit()
@@ -59,9 +83,7 @@ def setup_cargo_carry_mission(gui_manager):
     txtPayloadWeight = QLineEdit()
     gui_manager.ui.glMissionParameters.addWidget(txtPayloadWeight, 1, 1)
     txtPayloadWeight.textChanged.connect(lambda text: set_carry_weight(text, gui_manager.ui))
-    txtPayloadWeight.setText(mission_dict["PermPayload"])
-
-    data_manager.transfer_mission_inputs_to_output()
+    txtPayloadWeight.setText(str(mission_dict["PermPayload"]))
 
 def set_drop_distance(text, ui):
     ui.txtCruise1Dist.setText(text)
@@ -92,7 +114,7 @@ def set_payload_weight(text, ui):
     ui.txtService2Payload.setText(text)
     ui.txtExpendablePayload.setText(text)
 
-def set_drop_Alt(text, ui):
+def set_drop_altitude(text, ui):
     ui.txtPatrol1Alt.setText(text)
     ui.txtService1Alt.setText(text)
     ui.txtPatrol2Alt.setText(text)
