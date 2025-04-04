@@ -74,6 +74,8 @@ class GuiManager:
         self.ui.btnPlot.clicked.connect(self.on_btn_plot_clicked)
         self.ui.btnCalculateResponseSurface.clicked.connect(self.generate_response_surface)
         self.ui.btnDeleteBwb.clicked.connect(self.on_btn_delete_bwb_clicked)
+        self.ui.ddX.menu().triggered.connect(self.set_response_x_units)
+        self.ui.ddY.menu().triggered.connect(self.set_response_y_units)
 
     def on_set_mission_clicked(self):
         for aircraft in LoadingBar.List(list(self.aircraft_dict.values()), message="Assigning Mission..."):
@@ -452,3 +454,20 @@ class GuiManager:
             else:
                 for key2, val in dict.items():
                     self.ui_mission_inputs_dict[key1][key2].setText(str(mission_inputs_dict[key1][key2]))
+
+    def set_response_x_units(self):
+        name = [item.text() for item in self.ui.ddX.menu().actions() if item.isChecked()][0]
+        units_dict = flatten_dict(self.selected_aircraft.geometry.push_units_to_dict())
+        units_dict = {convert_from_camel_casing_to_underscores(key): unit for key, unit in units_dict.items()}
+        unit = units_dict[convert_to_underscores_from_spaces(name)]
+        self.ui.lbMinXUnits.setText(unit)
+        self.ui.lbMaxXUnits.setText(unit)
+
+    def set_response_y_units(self):
+        name = [item.text() for item in self.ui.ddY.menu().actions() if item.isChecked()][0]
+        units_dict = flatten_dict(self.selected_aircraft.geometry.push_units_to_dict())
+        units_dict = {convert_from_camel_casing_to_underscores(key): unit for key, unit in units_dict.items()}
+        unit = units_dict[convert_to_underscores_from_spaces(name)]
+        self.ui.lbMinYUnits.setText(unit)
+        self.ui.lbMaxYUnits.setText(unit)
+
