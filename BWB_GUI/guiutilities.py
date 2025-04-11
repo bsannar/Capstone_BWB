@@ -1,3 +1,5 @@
+from PySide6.QtWidgets import QCheckBox
+
 def clearLayout(layout):
   while layout.count():
     child = layout.takeAt(0)
@@ -34,3 +36,11 @@ def try_to_float(str):
     except:
         return 0
 
+def get_checked_checkboxes_from_layout(layout):
+    list = []
+    for i in range(layout.count()):
+        widget = layout.itemAt(i).widget()
+        if isinstance(widget, QCheckBox):
+            if widget.isChecked():
+                list.append(widget.text())
+    return list

@@ -6,7 +6,7 @@ import numpy as np
 import dropdowns
 import config_saver as save
 import sensitivities as sens
-from PySide6.QtWidgets import QFileDialog, QWidget, QVBoxLayout
+from PySide6.QtWidgets import QFileDialog, QWidget, QVBoxLayout, QCheckBox
 from PySide6.QtCore import QProcess
 from PySide6.QtGui import QPixmap, QWindow
 import missions
@@ -46,16 +46,22 @@ class GuiManager:
         self.main_canvas = MatplotlibCanvas(self.ui.widMainPlot)
         self.response_surface_canvas = MatplotlibCanvas(self.ui.widResponseSurface, projection='3d')
         self.setup_all_dropdowns()
+        self.generate_check_boxes_from_list_in_layout(self.selected_aircraft.list_mission_outputs(), self.ui.vlMissionOutputs)
         self.log_message("No Aircraft Selected")
         self.connect_all()
 
     def setup_all_dropdowns(self):
         dropdowns.setup_dropdown(self.ui.ddChooseAircraft, ["KC-135", "C-17", "B-747"])
-        dropdowns.setup_dropdown(self.ui.ddMissionOutputs, self.selected_aircraft.list_mission_outputs(), multi_select=True)
         dropdowns.setup_dropdown(self.ui.ddChooseMission, ["Tanker", "Airdrop", "Cargo Carry"])
         dropdowns.setup_dropdown(self.ui.ddX, self.selected_aircraft.list_geometry())
         dropdowns.setup_dropdown(self.ui.ddY, self.selected_aircraft.list_geometry())
         dropdowns.setup_dropdown(self.ui.ddZ, self.selected_aircraft.list_mission_outputs())
+
+    def generate_check_boxes_from_list_in_layout(self, list, layout):
+        for item in list:
+            checkbox = QCheckBox()
+            checkbox.setText(item)
+            layout.addWidget(checkbox)
 
     def connect_all(self):
         self.ui.btnAddBwbGeometry.clicked.connect(self.add_bwb_geometry)
@@ -105,7 +111,7 @@ class GuiManager:
         self.ui.text_output_taw.setText(message)  # display text value in qlabel
 
     def on_btn_plot_clicked(self):
-        checked_mission_outputs = [item.text() for item in self.ui.ddMissionOutputs.menu().actions() if item.isChecked()]
+        checked_mission_outputs = get_checked_checkboxes_from_layout(self.ui.vlMissionOutputs)
         for aircraft in LoadingBar.List(list(self.aircraft_dict.values()), message="Calculating Performance..."):
             self.tool_storage_manager.output = aircraft
             match aircraft:
@@ -130,7 +136,7 @@ class GuiManager:
                     case "cruise lift over drag":
                         if not aircraft.mission_outputs.cruise_lift_over_drag.is_calculated:
                             self.tool_storage_manager.transfer_lift_over_drag()
-        self.update_main_plot()
+        self.update_main_plot(checked_mission_outputs)
         self.tool_storage_manager.output = self.selected_aircraft
         self.gui_storage_manager.output = self.selected_aircraft
 
@@ -258,17 +264,21 @@ class GuiManager:
             case _:
                 self.log_message("No aircraft selected")
 
-    def update_main_plot(self):
+    def update_main_plot(self, checked_mission_outputs):
         self.main_canvas.ax.cla()
-        plotVars = [convert_to_underscores_from_spaces(item.text()) for item in self.ui.ddMissionOutputs.menu().actions() if item.isChecked()]
+        plotVars = [convert_to_underscores_from_spaces(mission_output) for mission_output in checked_mission_outputs]
+        normalize = True
         if len(plotVars) == 0:
             self.main_canvas.draw()
             return
+        elif len(plotVars) == 1:
+            normalize = False
         x = np.arange(len(plotVars))
         width = 0.2  # the width of the bars
         multiplier = 0
 
-        normalizers = [max([aircraft.mission_outputs.push_values_to_dict()[plotVar] for aircraft in self.aircraft_dict.values()]) for plotVar in plotVars]
+        if normalize:
+            normalizers = [max([aircraft.mission_outputs.push_values_to_dict()[plotVar] for aircraft in self.aircraft_dict.values()]) for plotVar in plotVars]
         values = []
         units = []
         bar_labels = []
@@ -281,8 +291,11 @@ class GuiManager:
             offset = width * multiplier
             labelValues = [value_dict[plotVar] for plotVar in plotVars]
             label_units = [unit_dict[plotVar] for plotVar in plotVars]
-            normalizedValues = [var/norm for var, norm in zip(labelValues, normalizers)]
-            rects = self.main_canvas.ax.bar(x + offset, normalizedValues, width, label=aircraft.name)
+            if normalize:
+                normalizedValues = [var/norm for var, norm in zip(labelValues, normalizers)]
+                rects = self.main_canvas.ax.bar(x + offset, normalizedValues, width, label=aircraft.name)
+            else:
+                rects = self.main_canvas.ax.bar(x + offset, labelValues, width, label=aircraft.name)
             units.extend(label_units)
             values.extend(labelValues)
             labels = self.main_canvas.ax.bar_label(rects, rotation=40)
@@ -298,11 +311,15 @@ class GuiManager:
 
         # Add some text for labels, title and custom x-self.main_canvas.axis tick labels, etc.
         n_aircraft = len(self.aircraft_dict)
-        self.main_canvas.ax.set_ylabel('Normalized Performance')
+        if normalize:
+            self.main_canvas.ax.set_ylabel('Normalized Performance')
+            self.main_canvas.ax.set_ylim(0, 1.25)
+        else:
+            self.main_canvas.ax.set_ylabel(f'{checked_mission_outputs[0]} ({units[0]})')
+            self.main_canvas.ax.set_ylim([0, max(values)*1.25])
         self.main_canvas.ax.set_title('Aircraft Performance')
         self.main_canvas.ax.set_xticks(x + (width * (n_aircraft - 1))/2, [convert_to_spaces_from_underscores(var) for var in plotVars], rotation=20)
         self.main_canvas.ax.legend(bbox_to_anchor=(1, 1), loc='upper left')
-        self.main_canvas.ax.set_ylim(0, 1.2)
 
         self.main_canvas.draw()
 

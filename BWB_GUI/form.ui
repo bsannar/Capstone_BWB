@@ -1192,23 +1192,17 @@
                </widget>
               </item>
               <item row="0" column="1">
-               <layout class="QVBoxLayout" name="verticalLayout">
+               <layout class="QVBoxLayout" name="vlMissionOutputs">
                 <item>
-                 <widget class="QToolButton" name="ddMissionOutputs">
+                 <widget class="QLabel" name="lbMissionOutputs">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
-                  <property name="acceptDrops">
-                   <bool>false</bool>
-                  </property>
                   <property name="text">
-                   <string>Mission Parameters</string>
-                  </property>
-                  <property name="checkable">
-                   <bool>false</bool>
+                   <string>Mission Outputs:</string>
                   </property>
                  </widget>
                 </item>
