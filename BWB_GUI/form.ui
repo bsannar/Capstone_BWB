@@ -33,7 +33,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tbMissionParameters">
        <attribute name="title">
@@ -579,8 +579,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1325</width>
-             <height>1173</height>
+             <width>1323</width>
+             <height>1161</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -1174,8 +1174,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1342</width>
-             <height>582</height>
+             <width>1340</width>
+             <height>585</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -1476,7 +1476,7 @@
      <x>0</x>
      <y>0</y>
      <width>1348</width>
-     <height>25</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
