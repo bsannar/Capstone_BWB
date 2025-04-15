@@ -1,3 +1,2 @@
-"# Capstone_BWB" 
-
-Although SU2 is able to run Navier-Stokes calculations, for now, SU2Run only supports Euler calculation, that is to say the skin friction is neglected. You can use the SkinFriction module to calculate the skin frictions (with empirical methods) afterwards and add them to the drag coefficient.
+# Welcome!
+All of the files you need to work on this project are found within the BWB_GUI directory. There is an Assets folder which contains default mission parameters for the Tanker, Airdrop, and Cargo Carry missions. Additionally this folder contains the BWB_tanker.xlsl, KC135.xlsl, and C17.xlsl jet files which are used by the DST for calculating performance.
