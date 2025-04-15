@@ -49,6 +49,8 @@ class GuiManager:
         self.generate_check_boxes_from_list_in_layout(self.selected_aircraft.list_mission_outputs(), self.ui.vlMissionOutputs)
         self.log_message("No Aircraft Selected")
         self.connect_all()
+        self.ui.txtStepX.setText("4")
+        self.ui.txtStepY.setText("4")
 
     def setup_all_dropdowns(self):
         dropdowns.setup_dropdown(self.ui.ddChooseAircraft, ["KC-135", "C-17", "B-747"])
