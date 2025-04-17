@@ -44,7 +44,7 @@ class EventReceiver(QObject):
         return super().event(event)
 
 class GuiManager:
-    def __init__(self, ui):
+    def __init__(self, ui, repaint):
         self.ui = ui
         self.bwb_process = QProcess()
         self.taw_process = QProcess()
@@ -71,7 +71,7 @@ class GuiManager:
         self.connect_all()
         self.ui.txtStepX.setText("4")
         self.ui.txtStepY.setText("4")
-
+        self.repaint = repaint
 
     def setup_all_dropdowns(self):
         dropdowns.setup_dropdown(self.ui.ddChooseAircraft, ["KC-135", "C-17", "B-747"])
@@ -392,41 +392,22 @@ class GuiManager:
         else:
             print('The path "Executables/TIGL 3.4.0/bin/tiglviewer-3.exe" does not exist')
 
-    # def embed_tigl_viewer(self, hwnd):
-    #     print("Embedding TiGL Viewer...")
-
-    #     window = QWindow.fromWinId(hwnd)
-    #     if window is None:
-    #         print("Error: QWindow.fromWinId returned None.")
-    #         return
-
-    #     widget = QWidget.createWindowContainer(window)
-    #     self.embedded_tigl_widget = widget  # Prevent GC
-
-    #     # Clear old layout
-    #     if self.ui.widTiglTaw.layout():
-    #         old_layout = self.ui.widTiglTaw.layout()
-    #         while old_layout.count():
-    #             item = old_layout.takeAt(0)
-    #             if item.widget():
-    #                 item.widget().setParent(None)
-    #         old_layout.deleteLater()
-
-    #     layout = QVBoxLayout()
-    #     layout.setContentsMargins(0, 0, 0, 0)
-    #     layout.addWidget(widget)
-    #     self.ui.widTiglTaw.setLayout(layout)
-
-    #     self.ui.widTiglTaw.update()
-    #     self.ui.widTiglTaw.repaint()
-    #     print("TiGL Viewer embedded successfully.")
+    def kill_taw_process(self):
+        if self.taw_process and self.taw_process.state() == QProcess.Running:
+            print("Killing existing TiGL Viewer process...")
+            self.taw_process.kill()
+            if not self.taw_process.waitForFinished(3000):  # Wait up to 3 seconds
+                print("Warning: TiGL Viewer process did not exit cleanly.")
+            else:
+                print("Old TiGL Viewer process terminated.")
 
     def open_tigl_viewer_taw(self):
         if not hasattr(self, "selected_taw_aircraft") or not self.jet_taw_interface.aircraft_name:
             self.log_message("No aircraft selected. Please select an aircraft first.")
             return
-        print(self.selected_taw_aircraft)
-
+        self.kill_taw_process()
+        self.log_message(f"Generating {self.jet_taw_interface.aircraft_name} geometry...")
+        self.repaint()
         self.jet_taw_interface.generate_cpacs()
 
         xml_file_map = {
@@ -436,109 +417,30 @@ class GuiManager:
         }
         xml_path = xml_file_map.get(self.jet_taw_interface.aircraft_name, None)
 
-        if self.taw_process and self.taw_process.state() == QProcess.Running:
-            print("Killing existing TiGL Viewer process...")
-            self.taw_process.kill()
-            if not self.taw_process.waitForFinished(3000):  # Wait up to 3 seconds
-                print("Warning: TiGL Viewer process did not exit cleanly.")
-            else:
-                print("Old TiGL Viewer process terminated.")
-
-        # if hasattr(self, "embedded_tigl_widget") and self.embedded_tigl_widget:
-        #     self.embedded_tigl_widget.setParent(None)
-        #     self.embedded_tigl_widget.deleteLater()
-        #     self.embedded_tigl_widget = None
-        #     QApplication.processEvents()  # <--- Ensure GUI processes that deletion
-        #     time.sleep(0.2)
-        #     print("Old embedded widget removed.")
-
         tigl_exe_path = "Executables/TIGL 3.4.0/bin/tiglviewer-3.exe"
         if not os.path.exists(tigl_exe_path):
             print(f'The path "{tigl_exe_path}" does not exist')
             return
-
+        print(self.taw_process)
         # Start TiGL Viewer process with new CPACS file
         self.taw_process = QProcess()
         self.taw_process.start(tigl_exe_path, [xml_path])
 
-        #DEBUG Step
-        if not self.taw_process.waitForStarted(5000):  # Wait 3 seconds to check if it starts
-            print("Error: TiGL Viewer did not start.")
-            return
-        else:
-            print("TiGL Viewer started successfully.")
-
-        def find_tigl_hwnd_by_pid(pid):
-            def callback(hwnd, hwnds):
-                _, found_pid = win32process.GetWindowThreadProcessId(hwnd)
-                if found_pid == pid and win32gui.IsWindowVisible(hwnd):
-                    hwnds.append(hwnd)
-            hwnds = []
-            win32gui.EnumWindows(callback, hwnds)
-            return hwnds[0] if hwnds else None
-
-        hwnd = None
-        for _ in range(100):  # Try for ~5 seconds
-            time.sleep(0.25)
-            hwnd = find_tigl_hwnd_by_pid(self.taw_process.processId())
-            if hwnd:
-                rect = win32gui.GetWindowRect(hwnd)
-                width = rect[2] - rect[0]
-                height = rect[3] - rect[1]
-                is_visible = win32gui.IsWindowVisible(hwnd)
-                if is_visible and width > 100 and height > 100:
-                    time.sleep(1)
-                    print(f"Window visible with size {width}x{height}")
-                    try:
-                        win32gui.SetForegroundWindow(hwnd)
-                        print("Set TiGL window to foreground.")
-                    except Exception as e:
-                        print(f"Could not bring window to foreground: {e}")
-                    break
-
-        if hwnd:
-             print(f"Found TiGL Viewer window: HWND = {hwnd}")
-        else:
-            print("Error: Could not find TiGL Viewer window.")
-            return
-
-        # Embed TiGL Viewer inside the PyQt widget
-        window = QWindow.fromWinId(hwnd)
-        if window is None:
-            print("Error: QWindow.fromWinId returned None.")
-            return
-        widget = QWidget.createWindowContainer(window)
-        self.embedded_tigl_widget = widget
-
-        # Clear existing layout and replace it
-        if self.ui.widTiglTaw.layout():
-            old_layout = self.ui.widTiglTaw.layout()
-            while old_layout.count():
-                item = old_layout.takeAt(0)
-                if item.widget():
-                    item.widget().setParent(None)
-            old_layout.deleteLater()
-
-        layout = QVBoxLayout()
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.addWidget(widget)
-        self.ui.widTiglTaw.setLayout(layout)
-        self.ui.widTiglTaw.update()
-        self.ui.widTiglTaw.repaint()
-
-
         while True:
             hwnd = GetForegroundWindow()
             title = GetWindowText(hwnd)
-            print(f"Found TiGL Viewer window: HWND = {title}")
             if title == "TiGL Viewer 3":
                 break
         window = QWindow.fromWinId(hwnd)
         widget = QWidget.createWindowContainer(window)
-        layout = QVBoxLayout(self.ui.widTigl)
-        layout.addWidget(widget)
-        self.ui.widTigl.setLayout(layout)
-        print("done! good luck!")
+        if self.ui.widTiglTaw.layout():
+            self.ui.widTiglTaw.layout().addWidget(widget)
+        else:
+            layout = QVBoxLayout(self.ui.widTigl)
+            layout.addWidget(widget)
+            self.ui.widTiglTaw.setLayout(layout)
+        self.log_message(f"{self.jet_taw_interface.aircraft_name} viewer launched")
+
 
     def generate_ui_mission_inputs_dict(self):
         dict = {}

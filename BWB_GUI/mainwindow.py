@@ -25,7 +25,7 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.setWindowIcon(QPixmap("App_Icon.png"))
-        self.gui_manager = GuiManager(self.ui)
+        self.gui_manager = GuiManager(self.ui, self.repaint)
 
     def closeEvent(self, *args, **kwargs):
         if self.gui_manager.bwb_process.state == "ProcessState.Running":
