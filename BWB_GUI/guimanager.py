@@ -6,7 +6,7 @@ import numpy as np
 import dropdowns
 import config_saver as save
 import sensitivities as sens
-from PySide6.QtWidgets import QFileDialog, QWidget, QVBoxLayout, QCheckBox
+from PySide6.QtWidgets import QFileDialog, QWidget, QVBoxLayout, QCheckBox, QSpacerItem, QSizePolicy
 from PySide6.QtCore import QProcess
 from PySide6.QtGui import QPixmap, QWindow
 import missions
@@ -64,6 +64,8 @@ class GuiManager:
             checkbox = QCheckBox()
             checkbox.setText(item)
             layout.addWidget(checkbox)
+        v_spacer = spacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        layout.addItem(v_spacer)
 
     def connect_all(self):
         self.ui.btnAddBwbGeometry.clicked.connect(self.add_bwb_geometry)
